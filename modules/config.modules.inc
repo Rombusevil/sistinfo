@@ -15,29 +15,40 @@
  * $Id: config.modules.inc 5515 2009-03-21 12:50:32Z sandy $
  */
 
-/**
- * Turn on the default achievo modules, custom modules should be
- * added in the config.inc.php
- */
- /*
-  module("utils");
-  module("email_template");
-  module("setup");
-  module("employee");
-  module("person");
-  module("timereg");
-  module("project");
-  module("organization");
-  module("notes");
-  module("scheduler");
-  module("todo");
-  module("reports");
-  module("pim");
-  module("search");
-  module("graph");
-  module("quotation");
-  module("docmanager");
-  module("crm");
-  */
-  module("empleados");
+	/**
+	 * Turn on the default achievo modules, custom modules should be
+	 * added in the config.inc.php
+	 */
+	// TODO
+	// Sacamos todos los módulos, vamos a ir agregando según sea necesario.
+	// Finalmente limpiar la basura.
+
+
+	module("empleados");
+	module("search");	// Funcionalidad de búsquedas de achievo
+	module("setup");	// Para el setup del administrator
+
+	// TODO: Este módulo es el primero que se muestra cuando carga la página.
+	// Reemplazar por lo que creamos necesario.
+	module("pim");
+
+
+	/*
+	module("utils");
+	module("email_template");
+
+	module("employee");
+	module("person");
+	module("timereg");
+	module("project");
+	module("organization");
+	module("notes");
+	module("scheduler");
+	module("todo");
+	module("reports");
+	module("graph");
+	module("quotation");
+	module("docmanager");
+	module("crm");
+	*/
 ?>
