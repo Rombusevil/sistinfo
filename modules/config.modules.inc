@@ -25,6 +25,9 @@
 
 
 	module("empleados");
+	module("color");
+
+
 	module("search");	// Funcionalidad de búsquedas de achievo
 	module("setup");	// Para el setup del administrator
 
