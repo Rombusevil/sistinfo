@@ -19,6 +19,7 @@
 	 * Turn on the default achievo modules, custom modules should be
 	 * added in the config.inc.php
 	 */
+	
 	// TODO
 	// Sacamos todos los módulos, vamos a ir agregando según sea necesario.
 	// Finalmente limpiar la basura.
@@ -26,6 +27,9 @@
 
 	module("empleados");
 	module("color");
+	module("productos");
+	module("clientes");
+	module("facturas");
 
 
 	module("search");	// Funcionalidad de búsquedas de achievo
@@ -39,7 +43,6 @@
 	/*
 	module("utils");
 	module("email_template");
-
 	module("employee");
 	module("person");
 	module("timereg");
