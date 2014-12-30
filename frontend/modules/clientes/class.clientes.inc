@@ -14,9 +14,13 @@ class clientes extends atkNode {
     $this->add(new atkAttribute("direccion",AF_OBLIGATORY, 50));
     
     // @TODO Foraneas
-    $this->add(new atkNumberAttribute("tipoClienteId" ,AF_OBLIGATORY));
-    $this->add(new atkNumberAttribute("sociedadId" ,AF_OBLIGATORY));   
-    $this->add(new atkNumberAttribute("localidadId" ,AF_OBLIGATORY));  
+    $this->add(new atkManyToOneRelation("tipoClienteId", "clientes.tiposCliente", AF_RELATION_AUTOLINK|AF_HIDE_LIST));    
+    $this->add(new atkManyToOneRelation("sociedadId", "clientes.sociedades", AF_RELATION_AUTOLINK|AF_HIDE_LIST));
+    $this->add(new atkManyToOneRelation("localidadId", "clientes.localidades", AF_RELATION_AUTOLINK|AF_HIDE_LIST));    
+    
+    //$this->add(new atkNumberAttribute("tipoClienteId" ,AF_OBLIGATORY));
+    //$this->add(new atkNumberAttribute("sociedadId" ,AF_OBLIGATORY));   
+    //$this->add(new atkNumberAttribute("localidadId" ,AF_OBLIGATORY));  
     
     $this->setTable("clientes", "clientes");
   }
