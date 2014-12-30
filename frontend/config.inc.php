@@ -46,7 +46,7 @@
   // The language of the application. You can use any language for which
   // a language file is present in the languages directory.
   //
-  $config_language="en";
+  $config_language="es";
 
   // The menu to use (For older themes this is 'achievo', for newer this
   //  is 'achievo_modern'

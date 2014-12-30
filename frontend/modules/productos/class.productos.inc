@@ -17,8 +17,8 @@ class productos extends atkNode {
     // Foraneas
     $this->add(new atkManyToOneRelation("marcaId", "productos.marca", AF_RELATION_AUTOLINK|AF_HIDE_LIST));
     $this->add(new atkManyToOneRelation("tipoProductoId", "productos.tiposProducto", AF_RELATION_AUTOLINK|AF_HIDE_LIST));
-    
-    
+        
     $this->setTable("productos", "productos");
+    $this->setDescriptorTemplate("[nombreProducto]");
   }
 }  
