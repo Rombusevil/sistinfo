@@ -6,6 +6,7 @@ class perfiles extends atkNode {
 
 		$this->add(new atkNumberAttribute("perfilId" ,AF_AUTOKEY));
 		$this->add(new atkAttribute("nombrePerfil",AF_OBLIGATORY, 30));
+		
 		$this->setTable("perfiles", "perfiles");
 		$this->setDescriptorTemplate("[nombrePerfil]");
 	}

@@ -14,9 +14,10 @@ class productos extends atkNode {
     $this->add(new atkNumberAttribute("cantidad"));
     $this->add(new atkNumberAttribute("stockMinimo" ,AF_OBLIGATORY));
     
-    // @TODO Foraneas
-    $this->add(new atkNumberAttribute("marcaId" ,AF_OBLIGATORY));         // Foranea
-    $this->add(new atkNumberAttribute("tipoProductoId" ,AF_OBLIGATORY));  // foranea
+    // Foraneas
+    $this->add(new atkManyToOneRelation("marcaId", "productos.marca", AF_RELATION_AUTOLINK|AF_HIDE_LIST));
+    $this->add(new atkManyToOneRelation("tipoProductoId", "productos.tiposProducto", AF_RELATION_AUTOLINK|AF_HIDE_LIST));
+    
     
     $this->setTable("productos", "productos");
   }
