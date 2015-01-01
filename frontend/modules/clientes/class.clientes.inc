@@ -19,5 +19,7 @@ class clientes extends atkNode {
     $this->add(new atkManyToOneRelation("localidadId", "clientes.localidades", AF_RELATION_AUTOLINK|AF_HIDE_LIST));    
     
     $this->setTable("clientes", "clientes");
+    $this->setDescriptorTemplate("[razonSocial]");
+    
   }
 }  

@@ -9,10 +9,9 @@ class facturas extends atkNode {
     $this->add(new atkNumberAttribute("facturaId" ,AF_AUTOKEY));
     $this->add(new atkNumberAttribute("numeroFactura" ,AF_OBLIGATORY));
     
-    
-    // @TODO Foraneas
-    $this->add(new atkNumberAttribute("tipoFacturaId" ,AF_OBLIGATORY));
+    $this->add(new atkManyToOneRelation("tipoFacturaId", "clientes.tiposFactura", AF_RELATION_AUTOLINK|AF_HIDE_LIST));    
     
     $this->setTable("facturas", "facturas");
+    $this->setDescriptorTemplate("[numeroFactura]");
   }
 }  

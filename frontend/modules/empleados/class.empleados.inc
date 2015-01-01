@@ -8,8 +8,10 @@ class empleados extends atkNode {
     
     $this->add(new atkNumberAttribute("empleadoId" ,AF_AUTOKEY));
     $this->add(new atkAttribute("nombreEmpleado",AF_OBLIGATORY, 30));
+    
     $this->add(new atkManyToOneRelation("perfilId", "empleados.perfiles", AF_RELATION_AUTOLINK|AF_HIDE_LIST));
     
     $this->setTable("empleados", "empleados");
+    $this->setDescriptorTemplate("[nombreEmpleado]");
   }
 }  

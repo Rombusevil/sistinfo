@@ -28,8 +28,8 @@
 	module("empleados");
 	module("color");
 	module("productos");
-	module("clientes");
-	module("facturas");
+	module("clientes");	
+	module("ventas");
 
 
 	module("search");	// Funcionalidad de búsquedas de achievo
