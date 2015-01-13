@@ -1,6 +1,8 @@
 <?php 
 
 userelation("atkmanytoonerelation");
+userelation("atkonetomanyrelation");
+
 
 class ventas extends atkNode {  
   function ventas($name="ventas", $flags=0) {
@@ -13,13 +15,24 @@ class ventas extends atkNode {
     
     $this->add(new atkManyToOneRelation("clienteId", "clientes.clientes", AF_RELATION_AUTOLINK|AF_HIDE_LIST));
     $this->add(new atkManyToOneRelation("tipoVentaId", "ventas.tiposVenta", AF_RELATION_AUTOLINK|AF_HIDE_LIST));
-    $this->add(new atkManyToOneRelation("facturaId", "ventas.facturas", AF_RELATION_AUTOLINK|AF_HIDE_LIST));
+    
+    
+    $facturas = $this->add(new atkManyToOneRelation("numeroFactura", "ventas.facturas", AF_RELATION_AUTOLINK|AF_HIDE_LIST));
+    $this->add(new atkManyToOneRelation("tipoFactura", "clientes.tiposFactura", AF_RELATION_AUTOLINK|AF_HIDE_LIST));
+    
+    
+    
     $this->add(new atkManyToOneRelation("empleadoId", "empleados.empleados", AF_RELATION_AUTOLINK|AF_HIDE_LIST));
-    $this->add(new atkOneToManyRelation("dummy", "ventas.detalle", "ventaId", AF_RELATION_AUTOLINK|AF_HIDE_LIST));
+    $this->add(new atkOneToManyRelation("Detalle", "ventas.detalle", "ventaId", AF_RELATION_AUTOLINK|AF_HIDE_LIST));
                    //atkOneToManyRelation($name, $destination, $refKey="", $flags=0)
     
-        
     $this->setTable("ventas", "ventas");
     
+    
+    
   }
+  public static function meta(atkMetaPolicy $policy) {
+    $policy->hasMany('detalle');
+  }
+
 }  
