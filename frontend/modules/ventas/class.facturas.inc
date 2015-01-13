@@ -20,8 +20,8 @@ class facturas extends atkNode {
   // Esta func carga un arreglo con key value los valores iniciales.
   function initial_values(){
     $db = atkGetDb();
+    // Obtengo el número siguiente en la secuencia de números factura
     $numFactura = $db->getRows("SELECT `nextid` FROM `db_sequence` WHERE `seq_name`='facturas'");
-    //$numFactura = $db->query("SELECT `nextid` FROM `db_sequence` WHERE `seq_name`='facturas'");
     
     return array("numeroFactura"=>$numFactura[0]["nextid"]);
   }
