@@ -26,7 +26,7 @@
 
 
 	module("empleados");
-	module("color");
+	module("color");	
 	module("productos");
 	module("clientes");	
 	module("ventas");
