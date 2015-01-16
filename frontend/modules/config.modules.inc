@@ -25,11 +25,14 @@
 	// Finalmente limpiar la basura.
 
 
-	module("empleados");
-	module("color");	
-	module("productos");
-	module("clientes");	
 	module("ventas");
+	
+	module("clientes");	
+	module("empleados");
+	
+	module("productos");
+	module("color");	
+	
 
 
 	module("search");	// Funcionalidad de búsquedas de achievo

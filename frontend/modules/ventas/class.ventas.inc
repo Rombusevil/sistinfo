@@ -10,7 +10,7 @@ class ventas extends atkNode {
     
     $this->add(new atkNumberAttribute("ventaId" ,AF_AUTOKEY));
     $this->add(new atkDateAttribute("fechaVencimiento"));
-    $this->add(new atkDateAttribute("fechaVenta" ,AF_OBLIGATORY));
+    $this->add(new atkDateTimeAttribute("fechaVenta" ,AF_OBLIGATORY));
     $this->add(new atkAttribute("nombreCliente")); 
     
     $this->add(new atkManyToOneRelation("clienteId", "clientes.clientes", AF_RELATION_AUTOLINK|AF_HIDE_LIST));
