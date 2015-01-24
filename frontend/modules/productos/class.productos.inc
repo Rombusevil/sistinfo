@@ -21,4 +21,31 @@ class productos extends atkNode {
     $this->setTable("productos", "productos");
     $this->setDescriptorTemplate("[nombreProducto]");
   }
+/*  
+  function postAdd($record)
+    {
+      $db = &atkGetDb();
+      
+      $tipoProductoId = $record["tipoProductoId"];
+      
+      
+      SELECT * FROM atributosDeProductos adp 
+      join tiposAtributosDeProductos tap
+      where adp.atributoId = tap.atributoId 
+      and tap.tipoProductoId = 3;
+      
+      
+      $sql = "SELECT DISTINCT projectid
+	               FROM project_person
+	               WHERE personid = '".atkGetUserId()."'";
+  	  $records = $db->getrows($sql);
+  	  $id_array = array();
+  	  foreach($records as $row)
+  	  {
+  	    array_push($id_array, $row["projectid"]);
+  	  }
+  	  array_push($id_array, 0);
+  	  return $id_array;
+    }
+    */
 }  

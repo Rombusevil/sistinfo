@@ -13,4 +13,7 @@ class datosProductos extends atkNode {
 		
 		$this->setTable("datosProductos", "datosProductos");		
 	}
+	
+	
+
 }

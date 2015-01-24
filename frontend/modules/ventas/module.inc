@@ -1,7 +1,8 @@
 <?php
 class mod_ventas extends achievoModule {
 	function getNodes() {
-		registerNode("ventas.ventas", array("admin", "add", "edit", "delete" ));		
+		registerNode("ventas.ventas", array("admin", "add", "edit", "delete" ));
+		registerNode("ventas.detalle", array("admin", "add", "edit", "delete" ));				
 	}
 
 	function getMenuItems() {

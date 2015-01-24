@@ -7,6 +7,7 @@ class mod_productos extends achievoModule {
 		registerNode("productos.ingresos", array("admin", "add", "edit", "delete" ));
 		registerNode("productos.datosProductos", array("admin", "add", "edit", "delete" ));
 		registerNode("productos.atributosDeProductos", array("admin", "add", "edit", "delete" ));
+		registerNode("productos.tiposAtributosDeProductos", array("admin", "add", "edit", "delete" ));
 		registerNode("productos.tiposProducto", array("admin", "add", "edit", "delete" ));
 		
 	}

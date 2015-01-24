@@ -20,16 +20,15 @@
 	 * added in the config.inc.php
 	 */
 	
+	
 	// TODO
 	// Sacamos todos los módulos, vamos a ir agregando según sea necesario.
 	// Finalmente limpiar la basura.
 
 
-	module("ventas");
-	
+	module("ventas");	
 	module("clientes");	
-	module("empleados");
-	
+	module("empleados");	
 	module("productos");
 	module("color");	
 	
