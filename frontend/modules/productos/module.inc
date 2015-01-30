@@ -5,7 +5,7 @@ class mod_productos extends achievoModule {
 		registerNode("productos.marca", array("admin", "add", "edit", "delete" ));
 		registerNode("productos.tiposProducto", array("admin", "add", "edit", "delete" ));
 		registerNode("productos.ingresos", array("admin", "add", "edit", "delete" ));
-		registerNode("productos.datosProductos", array("admin", "add", "edit", "delete" ));
+		registerNode("productos.datosProductos", array("admin", "edit" ));
 		registerNode("productos.atributosDeProductos", array("admin", "add", "edit", "delete" ));
 		registerNode("productos.tiposAtributosDeProductos", array("admin", "add", "edit", "delete" ));
 		registerNode("productos.tiposProducto", array("admin", "add", "edit", "delete" ));
@@ -20,8 +20,6 @@ class mod_productos extends achievoModule {
 		
 		$this->menuitem("Tipos", dispatch_url("productos.tiposProducto", "admin"), "Productos", array("productos.tiposProducto", "admin"));		
 		$this->menuitem("Atributos", dispatch_url("productos.atributosDeProductos", "admin"), "Productos", array("productos.atributosDeProductos", "admin"));
-		$this->menuitem("Datos", dispatch_url("productos.datosProductos", "admin"), "Productos", array("productos.datosProductos", "admin"));
-		
 		
 		$this->menuitem("-","","main",true,620);
 	}
