@@ -12,6 +12,7 @@
 
     function getMenuItems()
     {
+/*      
       $this->menuitem("organizationmanagement",dispatch_url("organization.organization", "admin"),"main",array("organization.organization","admin"),500);
       $this->menuitem("organization_admin", dispatch_url("organization.organization", "admin"),"organizationmanagement", array("organization.organization","admin"));
       $this->menuitem("contracts", dispatch_url("organization.contracts","admin"),"organizationmanagement", array("organization.contracts","admin"));
@@ -20,6 +21,7 @@
       $this->menuitem("-","","main",true,720);
       $this->menuitem("-","","organizationmanagement",true);
       $this->menuitem("contact_admin", dispatch_url("organization.contact", "admin"),"organizationmanagement", array("organization.contact","admin"));
+*/      
     }
 
     function getDependencies($mode)

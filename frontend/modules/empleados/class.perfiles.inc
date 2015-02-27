@@ -1,5 +1,7 @@
 <?php
 
+
+// ESTA clase está deprecated en favor de profile, ver de renombrar profile después
 class perfiles extends atkNode {
 	function perfiles($name="perfiles", $flags=0) {
 		$this->atkNode($name, $flags|NF_ADD_LINK);

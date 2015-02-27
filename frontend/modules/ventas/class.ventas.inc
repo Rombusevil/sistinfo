@@ -16,7 +16,7 @@ class ventas extends atkNode {
                                                 AF_RELATION_AUTOLINK|AF_HIDE_LIST|AF_HIDE_SELECT|AF_HIDE_EDIT));
         
         
-        $this->add(new atkManyToOneRelation("empleadoId", "empleados.empleados", AF_RELATION_AUTOLINK|AF_HIDE_LIST));
+        $this->add(new atkManyToOneRelation("empleadoId", "employee.employee", AF_RELATION_AUTOLINK|AF_HIDE_LIST|AF_HIDE));
         
         $linDetalle = &new atkOneToManyRelation("detalleId", "ventas.detalle", "ventaId", 0);
         $linDetalle->setDestinationFilter("ventaId");
@@ -40,5 +40,12 @@ class ventas extends atkNode {
     // Esta func carga un arreglo con key value los valores iniciales.
     function initial_values(){    
         return array("fechaVenta"=>date("Y-m-d"));    
+    }
+    
+    function post_add($record){
+        $user = atkGetUser();
+        $userId = $user["id"];
+        $recordId = $record["id"];
+        $db->query("UPDATE ventas set empleadoId = $userId where id= $recordId;");
     }
 } 

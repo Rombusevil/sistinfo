@@ -11,6 +11,15 @@ class empleados extends atkNode {
     
     $this->add(new atkManyToOneRelation("perfilId", "empleados.perfiles", AF_RELATION_AUTOLINK|AF_HIDE_LIST));
     
+    
+    $rel = &$this->add(new atkManyBoolRelation("profiles", "empleados.employeerole", "empleados.profile", AF_HIDE_LIST|AF_MANYBOOL_AUTOLINK), "account");
+    $rel->setLocalKey("empleadoId");
+    $rel->setRemoteKey("role_id");
+    
+    
+    
+    
+    
     $this->setTable("empleados", "empleados");
     $this->setDescriptorTemplate("[nombreEmpleado]");
   }
