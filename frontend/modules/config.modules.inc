@@ -20,16 +20,18 @@
 	 * added in the config.inc.php
 	 */
 	
+	
 	// TODO
 	// Sacamos todos los módulos, vamos a ir agregando según sea necesario.
 	// Finalmente limpiar la basura.
 
 
-	module("empleados");
-	module("color");
+	module("ventas");	
+	module("clientes");	
+	//module("empleados");	
 	module("productos");
-	module("clientes");
-	module("facturas");
+	module("color");	
+	
 
 
 	module("search");	// Funcionalidad de búsquedas de achievo
@@ -40,16 +42,21 @@
 	module("pim");
 
 
-	/*
-	module("utils");
-	module("email_template");
-	module("employee");
+// Módulos para perfiles y usuarios
 	module("person");
+	module("employee");
+	module("utils");
+	module("organization");
+	module("scheduler");
+	
+	/*
+	
+	module("email_template");
 	module("timereg");
 	module("project");
-	module("organization");
+	
 	module("notes");
-	module("scheduler");
+	
 	module("todo");
 	module("reports");
 	module("graph");

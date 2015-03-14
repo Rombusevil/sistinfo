@@ -1,7 +1,7 @@
 <?php
 
 class tiposFactura extends atkNode {
-	function tiposFactura($name="tiposCliente", $flags=0) {
+	function tiposFactura($name="tiposFactura", $flags=0) {
 		$this->atkNode($name, $flags|NF_ADD_LINK);
 
 		$this->add(new atkNumberAttribute("tipoFacturaId" ,AF_AUTOKEY));		
