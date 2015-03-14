@@ -12,7 +12,7 @@ class ventas extends atkNode {
         $this->add(new atkManyToOneRelation("tipoVentaId", "ventas.tiposVenta", AF_RELATION_AUTOLINK|AF_HIDE_LIST));
         
         
-        $facturas = $this->add(new atkManyToOneRelation("facturaId", "ventas.facturas",
+        $this->add(new atkManyToOneRelation("facturaId", "ventas.facturas",
                                                 AF_RELATION_AUTOLINK|AF_HIDE_LIST|AF_HIDE_SELECT|AF_HIDE_EDIT));
         
         

@@ -9,8 +9,8 @@ class productos extends atkNode {
     $this->add(new atkNumberAttribute("id" ,AF_AUTOKEY));
     $this->add(new atkNumberAttribute("codigoProducto" ,AF_OBLIGATORY));
     $this->add(new atkAttribute("nombreProducto",AF_OBLIGATORY|AF_SEARCHABLE, 30));
-    $this->add(new atkAttribute("descripcion",AF_OBLIGATORY, 30));
-    $this->add(new atkCurrencyAttribute("precio" ,AF_OBLIGATORY,0,"$",4));
+    $this->add(new atkAttribute("descripcion",AF_OBLIGATORY, 100));
+    $this->add(new atkCurrencyAttribute("precio" ,AF_OBLIGATORY,0,"$",2));
     $this->add(new atkNumberAttribute("cantidad"));
     $this->add(new atkNumberAttribute("stockMinimo" ,AF_OBLIGATORY));
     

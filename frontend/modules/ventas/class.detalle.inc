@@ -8,7 +8,7 @@ class detalle extends atkNode {
 		$this->add(new atkManyToOneRelation("ventaId", "ventas.ventas", AF_RELATION_AUTOLINK));
 		
 		$this->add(new atkManyToOneRelation("productoId", "productos.productos", AF_RELATION_AUTOLINK));		
-		$this->add(new atkManyToOneRelation("colorId", "color.color", AF_RELATION_AUTOLINK));		
+		$this->add(new atkManyToOneRelation("colorId", "color.color", AF_RELATION_AUTOLINK)); // TODO esto es condicional al producto (si es coloreable o no)
 		$this->add(new atkNumberAttribute("cantidad" ,AF_OBLIGATORY));
 		
 		$this->setTable("detalle", "detalle");
