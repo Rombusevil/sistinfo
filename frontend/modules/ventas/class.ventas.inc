@@ -8,8 +8,8 @@ class ventas extends atkNode {
         $this->add(new atkNumberAttribute("id" ,AF_AUTOKEY)); $this->add(new atkDateAttribute("fechaVencimiento"));
         $this->add(new atkDateTimeAttribute("fechaVenta" ,AF_OBLIGATORY)); $this->add(new atkAttribute("nombreCliente"));
         
-        $this->add(new atkManyToOneRelation("clienteId", "clientes.clientes", AF_RELATION_AUTOLINK|AF_HIDE_LIST));
-        $this->add(new atkManyToOneRelation("tipoVentaId", "ventas.tiposVenta", AF_RELATION_AUTOLINK|AF_HIDE_LIST));
+        $this->add(new atkManyToOneRelation("clienteId", "clientes.clientes", AF_OBLIGATORY|AF_RELATION_AUTOLINK|AF_HIDE_LIST));
+        $this->add(new atkManyToOneRelation("tipoVentaId", "ventas.tiposVenta", AF_OBLIGATORY|AF_RELATION_AUTOLINK|AF_HIDE_LIST));
         
         
         $this->add(new atkManyToOneRelation("facturaId", "ventas.facturas",
@@ -18,11 +18,11 @@ class ventas extends atkNode {
         
         $this->add(new atkManyToOneRelation("empleadoId", "employee.employee", AF_RELATION_AUTOLINK|AF_HIDE_LIST|AF_HIDE));
         
-        $linDetalle = &new atkOneToManyRelation("detalleId", "ventas.detalle", "ventaId", 0);
+        $linDetalle = &new atkOneToManyRelation("detalle", "ventas.detalle", "ventaId", AF_ONETOMANY_SHOW_ADD);
         $linDetalle->setDestinationFilter("ventaId");
         $this->add($linDetalle,"Detalle");
         
-        
+        $this->add(new atkDummyAttribute("precioTotal", "", AF_HIDE_ADD), "Detalle");
         
         $this->setTable("ventas", "ventas");
         
@@ -42,10 +42,33 @@ class ventas extends atkNode {
         return array("fechaVenta"=>date("Y-m-d"));    
     }
     
-    function post_add($record){
-        $user = atkGetUser();
+    function postAdd($record){
+        // El usuario actual hace la venta
+        $user = &atkGetUser();        
         $userId = $user["id"];
         $recordId = $record["id"];
+        
+        $db = &atkGetDb();
         $db->query("UPDATE ventas set empleadoId = $userId where id= $recordId;");
     }
+    
+    
+    function precioTotal_edit($record, $prefix="", $mode=""){
+        $db = &atkGetDb();
+        $venta = $record["id"];
+        
+        $rows= $db->getrows("SELECT precio, cantidad from detalle where ventaId = $venta;");
+        $total = 0;
+        atk_var_dump($rows,"ROWWWWWSSSS");
+        foreach($rows as $row){
+            atk_var_dump($row["precio"],"PRECIO");
+            atk_var_dump($row["cantidad"],"CANTIDAD");
+            $total += $row["precio"] * $row["cantidad"];
+        }
+        
+        atk_var_dump($record,"DETALLEEEEE");
+        
+        return "TOTAL ES: $total";
+    }
+
 } 
