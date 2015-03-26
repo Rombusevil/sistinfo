@@ -27,6 +27,10 @@ class detalle extends atkNode {
 		if($cantidadNueva < 0){		
 			triggerError($record, "No hay suficiente stock", "la cantidad actual es $cantidad");
 		}
+        
+        if($record["cantidad"]< 0){
+            triggerError($record, "Error", "cantidad negativa");
+        }   
 	}
 	
 	
