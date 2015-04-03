@@ -34,12 +34,13 @@ class detalle extends atkNode {
 	}
 	
 	
-	function postAdd($record){
+	function postAdd($record){        
 		$db = &atkGetDb();
 		
         // Checkeamos el stock mínimo del producto
         $producto= $record["productoId"]["id"];
 		$detalle = $record["detalleId"];
+        $nombreProducto = $record["productoId"]["nombreProducto"];
 		
 		$result = $db->getrows("select cantidad, stockMinimo, precio from productos where id = $producto");
 		$cantidad = $result[0]["cantidad"];
@@ -53,10 +54,13 @@ class detalle extends atkNode {
 		$db->query("UPDATE productos set cantidad = $cantidad where id= $producto;");
 		$db->query("UPDATE detalle set precio = $precio where detalleId= $detalle;");
 		
+        atk_var_dump("LOOOGGGG", $record["productoId"]);
+        atk_var_dump($record["productoId"]);
 		
 		if($cantidad < $minimo){
-			// TODO hacer que funcione este alert, de cualquier forma
-			echo "<javascript> alert(\"STOCK MINIMO\");</javascript>";
+			echo '<script language="javascript"> confirm("Alerta de stock minimo para '. $nombreProducto.'. Cantidad: '.$cantidad.'");</script>';
 		}
+        
+        return true;
 	}
 }

@@ -52,6 +52,8 @@ class ventas extends atkNode {
         
         $db = &atkGetDb();
         $db->query("UPDATE ventas set empleadoId = $userId where id= $recordId;");
+        
+        return true;
     }
     
     
