@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 20-03-2015 a las 01:25:08
+-- Tiempo de generación: 07-04-2015 a las 02:15:30
 -- Versión del servidor: 5.5.41
 -- Versión de PHP: 5.4.36-0+deb7u3
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Base de datos: `pqllana_limpia`
+-- Base de datos: `pqllana`
 --
 
 -- --------------------------------------------------------
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `accessright` (
 --
 
 CREATE TABLE IF NOT EXISTS `atributosDeProductos` (
-  `atributoId` int(11) NOT NULL,
+  `atributoId` int(11) NOT NULL DEFAULT '0',
   `nombreAtributo` varchar(30) DEFAULT NULL,
   `tipoAtributo` varchar(11) DEFAULT NULL,
   PRIMARY KEY (`atributoId`),
@@ -54,15 +54,15 @@ CREATE TABLE IF NOT EXISTS `atributosDeProductos` (
 --
 
 CREATE TABLE IF NOT EXISTS `clientes` (
-  `clienteId` int(11) NOT NULL,
+  `clienteId` int(11) NOT NULL DEFAULT '0',
   `cuitCuil` int(11) DEFAULT NULL,
   `razonSocial` varchar(50) DEFAULT NULL,
   `correoElectronico` varchar(80) DEFAULT NULL,
   `telefono` varchar(50) DEFAULT NULL,
   `direccion` varchar(50) DEFAULT NULL,
-  `tipoClienteId` int(11) NOT NULL,
-  `sociedadId` int(11) NOT NULL,
-  `localidadId` int(11) NOT NULL,
+  `tipoClienteId` int(11) DEFAULT NULL,
+  `sociedadId` int(11) DEFAULT NULL,
+  `localidadId` int(11) DEFAULT NULL,
   PRIMARY KEY (`clienteId`),
   KEY `localidadId` (`localidadId`),
   KEY `tipoClienteId` (`tipoClienteId`),
@@ -76,11 +76,11 @@ CREATE TABLE IF NOT EXISTS `clientes` (
 --
 
 CREATE TABLE IF NOT EXISTS `color` (
-  `colorId` int(11) NOT NULL,
+  `colorId` int(11) NOT NULL DEFAULT '0',
   `codigoColor` int(11) DEFAULT NULL,
   `imagen` varchar(90) DEFAULT NULL,
   `gamaId` int(11) DEFAULT NULL,
-  `composicionId` int(11) NOT NULL,
+  `composicionId` int(11) DEFAULT NULL,
   PRIMARY KEY (`colorId`),
   KEY `gamaId` (`gamaId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `color` (
 --
 
 CREATE TABLE IF NOT EXISTS `composicionColores` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL DEFAULT '0',
   `colorPrimario` int(11) DEFAULT NULL,
   `colorSecundario` int(11) DEFAULT NULL,
   `porcentaje` float DEFAULT NULL,
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `composicionColores` (
 --
 
 CREATE TABLE IF NOT EXISTS `datosProductos` (
-  `datosProductosId` int(11) NOT NULL,
+  `datosProductosId` int(11) NOT NULL DEFAULT '0',
   `productoId` int(11) DEFAULT NULL,
   `nombreAtributo` varchar(30) DEFAULT NULL,
   `valorAtributo` int(11) DEFAULT NULL,
@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS `db_sequence` (
 --
 
 CREATE TABLE IF NOT EXISTS `detalle` (
-  `detalleId` int(11) NOT NULL,
+  `detalleId` int(11) NOT NULL DEFAULT '0',
   `productoId` int(11) DEFAULT NULL,
   `cantidad` int(11) DEFAULT NULL,
   `ventaId` int(11) DEFAULT NULL,
@@ -155,7 +155,7 @@ CREATE TABLE IF NOT EXISTS `detalle` (
 --
 
 CREATE TABLE IF NOT EXISTS `empleados` (
-  `empleadoId` int(11) NOT NULL,
+  `empleadoId` int(11) NOT NULL DEFAULT '0',
   `nombreEmpleado` varchar(30) DEFAULT NULL,
   `perfilId` int(11) DEFAULT NULL,
   PRIMARY KEY (`empleadoId`),
@@ -194,9 +194,9 @@ CREATE TABLE IF NOT EXISTS `employee_department` (
 --
 
 CREATE TABLE IF NOT EXISTS `facturas` (
-  `facturaId` int(11) NOT NULL,
+  `facturaId` int(11) NOT NULL DEFAULT '0',
   `numeroFactura` int(11) DEFAULT NULL,
-  `tipoFacturaId` int(11) NOT NULL,
+  `tipoFacturaId` int(11) DEFAULT NULL,
   PRIMARY KEY (`facturaId`),
   KEY `tipoFacturaId` (`tipoFacturaId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -221,7 +221,7 @@ CREATE TABLE IF NOT EXISTS `functionlevel` (
 --
 
 CREATE TABLE IF NOT EXISTS `gama` (
-  `gamaId` int(11) NOT NULL,
+  `gamaId` int(11) NOT NULL DEFAULT '0',
   `nombreGama` varchar(30) DEFAULT NULL,
   `imagen` varchar(90) DEFAULT NULL,
   PRIMARY KEY (`gamaId`)
@@ -234,7 +234,7 @@ CREATE TABLE IF NOT EXISTS `gama` (
 --
 
 CREATE TABLE IF NOT EXISTS `ingresos` (
-  `ingresosId` int(11) NOT NULL,
+  `ingresosId` int(11) NOT NULL DEFAULT '0',
   `productoId` int(11) DEFAULT NULL,
   `fecha` date DEFAULT NULL,
   `cantidad` int(11) DEFAULT NULL,
@@ -249,9 +249,9 @@ CREATE TABLE IF NOT EXISTS `ingresos` (
 --
 
 CREATE TABLE IF NOT EXISTS `ivas` (
-  `id` int(11) NOT NULL,
-  `fechaVigencia` date NOT NULL,
-  `valorIva` decimal(5,2) NOT NULL,
+  `id` int(11) DEFAULT NULL,
+  `fechaVigencia` date DEFAULT NULL,
+  `valorIva` decimal(5,2) DEFAULT NULL,
   `tipoFacturaId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -262,8 +262,8 @@ CREATE TABLE IF NOT EXISTS `ivas` (
 --
 
 CREATE TABLE IF NOT EXISTS `localidades` (
-  `localidadId` int(11) NOT NULL,
-  `codigoPostal` int(11) NOT NULL,
+  `localidadId` int(11) NOT NULL DEFAULT '0',
+  `codigoPostal` int(11) DEFAULT NULL,
   `nombreLocalidad` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`localidadId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -275,7 +275,7 @@ CREATE TABLE IF NOT EXISTS `localidades` (
 --
 
 CREATE TABLE IF NOT EXISTS `marca` (
-  `marcaId` int(11) NOT NULL,
+  `marcaId` int(11) NOT NULL DEFAULT '0',
   `nombreMarca` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`marcaId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -342,7 +342,7 @@ CREATE TABLE IF NOT EXISTS `organization` (
 --
 
 CREATE TABLE IF NOT EXISTS `perfiles` (
-  `perfilId` int(11) NOT NULL,
+  `perfilId` int(11) NOT NULL DEFAULT '0',
   `nombrePerfil` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`perfilId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -398,7 +398,7 @@ CREATE TABLE IF NOT EXISTS `person` (
 --
 
 CREATE TABLE IF NOT EXISTS `productos` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL DEFAULT '0',
   `codigoProducto` int(11) DEFAULT NULL,
   `nombreProducto` varchar(30) DEFAULT NULL,
   `descripcion` varchar(120) DEFAULT NULL,
@@ -673,8 +673,8 @@ CREATE TABLE IF NOT EXISTS `scheduler_userpreferences` (
 --
 
 CREATE TABLE IF NOT EXISTS `sociedades` (
-  `sociedadId` int(11) NOT NULL,
-  `nombreSociedad` varchar(30) NOT NULL,
+  `sociedadId` int(11) NOT NULL DEFAULT '0',
+  `nombreSociedad` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`sociedadId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -685,7 +685,7 @@ CREATE TABLE IF NOT EXISTS `sociedades` (
 --
 
 CREATE TABLE IF NOT EXISTS `tiposAtributosDeProductos` (
-  `tiposAtributosDeProductosId` int(11) NOT NULL,
+  `tiposAtributosDeProductosId` int(11) NOT NULL DEFAULT '0',
   `tipoProductoId` int(11) DEFAULT NULL,
   `atributoId` int(11) DEFAULT NULL,
   PRIMARY KEY (`tiposAtributosDeProductosId`),
@@ -699,9 +699,9 @@ CREATE TABLE IF NOT EXISTS `tiposAtributosDeProductos` (
 --
 
 CREATE TABLE IF NOT EXISTS `tiposCliente` (
-  `tipoClienteId` int(11) NOT NULL,
+  `tipoClienteId` int(11) NOT NULL DEFAULT '0',
   `nombreTipoCliente` varchar(30) DEFAULT NULL,
-  `tipoFacturaId` int(11) NOT NULL,
+  `tipoFacturaId` int(11) DEFAULT NULL,
   PRIMARY KEY (`tipoClienteId`),
   KEY `tipoFacturaId` (`tipoFacturaId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -713,7 +713,7 @@ CREATE TABLE IF NOT EXISTS `tiposCliente` (
 --
 
 CREATE TABLE IF NOT EXISTS `tiposFactura` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL DEFAULT '0',
   `nombreTipoFactura` varchar(30) DEFAULT NULL,
   `ivaId` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -726,7 +726,7 @@ CREATE TABLE IF NOT EXISTS `tiposFactura` (
 --
 
 CREATE TABLE IF NOT EXISTS `tiposProducto` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL DEFAULT '0',
   `tipoProducto` varchar(30) DEFAULT NULL,
   `esColoreable` tinyint(1) DEFAULT NULL,
   `stockMinimoPorDefecto` int(11) DEFAULT NULL,
@@ -740,7 +740,7 @@ CREATE TABLE IF NOT EXISTS `tiposProducto` (
 --
 
 CREATE TABLE IF NOT EXISTS `tiposVenta` (
-  `tipoVentaId` int(11) NOT NULL,
+  `tipoVentaId` int(11) NOT NULL DEFAULT '0',
   `nombreTipoVenta` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`tipoVentaId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -771,8 +771,8 @@ CREATE TABLE IF NOT EXISTS `usercontract` (
   `enddate` date DEFAULT NULL,
   `description` text,
   `workingdays` text,
-  `workstarttime` time NOT NULL,
-  `workendtime` time NOT NULL,
+  `workstarttime` time DEFAULT NULL,
+  `workendtime` time DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -797,14 +797,14 @@ CREATE TABLE IF NOT EXISTS `userpimitems` (
 --
 
 CREATE TABLE IF NOT EXISTS `ventas` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL DEFAULT '0',
   `nombreCliente` varchar(30) DEFAULT NULL,
-  `fechaVenta` date NOT NULL,
+  `fechaVenta` date DEFAULT NULL,
   `fechaVencimiento` date DEFAULT NULL,
   `facturaId` int(11) DEFAULT NULL,
   `tipoVentaId` int(11) DEFAULT NULL,
   `empleadoId` int(11) DEFAULT NULL,
-  `clienteId` int(11) NOT NULL,
+  `clienteId` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `clienteId` (`clienteId`),
   KEY `tipoVentaId` (`tipoVentaId`),
