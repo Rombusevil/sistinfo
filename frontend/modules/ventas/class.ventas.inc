@@ -29,16 +29,6 @@ class ventas extends atkNode {
         
     }
     
-    // TODO es código muerto??
-    /*
-    function detalle($name="detalle",$flags=0){
-        $this->atkNode($name,$flags|NF_ADD_LINK);
-        
-        $this->add(new atkAttribute(""));
-    }
-    */
-    
-    
     // Esta func carga un arreglo con key value los valores iniciales.
     function initial_values(){    
         return array("fechaVenta"=>date("Y-m-d"));    
