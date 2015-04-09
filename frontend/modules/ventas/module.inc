@@ -5,6 +5,8 @@ class mod_ventas extends achievoModule {
 		registerNode("ventas.detalle", array("admin", "add", "edit", "delete" ));
 		registerNode("ventas.tiposFactura", array("admin", "add", "edit", "delete" ));
 		registerNode("ventas.ivas", array("admin", "add", "edit", "delete" ));
+        registerNode("ventas.tiposVenta", array("admin", "add", "edit", "delete" ));
+        registerNode("ventas.facturas", array("admin", "add", "edit", "delete" ));        
 	}
 
 	function getMenuItems() {

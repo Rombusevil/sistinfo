@@ -2,8 +2,9 @@
 class mod_clientes extends achievoModule {
 	function getNodes() {
 		registerNode("clientes.clientes", array("admin", "add", "edit", "delete" ));
+        registerNode("clientes.localidades", array("admin", "add", "edit", "delete" ));
 		registerNode("clientes.sociedades", array("admin", "add", "edit", "delete" ));
-		registerNode("clientes.tiposCliente", array("admin", "add", "edit", "delete" ));		
+		registerNode("clientes.tiposCliente", array("admin", "add", "edit", "delete" ));
 	}
 
 	function getMenuItems() {
