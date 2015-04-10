@@ -51,5 +51,14 @@
   else atkerror("no menu object created!");;
 
   $output->outputFlush();
+  
+  function muestraAlertaStock(){
+        $nombreProducto = ' <todo> ';
+        $cantidad = 3;
+        echo '<script language="javascript"> confirm("Alerta de stock minimo para '. $nombreProducto.'. Cantidad: '.$cantidad.'");</script>';
+  }
+  
+  muestraAlertaStock();
+    
 
 ?>
