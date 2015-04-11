@@ -47,20 +47,22 @@ class detalle extends atkNode {
 		$minimo = $result[0]["stockMinimo"];
 		$precio = $result[0]["precio"];
 		
-		
+		// Me preparo para descontar el stock vendido
 		$cantidad -= $record["cantidad"];
 		
 		
-		$db->query("UPDATE productos set cantidad = $cantidad where id= $producto;");
-		$db->query("UPDATE detalle set precio = $precio where detalleId= $detalle;");
+		$db->query("UPDATE productos set cantidad = $cantidad where id= $producto");
+		$db->query("UPDATE detalle set precio = $precio where detalleId= $detalle");
 		
         atk_var_dump("LOOOGGGG", $record["productoId"]);
         atk_var_dump($record["productoId"]);
 		
+        // Muestro alerta si hay productos con alerta de stock
 		if($cantidad < $minimo){
 			echo '<script language="javascript"> confirm("Alerta de stock minimo para '. $nombreProducto.'. Cantidad: '.$cantidad.'");</script>';
 		}
         
         return true;
+        
 	}
 }
