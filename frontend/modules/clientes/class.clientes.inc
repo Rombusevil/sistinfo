@@ -7,7 +7,7 @@ class clientes extends atkNode {
     $this->atkNode($name, $flags|NF_ADD_LINK);
     
     $this->add(new atkNumberAttribute("clienteId" ,AF_AUTOKEY));
-    $this->add(new atkNumberAttribute("cuitCuil" ,AF_OBLIGATORY|AF_SEARCHABLE));
+    $this->add(new atkAttribute("cuitCuil" ,AF_OBLIGATORY|AF_SEARCHABLE, 20));
     $this->add(new atkAttribute("razonSocial",AF_OBLIGATORY, 50));
     $this->add(new atkAttribute("correoElectronico",AF_OBLIGATORY, 80));
     $this->add(new atkAttribute("telefono",AF_OBLIGATORY, 50));

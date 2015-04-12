@@ -1,4 +1,0 @@
-<?php
-$holidays = array (
-)
-?>
