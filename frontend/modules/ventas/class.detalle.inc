@@ -37,14 +37,12 @@ class detalle extends atkNode {
 	function postAdd($record){        
 		$db = &atkGetDb();
 		
-        // Checkeamos el stock mínimo del producto
+        // Se modifica el stock del producto TODO: esto no debería estar cuando guardás la venta en vez del detalle?
         $producto= $record["productoId"]["id"];
 		$detalle = $record["detalleId"];
-        $nombreProducto = $record["productoId"]["nombreProducto"];
 		
 		$result = $db->getrows("select cantidad, stockMinimo, precio from productos where id = $producto");
 		$cantidad = $result[0]["cantidad"];
-		$minimo = $result[0]["stockMinimo"];
 		$precio = $result[0]["precio"];
 		
 		// Me preparo para descontar el stock vendido
@@ -52,17 +50,8 @@ class detalle extends atkNode {
 		
 		
 		$db->query("UPDATE productos set cantidad = $cantidad where id= $producto");
-		$db->query("UPDATE detalle set precio = $precio where detalleId= $detalle");
-		
-        atk_var_dump("LOOOGGGG", $record["productoId"]);
-        atk_var_dump($record["productoId"]);
-		
-        // Muestro alerta si hay productos con alerta de stock
-		if($cantidad < $minimo){
-			echo '<script language="javascript"> confirm("Alerta de stock minimo para '. $nombreProducto.'. Cantidad: '.$cantidad.'");</script>';
-		}
+		$db->query("UPDATE detalle set precio = $precio where detalleId= $detalle");       
         
         return true;
-        
 	}
 }

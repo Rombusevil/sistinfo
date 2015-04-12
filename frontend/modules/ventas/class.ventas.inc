@@ -35,18 +35,50 @@ class ventas extends atkNode {
     }
 
     function postAdd($record) {
-        // El usuario actual hace la venta
         $user = &atkGetUser();
         $userId = $user["id"];
-        $recordId = $record["id"];  
-                
+        $recordId = $record["id"];
+
         // Si sos administrator no andan las cosas y el error no es muy claro. Con esto te tenés que dar cuenta
         // TODO sacarlo en producción
-        if(!$userId)
+        if (!$userId)
             atk_var_dump("NO SEAS ADMINISTRATOR, CAMBIA EL USUARIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-            
+        /*****************************************************/
+        
+        // El usuario actual es el que hace la venta
         $db = &atkGetDb();
         $db->query("UPDATE ventas set empleadoId = $userId where id= $recordId");
+
+
+        
+        
+        // Traigo los productos de esta venta para controlar las alertas de stock
+        $dbQuery = $db->getrows("SELECT productoId FROM detalle WHERE ventaId = $recordId");
+        $arrayProductos = array();
+        foreach ($dbQuery as $producto) {
+            $arrayProductos[] = $producto['productoId'];
+        }
+        // Meto los id de los productos en un string para el query
+        $strProductos = implode(' OR id= ', $arrayProductos);
+
+        $productosAlerta = $db->getrows("SELECT nombreProducto, cantidad, stockMinimo "
+                . "FROM productos WHERE id = $strProductos"
+                . " AND cantidad < stockMinimo");
+        
+
+        // Muestro alerta si hay productos con alerta de stock
+        if ($productosAlerta) {
+            // Armo el mensaje para mostrarlo en un solo alert
+            $str = '';
+            foreach ($productosAlerta as $row) {
+                $str .= '\t' . $row['nombreProducto'] . ' - stock: ' . $row['cantidad'] . ' unidades \n';
+            }
+            $stockProductos = $str;
+
+
+            $msg = 'Alerta de stock para \n' . $stockProductos;
+            echo '<script language="javascript"> confirm("' . $msg . '");</script>';
+        }
 
         return true;
     }
@@ -66,7 +98,7 @@ class ventas extends atkNode {
 
         atk_var_dump($record, "DETALLEEEEE");
 
-        return "TOTAL ES: $total";
+        return "TOTAL: \$$total";
     }
 
 }
