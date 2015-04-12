@@ -31,8 +31,8 @@
 	//module("empleados");	
 	module("productos");
 	module("color");	
+    module("basedatos");
 	
-
 
 	module("search");	// Funcionalidad de búsquedas de achievo
 	module("setup");	// Para el setup del administrator
