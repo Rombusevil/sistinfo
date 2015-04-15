@@ -26,12 +26,12 @@ class basedatos extends atkNode {
     }
 
     function getViewText() {
-        $msg = "¿Desea generar un backup de la base de datos?";
-        $alert  = '<script language="javascript"> confirm("' . $msg . '");</script>';
+        // TODO esto está horrible, hacer bien.
+        $urlBackupDb = "http://localhost:800/frontend/bbd.php";
         
-        //return $alert;
-        return "Place holder. Aca poner un boton de confirmacion "
-        . "que ejecute este comando  <br> mysqldump -u root -proot pqllana | gzip -9 > pqllana.sql.gz <br> y asi generar un bkp de bd";
+        return    "<a href=". $urlBackupDb . " >"
+                . "<input type=button value='Generar Backup'/>"
+                . "</a>";
     }
 
 }
