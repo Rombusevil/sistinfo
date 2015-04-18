@@ -47,11 +47,11 @@ $ui = &atkinstance("atk.ui.atkui");
 atkimport("atk.menu.atkmenu");
 $menu = &atkMenu::getMenu();
 
-if (is_object($menu)){
-    $output->output($menu->render());    
-}
-else {
-    atkerror("no menu object created!");;
+if (is_object($menu)) {
+    $output->output($menu->render());
+} else {
+    atkerror("no menu object created!");
+    ;
 }
 
 $output->outputFlush();
@@ -61,22 +61,46 @@ function muestraAlertaStock() {
 
     $sql = "SELECT nombreProducto, cantidad, stockMinimo FROM productos WHERE cantidad < stockMinimo";
     $rows = $db->getrows($sql);
-    
+
     // Si no tengo productos en alerta salgo...
-    if(!$rows)
-        return;    
-    
+    if (!$rows)
+        return;
+
     // Armo el mensaje para mostrarlo en un solo alert
     $str = '';
     foreach ($rows as $row) {
-        $str .= '\t'.$row['nombreProducto'] . ' - stock: ' . $row['cantidad'] . ' unidades \n';
+        $str .= '\t' . $row['nombreProducto'] . ' - stock: ' . $row['cantidad'] . ' unidades \n';
     }
     $stockProductos = $str;
-    
+
 
     $msg = 'Alerta de stock para \n' . $stockProductos;
     echo '<script language="javascript"> confirm("' . $msg . '");</script>';
 }
 
+function muestraAlertaVencimiento() {
+    //TODO if es admin?? hacer
+    $db = &atkGetDb();
+    $sql = "SELECT * FROM ventas WHERE fechaVencimiento < now() + INTERVAL 1 WEEK";
+    $rows = $db->getrows($sql);
+
+    // Si no tengo vencimientos que alertar salgo.
+    if (!$rows)
+        return;
+
+    // Armo el mensaje para mostrarlo en un solo alert
+    $str = '';
+    foreach ($rows as $row) {
+        $str .= '\t' . $row['nombreCliente'] . ' - fecha de venta ' . $row['fechaVenta'] . ', vencimiento '. $row['fechaVencimiento'] . ' \n';
+    }
+    $ventasFiadas = $str;
+
+
+    $msg = 'Vencimientos de ventas fiadas \n' . $ventasFiadas;
+    echo '<script language="javascript"> confirm("' . $msg . '");</script>';
+}
+
+
 muestraAlertaStock();
+muestraAlertaVencimiento();
 ?>
