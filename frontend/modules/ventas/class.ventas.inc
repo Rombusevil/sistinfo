@@ -12,14 +12,15 @@ class ventas extends atkNode {
         $this->add(new atkAttribute("nombreCliente", AF_OBLIGATORY));
 
         $this->add(new atkManyToOneRelation("clienteId", "clientes.clientes", AF_OBLIGATORY | AF_RELATION_AUTOLINK | AF_HIDE_LIST));
-        $this->add(new atkManyToOneRelation("tipoVentaId", "ventas.tiposVenta", AF_OBLIGATORY | AF_RELATION_AUTOLINK | AF_HIDE_LIST));
+        
+        $tipoVentaId = &new atkManyToOneRelation("tipoVentaId", "ventas.tiposVenta", AF_OBLIGATORY | AF_RELATION_AUTOLINK | AF_HIDE_LIST);
+        $this->add($tipoVentaId);
 
-
-        $this->add(new atkManyToOneRelation("facturaId", "ventas.facturas", AF_RELATION_AUTOLINK | AF_HIDE_LIST | AF_HIDE_SELECT | AF_HIDE_EDIT));
-
-
+        $this->add(new atkManyToOneRelation("facturaId", "ventas.facturas", AF_RELATION_AUTOLINK | AF_HIDE_LIST));
+        $tipoVentaId->addDependee("facturaId");
+        
         $this->add(new atkManyToOneRelation("empleadoId", "employee.employee", AF_RELATION_AUTOLINK | AF_HIDE_LIST | AF_HIDE));
-
+        
         $linDetalle = &new atkOneToManyRelation("detalle", "ventas.detalle", "ventaId", AF_ONETOMANY_SHOW_ADD);
         $linDetalle->setDestinationFilter("ventaId");
         $this->add($linDetalle, "Detalle");
@@ -100,5 +101,16 @@ class ventas extends atkNode {
 
         return "TOTAL: \$$total";
     }
-
+   
+    function facturaId_edit($record, $fieldprefix, $mode) {
+        $tipoVentaId = $record["tipoVentaId"]["tipoVentaId"];
+        atk_var_dump($tipoVentaId, "TipoVEnta ID!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        //TODO: tal vez lo mejor sea definirlo como constantes los tipos y no en una tabla
+        $factura = &$this->getAttribute("facturaId");
+        $factura->addFlag(AF_HIDE);
+        if($tipoVentaId == "1") {
+            $factura->removeFlag(AF_HIDE);
+        }
+        return $factura->edit($record, $fieldprefix, $mode);
+    }
 }

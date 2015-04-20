@@ -9,7 +9,7 @@ class ingresos extends atkNode {
         $this->add(new atkDateAttribute("Fecha", AF_OBLIGATORY));
         $this->add(new atkNumberAttribute("cantidad", AF_OBLIGATORY));
 
-        $this->add(new atkManyToOneRelation("productoId", "productos.productos", AF_RELATION_AUTOLINK | AF_HIDE_LIST|AF_OBLIGATORY));
+        $this->add(new atkManyToOneRelation("productoId", "productos.productos", AF_RELATION_AUTOLINK | AF_OBLIGATORY));
 
         $this->setTable("ingresos", "ingresos");
     }
