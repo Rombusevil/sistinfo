@@ -7,18 +7,12 @@ class ventas extends atkNode {
         // TODO después de guardar, que te muestre la pestaña de detalle
 
         $this->add(new atkNumberAttribute("id", AF_AUTOKEY));
-        $this->add(new atkDateAttribute("fechaVencimiento"));
+        $this->add(new atkDateAttribute("fechaVencimiento", AF_HIDE));
         $this->add(new atkDateTimeAttribute("fechaVenta", AF_OBLIGATORY));
         $this->add(new atkAttribute("nombreCliente", AF_OBLIGATORY));
-
         $this->add(new atkManyToOneRelation("clienteId", "clientes.clientes", AF_OBLIGATORY | AF_RELATION_AUTOLINK | AF_HIDE_LIST));
-        
-        $tipoVentaId = &new atkManyToOneRelation("tipoVentaId", "ventas.tiposVenta", AF_OBLIGATORY | AF_RELATION_AUTOLINK | AF_HIDE_LIST);
-        $this->add($tipoVentaId);
-
+        $this->add(new atkManyToOneRelation("tipoVentaId", "ventas.tiposVenta", AF_OBLIGATORY | AF_RELATION_AUTOLINK | AF_HIDE_LIST));
         $this->add(new atkManyToOneRelation("facturaId", "ventas.facturas", AF_RELATION_AUTOLINK | AF_HIDE_LIST));
-        $tipoVentaId->addDependee("facturaId");
-        
         $this->add(new atkManyToOneRelation("empleadoId", "employee.employee", AF_RELATION_AUTOLINK | AF_HIDE_LIST | AF_HIDE));
         
         $linDetalle = &new atkOneToManyRelation("detalle", "ventas.detalle", "ventaId", AF_ONETOMANY_SHOW_ADD);
@@ -101,16 +95,29 @@ class ventas extends atkNode {
 
         return "TOTAL: \$$total";
     }
-   
-    function facturaId_edit($record, $fieldprefix, $mode) {
+    
+    //Permite actualizar los flags de los atributos al detectar cambios en un atributo, esta detección la realiza el addOnChangeHandler
+    function editArray($mode = "add", $record = NULL, $forceList = "", $suppressList = "", $fieldprefix = "", $ignoreTab = false, $injectSections = true)
+    {
+        $url = atkSelf() . "?atknodetype=" . $this->atkNodeType() . "&atkaction=" . $this->m_action;
+        $code = 'atkSubmit("' . atkurlencode(atkSessionManager::sessionUrl($url, SESSION_DEFAULT)) . '")';
+        $this->getAttribute('tipoVentaId')->addOnChangeHandler($code);
+        
         $tipoVentaId = $record["tipoVentaId"]["tipoVentaId"];
-        atk_var_dump($tipoVentaId, "TipoVEnta ID!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        //TODO: tal vez lo mejor sea definirlo como constantes los tipos y no en una tabla
-        $factura = &$this->getAttribute("facturaId");
-        $factura->addFlag(AF_HIDE);
+        $this->getAttribute("facturaId")->removeFlag(AF_HIDE);
+        $this->getAttribute("fechaVencimiento")->removeFlag(AF_HIDE);
+        $this->getAttribute("fechaVencimiento")->removeFlag(AF_OBLIGATORY);
+        
         if($tipoVentaId == "1") {
-            $factura->removeFlag(AF_HIDE);
+            $this->getAttribute("fechaVencimiento")->addFlag(AF_HIDE);
         }
-        return $factura->edit($record, $fieldprefix, $mode);
+        if($tipoVentaId == "2") {
+            $this->getAttribute("fechaVencimiento")->addFlag(AF_HIDE);
+            $this->getAttribute("facturaId")->addFlag(AF_HIDE);
+        }
+        if($tipoVentaId == "3") {
+            $this->getAttribute("fechaVencimiento")->addFlag(AF_OBLIGATORY);
+        }
+        return parent::editArray($mode, $record, $forceList, $suppressList, $fieldprefix, $ignoreTab, $injectSections);
     }
 }
