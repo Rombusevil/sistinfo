@@ -4,8 +4,6 @@ class ventas extends atkNode {
 
     function ventas($name = "ventas", $flags = 0) {
         $this->atkNode($name, $flags | NF_ADD_LINK | NF_EDITAFTERADD);
-        // TODO después de guardar, que te muestre la pestaña de detalle
-
         $this->add(new atkNumberAttribute("id", AF_AUTOKEY));
         $this->add(new atkDateAttribute("fechaVencimiento", AF_HIDE));
         $this->add(new atkDateTimeAttribute("fechaVenta", AF_OBLIGATORY));
@@ -13,13 +11,12 @@ class ventas extends atkNode {
         $this->add(new atkManyToOneRelation("clienteId", "clientes.clientes", AF_OBLIGATORY | AF_RELATION_AUTOLINK | AF_HIDE_LIST));
         $this->add(new atkManyToOneRelation("tipoVentaId", "ventas.tiposVenta", AF_OBLIGATORY | AF_RELATION_AUTOLINK | AF_HIDE_LIST));
         $this->add(new atkManyToOneRelation("facturaId", "ventas.facturas", AF_RELATION_AUTOLINK | AF_HIDE_LIST));
-        $this->add(new atkManyToOneRelation("empleadoId", "employee.employee", AF_RELATION_AUTOLINK | AF_HIDE_LIST | AF_HIDE));
-        
-        $linDetalle = &new atkOneToManyRelation("detalle", "ventas.detalle", "ventaId", AF_ONETOMANY_SHOW_ADD);
-        $linDetalle->setDestinationFilter("ventaId");
-        $this->add($linDetalle, "Detalle");
+        $this->add(new atkManyToOneRelation("empleadoId", "employee.employee", AF_RELATION_AUTOLINK | AF_HIDE_LIST | AF_HIDE));        
 
-        $this->add(new atkDummyAttribute("precioTotal", "", AF_HIDE_ADD), "Detalle");
+        $linDetalle = $this->add(new atkOneToManyRelation("detalle", "ventas.detalle", "ventaId",  AF_ONETOMANY_SHOW_ADD));
+        $linDetalle->setDestinationFilter("ventaId");        
+        
+        $this->add(new atkDummyAttribute("precioTotal", "", AF_HIDE_ADD));
 
         $this->setTable("ventas", "ventas");
     }
@@ -29,6 +26,19 @@ class ventas extends atkNode {
         return array("fechaVenta" => date("Y-m-d"));
     }
 
+    /*
+    function preAdd($record) {
+        
+        echo "PREADDD";
+        $ventaId = $record['ventaId'];
+        
+        atk_var_dump($record," RECORODDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+        atk_var_dump(" RECORODDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD", $record);
+        
+        return true; // ?????
+    }
+    */
+    
     function postAdd($record) {
         $user = &atkGetUser();
         $userId = $user["id"];
@@ -104,19 +114,24 @@ class ventas extends atkNode {
         $this->getAttribute('tipoVentaId')->addOnChangeHandler($code);
         
         $tipoVentaId = $record["tipoVentaId"]["tipoVentaId"];
-        $this->getAttribute("facturaId")->removeFlag(AF_HIDE);
-        $this->getAttribute("fechaVencimiento")->removeFlag(AF_HIDE);
+        $this->getAttribute("facturaId")->removeFlag(AF_HIDE);        
         $this->getAttribute("fechaVencimiento")->removeFlag(AF_OBLIGATORY);
         
-        if($tipoVentaId == "1") {
+        // Venta
+        if($tipoVentaId == "1") {            
             $this->getAttribute("fechaVencimiento")->addFlag(AF_HIDE);
         }
-        if($tipoVentaId == "2") {
+        
+        // Descarga en obra
+        else if($tipoVentaId == "2") {
             $this->getAttribute("fechaVencimiento")->addFlag(AF_HIDE);
             $this->getAttribute("facturaId")->addFlag(AF_HIDE);
         }
-        if($tipoVentaId == "3") {
+        
+        // Fiada
+        else if($tipoVentaId == "3") {
             $this->getAttribute("fechaVencimiento")->addFlag(AF_OBLIGATORY);
+            $this->getAttribute("fechaVencimiento")->removeFlag(AF_HIDE);
         }
         return parent::editArray($mode, $record, $forceList, $suppressList, $fieldprefix, $ignoreTab, $injectSections);
     }
