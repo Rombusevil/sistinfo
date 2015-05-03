@@ -23,13 +23,14 @@
   $config_auth_userdescriptor = "[userid]";
   $config_authentication_md5 = true;
   $config_securityscheme = "group";
-  $config_debug = 0;
+  $config_debug = 1;
   $config_auth_accountenableexpression = "role='employee' AND status='active'";
   $config_atktempdir = $config_atkroot."achievotmp/";
   $config_tplcompiledir = $config_atktempdir."compiled/tpl/";
   $config_auth_grantall_privilege = "employee.profile.grantall";
   $config_durationformat = 0;
   $config_defaultfavico = "images/achievo.ico";
+  $config_images_dir = "images/images/";
   $config_corporate_module_base = "modules.achievomodule";
   $config_supported_languages_module = 'langoverrides';
   $config_autoload_classes = true;

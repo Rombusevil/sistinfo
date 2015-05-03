@@ -9,14 +9,14 @@ class productos extends atkNode {
     $this->add(new atkNumberAttribute("id" ,AF_AUTOKEY));
     $this->add(new atkNumberAttribute("codigoProducto" ,AF_OBLIGATORY));
     $this->add(new atkAttribute("nombreProducto",AF_OBLIGATORY|AF_SEARCHABLE, 30));
-    $this->add(new atkAttribute("descripcion",AF_OBLIGATORY, 100));
+    $this->add(new atkAttribute("descripcion",0, 100));
     $this->add(new atkCurrencyAttribute("precio" ,AF_OBLIGATORY,0,"$",2));
     $this->add(new atkNumberAttribute("cantidad"));
     $this->add(new atkNumberAttribute("stockMinimo" ,AF_OBLIGATORY));
     
     // Foraneas
-    $this->add(new atkManyToOneRelation("marcaId", "productos.marca", AF_RELATION_AUTOLINK));
-    $this->add(new atkManyToOneRelation("tipoProductoId", "productos.tiposProducto", AF_RELATION_AUTOLINK|AF_SEARCHABLE));
+    $this->add(new atkManyToOneRelation("marcaId", "productos.marca", AF_OBLIGATORY | AF_RELATION_AUTOLINK));
+    $this->add(new atkManyToOneRelation("tipoProductoId", "productos.tiposProducto", AF_OBLIGATORY | AF_RELATION_AUTOLINK|AF_SEARCHABLE));
     
     $datosEspecificos= &new atkOneToManyRelation("datosProductoId", "productos.datosProductos", "productoId", 0);
     $datosEspecificos->setDestinationFilter("productoId");
