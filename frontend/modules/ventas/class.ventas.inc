@@ -27,23 +27,19 @@ class ventas extends atkNode {
         return array("fechaVenta" => date("Y-m-d"));
     }
 
-    function loguea($file, $text) {
-        
-    }
-
     function preAdd($record) {
-        atk_var_dump($record, " RECORODDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-
-        $ventaId = $record["id"];   
-
-        // El id de la venta se consolida cuando se guarda, entonces debería obtener los datos
-        // que se están almacenando en la relación oneToMany de detalle. Como los obtengo?
+        global $ATK_VARS;
+        $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)
+        if (!isset($ATK_VARS['#STACK#'][$id]["ventas.ventas:detalle"])){
+            triggerError($record, "Error", "Faltó agregar el detalle.");
+            return false;
+        }
         
-
-        return true;
+        return true;        
     }
 
-    function postAdd($record) {
+    // TODO sacar el remove, con eso deshabilito esta func para testing
+    function postAdd___remove($record) {
         $user = &atkGetUser();
         $userId = $user["id"];
         $recordId = $record["id"];
@@ -52,14 +48,8 @@ class ventas extends atkNode {
         // TODO sacarlo en producción
         if (!$userId)
             atk_var_dump("NO SEAS ADMINISTRATOR, CAMBIA EL USUARIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-        /*         * ************************************************** */
-
-        
-        
-        atk_var_dump($record," BUSCA DETALLE ACA, A VER QUE TIENE, SOY EL POSTADD");
-        
-        
-        
+        /* *************************************************** */
+       
         // El usuario actual es el que hace la venta
         $db = &atkGetDb();
         $db->query("UPDATE ventas set empleadoId = $userId where id= $recordId");

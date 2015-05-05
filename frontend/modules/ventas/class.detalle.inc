@@ -35,7 +35,7 @@ class detalle extends atkNode {
 	
 	
 	function postAdd($record){        
-		$db = &atkGetDb();
+		$db = &atkGetDb();        
 		
         // Se modifica el stock del producto TODO: esto no debería estar cuando guardás la venta en vez del detalle?
         $producto= $record["productoId"]["id"];

@@ -244,7 +244,7 @@
     {
       $this->m_postvars = $postvars;
       $node = &$this->getNode();
-      echo "Node: ".$node;
+      //echo "Node: ".$node;
       return $node->dispatch($postvars, $flags);
     }
 
