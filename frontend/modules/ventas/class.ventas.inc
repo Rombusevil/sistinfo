@@ -30,16 +30,15 @@ class ventas extends atkNode {
     function preAdd($record) {
         global $ATK_VARS;
         $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)
-        if (!isset($ATK_VARS['#STACK#'][$id]["ventas.ventas:detalle"])){
-            triggerError($record, "Error", "Faltó agregar el detalle.");
+        if (!isset($ATK_VARS['#STACK#'][$id]["ventas.ventas:detalle"])){            
             return false;
         }
         
         return true;        
     }
 
-    // TODO sacar el remove, con eso deshabilito esta func para testing
-    function postAdd___remove($record) {
+    
+    function postAdd($record) {
         $user = &atkGetUser();
         $userId = $user["id"];
         $recordId = $record["id"];
