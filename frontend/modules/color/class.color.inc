@@ -15,6 +15,6 @@ class color extends atkNode{
 
 		$this->setTable("color", "color");
 		
-		$this->setDescriptorTemplate("[codigoColor]"); //TODO Concatenar el descriptor de gama
+		$this->setDescriptorTemplate("[gamaId.nombreGama] [codigoColor]"); //TODO Concatenar el descriptor de gama
 	}
 }

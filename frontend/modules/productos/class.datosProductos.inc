@@ -8,8 +8,8 @@ class datosProductos extends atkNode {
 		//TODO hacer los campos nombreAtributo y tipoAtributo no editables
 		$this->add(new atkManyToOneRelation("productoId", "productos.productos", AF_RELATION_AUTOLINK|AF_HIDE));		
 		$this->add(new atkAttribute("nombreAtributo",AF_OBLIGATORY, 30)); // TODO el AF_NO_EDITABLE NO_EDIT no funca
-		$this->add(new atkNumberAttribute("valorAtributo" ,AF_OBLIGATORY));		
-		$this->add(new atkNumberAttribute("tipoAtributo" ,AF_OBLIGATORY|AF_HIDE)); 
+		$this->add(new atkAttribute("valorAtributo" ,AF_OBLIGATORY, 30));		
+		$this->add(new atkAttribute("tipoAtributo" ,AF_OBLIGATORY, 30)); 
 		
 		
 		

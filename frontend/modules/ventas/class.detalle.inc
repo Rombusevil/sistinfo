@@ -12,7 +12,7 @@ class detalle extends atkNode {
 		$this->add(new atkNumberAttribute("cantidad" ,AF_OBLIGATORY));
 		
 		$this->setTable("detalle", "detalle");
-		//$this->setDescriptorTemplate("[productoId]");
+		$this->setDescriptorTemplate("[productoId.nombreProducto] ([cantidad])");
 	}
 	
 	

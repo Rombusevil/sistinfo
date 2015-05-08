@@ -3,15 +3,15 @@
 class ventas extends atkNode {
 
     function ventas($name = "ventas", $flags = 0) {
-        $this->atkNode($name, $flags | NF_ADD_LINK | NF_EDITAFTERADD);
-        
+        $this->atkNode($name, $flags | NF_ADD_LINK );
+
         $this->add(new atkNumberAttribute("id", AF_AUTOKEY));
-        $this->add(new atkDateAttribute("fechaVencimiento", AF_HIDE));
+        $this->add(new atkDateAttribute("fechaVencimiento"));
         $this->add(new atkDateTimeAttribute("fechaVenta", AF_OBLIGATORY));
         $this->add(new atkAttribute("nombreCliente", AF_OBLIGATORY));
         $this->add(new atkManyToOneRelation("clienteId", "clientes.clientes", AF_OBLIGATORY | AF_RELATION_AUTOLINK | AF_HIDE_LIST));
-        $this->add(new atkManyToOneRelation("tipoVentaId", "ventas.tiposVenta", AF_OBLIGATORY | AF_RELATION_AUTOLINK | AF_HIDE_LIST));
-        $this->add(new atkManyToOneRelation("facturaId", "ventas.facturas", AF_RELATION_AUTOLINK | AF_HIDE_LIST));
+        $this->add(new atkManyToOneRelation("tipoVentaId", "ventas.tiposVenta", AF_OBLIGATORY | AF_RELATION_AUTOLINK ));
+        $this->add(new atkManyToOneRelation("facturaId", "ventas.facturas", AF_RELATION_AUTOLINK | AF_HIDE_LIST | AF_FORCE_LOAD));
         $this->add(new atkManyToOneRelation("empleadoId", "employee.employee", AF_RELATION_AUTOLINK | AF_HIDE_LIST | AF_HIDE));
 
         $linDetalle = $this->add(new atkOneToManyRelation("detalle", "ventas.detalle", "ventaId", AF_ONETOMANY_SHOW_ADD));
@@ -30,14 +30,13 @@ class ventas extends atkNode {
     function preAdd($record) {
         global $ATK_VARS;
         $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)
-        if (!isset($ATK_VARS['#STACK#'][$id]["ventas.ventas:detalle"])){            
+        if (!isset($ATK_VARS['#STACK#'][$id]["ventas.ventas:detalle"])) {
             return false;
         }
-        
-        return true;        
+
+        return true;
     }
 
-    
     function postAdd($record) {
         $user = &atkGetUser();
         $userId = $user["id"];
@@ -47,8 +46,8 @@ class ventas extends atkNode {
         // TODO sacarlo en producción
         if (!$userId)
             atk_var_dump("NO SEAS ADMINISTRATOR, CAMBIA EL USUARIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-        /* *************************************************** */
-       
+        /*         * ************************************************** */
+
         // El usuario actual es el que hace la venta
         $db = &atkGetDb();
         $db->query("UPDATE ventas set empleadoId = $userId where id= $recordId");
@@ -87,7 +86,7 @@ class ventas extends atkNode {
         return true;
     }
 
-    function precioTotal_edit($record, $prefix = "", $mode = "") {
+    function precioTotal_edit($record, $prefix = "", $mode = "admin") {
         $db = &atkGetDb();
         $venta = $record["id"];
 
@@ -132,6 +131,15 @@ class ventas extends atkNode {
             $this->getAttribute("fechaVencimiento")->removeFlag(AF_HIDE);
         }
         return parent::editArray($mode, $record, $forceList, $suppressList, $fieldprefix, $ignoreTab, $injectSections);
+    }
+
+    function rowColor($record) {  
+        $tipoVenta = $record["tipoVentaId"]["tipoVentaId"];
+        $facturaId = $record["facturaId"]["facturaId"];
+        if($tipoVenta == "3" && $facturaId == NULL) { //3 es Fiada TODO: Cambiar por una constante
+            return array("#FF2200","#FF6600"); //TODO: Hacer constantes
+        }        
+        return array("#FFFFFF");
     }
 
 }
