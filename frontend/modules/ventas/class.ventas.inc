@@ -1,7 +1,14 @@
 <?php
 
-class ventas extends atkNode {
+define("VENTA_NORMAL","1");
+define("DESCARGA_EN_OBRA","2");
+define("VENTA_FIADA","3");
 
+define("BLANCO","#FFFFFF");
+define("ROJO","#FF2200");
+define("ROJO_HIGHLIGHT","#FF6600");
+
+class ventas extends atkNode {
     function ventas($name = "ventas", $flags = 0) {
         $this->atkNode($name, $flags | NF_ADD_LINK );
 
@@ -113,20 +120,15 @@ class ventas extends atkNode {
         $tipoVentaId = $record["tipoVentaId"]["tipoVentaId"];
         $this->getAttribute("facturaId")->removeFlag(AF_HIDE);
         $this->getAttribute("fechaVencimiento")->removeFlag(AF_OBLIGATORY);
-
-        // Venta
-        if ($tipoVentaId == "1") {
+        
+        if ($tipoVentaId == VENTA_NORMAL) {
             $this->getAttribute("fechaVencimiento")->addFlag(AF_HIDE);
         }
-
-        // Descarga en obra
-        else if ($tipoVentaId == "2") {
+        else if ($tipoVentaId == DESCARGA_EN_OBRA) {
             $this->getAttribute("fechaVencimiento")->addFlag(AF_HIDE);
             $this->getAttribute("facturaId")->addFlag(AF_HIDE);
         }
-
-        // Fiada
-        else if ($tipoVentaId == "3") {
+        else if ($tipoVentaId == VENTA_FIADA) {
             $this->getAttribute("fechaVencimiento")->addFlag(AF_OBLIGATORY);
             $this->getAttribute("fechaVencimiento")->removeFlag(AF_HIDE);
         }
@@ -136,10 +138,10 @@ class ventas extends atkNode {
     function rowColor($record) {  
         $tipoVenta = $record["tipoVentaId"]["tipoVentaId"];
         $facturaId = $record["facturaId"]["facturaId"];
-        if($tipoVenta == "3" && $facturaId == NULL) { //3 es Fiada TODO: Cambiar por una constante
-            return array("#FF2200","#FF6600"); //TODO: Hacer constantes
+        if($tipoVenta == VENTA_FIADA && $facturaId == NULL) {
+            return array(ROJO,ROJO_HIGHLIGHT);
         }        
-        return array("#FFFFFF");
+        return array(BLANCO);
     }
 
 }
