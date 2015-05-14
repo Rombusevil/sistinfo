@@ -311,28 +311,28 @@ class employee extends person
 
   function rowColor($record)
   {
-    if ($record["status"]=="active")
-    {
-      $contractnode = &atkGetNode("employee.usercontracts");
-
-      $endlesscontracts = $contractnode->countDb("usercontract.enddate IS NULL AND usercontract.userid='{$record["id"]}'");
-
-      if ($endlesscontracts == 0)
-      {
-        $contract = $contractnode->getMostRecentContract($record["id"]);
-
-        $enddate = isset($contract["enddate"]) ? (dateutil::arr2str($contract["enddate"])) : "";
-
-        if (!count($contract)||($enddate!=""&&$enddate<date("Ymd")))
-        {
-          return array(COLOR_ERROR, COLOR_HIGHLIGHT_ERROR);
-        }
-        else if ($enddate!=""&&dateutil::date_diff(date("Ymd"), $enddate)<14)
-        {
-          return array(COLOR_WARNING, COLOR_HIGHLIGHT_WARNING);
-        }
-      }
-    }
+//    if ($record["status"]=="active")
+//    {
+//      $contractnode = &atkGetNode("employee.usercontracts");
+//
+//      $endlesscontracts = $contractnode->countDb("usercontract.enddate IS NULL AND usercontract.userid='{$record["id"]}'");
+//
+//      if ($endlesscontracts == 0)
+//      {
+//        $contract = $contractnode->getMostRecentContract($record["id"]);
+//
+//        $enddate = isset($contract["enddate"]) ? (dateutil::arr2str($contract["enddate"])) : "";
+//
+//        if (!count($contract)||($enddate!=""&&$enddate<date("Ymd")))
+//        {
+//          return array(COLOR_ERROR, COLOR_HIGHLIGHT_ERROR);
+//        }
+//        else if ($enddate!=""&&dateutil::date_diff(date("Ymd"), $enddate)<14)
+//        {
+//          return array(COLOR_WARNING, COLOR_HIGHLIGHT_WARNING);
+//        }
+//      }
+//    }
   }
 
   function postAdd($record)
