@@ -42,19 +42,10 @@ class ventas extends atkNode {
         $user = &atkGetUser();
         $userId = $user["id"];
         $recordId = $record["id"];
-
-        // Si sos administrator no andan las cosas y el error no es muy claro. Con esto te tenés que dar cuenta
-        // TODO sacarlo en producción
-        if (!$userId)
-            atk_var_dump("NO SEAS ADMINISTRATOR, CAMBIA EL USUARIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-        /*         * ************************************************** */
-
+        
         // El usuario actual es el que hace la venta
         $db = &atkGetDb();
         $db->query("UPDATE ventas set empleadoId = $userId where id= $recordId");
-
-
-
 
         // Traigo los productos de esta venta para controlar las alertas de stock
         $dbQuery = $db->getrows("SELECT productoId FROM detalle WHERE ventaId = $recordId");
@@ -66,7 +57,7 @@ class ventas extends atkNode {
         $strProductos = implode(' OR id= ', $arrayProductos);
 
         $productosAlerta = $db->getrows("SELECT nombreProducto, cantidad, stockMinimo "
-                . "FROM productos WHERE id = $strProductos"
+                . "FROM productos WHERE (id = $strProductos)" 
                 . " AND cantidad < stockMinimo");
 
 
