@@ -79,9 +79,8 @@ function muestraAlertaStock() {
 }
 
 function muestraAlertaVencimiento() {
-    //TODO if es admin?? hacer
     $db = &atkGetDb();
-    $sql = "SELECT * FROM ventas WHERE fechaVencimiento < now() + INTERVAL 1 WEEK";
+    $sql = "SELECT * FROM ventas WHERE fechaVencimiento < now() + INTERVAL 1 WEEK AND facturaId IS NULL;";
     $rows = $db->getrows($sql);
 
     // Si no tengo vencimientos que alertar salgo.
@@ -91,7 +90,7 @@ function muestraAlertaVencimiento() {
     // Armo el mensaje para mostrarlo en un solo alert
     $str = '';
     foreach ($rows as $row) {
-        $str .= '\t' . $row['nombreCliente'] . ' - fecha de venta ' . $row['fechaVenta'] . ', vencimiento '. $row['fechaVencimiento'] . ' \n';
+        $str .= '\t' . $row['nombreCliente'] . ' - fecha de venta ' . $row['fechaVenta'] . ', vencimiento ' . $row['fechaVencimiento'] . ' \n';
     }
     $ventasFiadas = $str;
 
@@ -101,6 +100,18 @@ function muestraAlertaVencimiento() {
 }
 
 
+// Este es el id del perfil de un usuario administrador, se encuentra en la tabla "profile". Debe estar en el set de datos inicial.
+$profileAdministrador = "3";
+
+// Warning para evitar el uso del usuario administrator
+if (atkArrayNvl(atkGetUser(), "name") == "administrator") {
+    echo '<script language="javascript"> confirm("El usuario ADMINISTRATOR es únicamente para configuración.");</script>';
+} 
+// Muestro alertas de vencimiento solo si es administrador.
+else if (atkArrayNvl(atkGetUser(), "level") == $profileAdministrador) {
+    muestraAlertaVencimiento();
+}
+
+
 muestraAlertaStock();
-muestraAlertaVencimiento();
 ?>
