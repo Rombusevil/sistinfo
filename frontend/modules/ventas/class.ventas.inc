@@ -1,12 +1,6 @@
 <?php
+include_once("modules/constantes.inc");
 
-define("VENTA_NORMAL","1");
-define("DESCARGA_EN_OBRA","2");
-define("VENTA_FIADA","3");
-
-define("BLANCO","#FFFFFF");
-define("ROJO","#FF2200");
-define("ROJO_HIGHLIGHT","#FF6600");
 
 class ventas extends atkNode {
     function ventas($name = "ventas", $flags = 0) {

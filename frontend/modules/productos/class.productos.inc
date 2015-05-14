@@ -1,5 +1,6 @@
 <?php
 
+include_once("modules/constantes.inc");
 //userelation("atkmanytoonerelation");
 
 class productos extends atkNode {
@@ -97,26 +98,37 @@ class productos extends atkNode {
         global $ATK_VARS, $g_sessionManager;
         if ($ATK_VARS['atkaction'] == 'edit') {
             // $actions["cerrar"]= session_url(dispatch_url($this->atknodetype(), "cerrar", array($record["ticket_id"])));
-            
         }
         $actions["desasignar"] = session_url(dispatch_url($this->atknodetype(), "desasignar", array($record["id"])));
         $mraactions["mra_editar"] = "mra_editar";
         array_splice($mraactions, array_search("delete", $mraactions), 1);
     }
 
-    function action_desasignar(&$handler, $record = array(), $mode = "", $selector = NULL)
-    {
+    function action_desasignar(&$handler, $record = array(), $mode = "", $selector = NULL) {
         
     }
-    
-    function action_mra_editar() {
-      /*  if (is_array($this->m_postvars['atkselector'])) {
-            foreach ($this->m_postvars['atkselector'] as $selector) {
-                $handler = "";
-                $this->action_desasignar($handler, array(), "", $selector);
-            }
-        }
-        $this->redirect();*/
-    }
-}
 
+    function action_mra_editar() {
+        /*  if (is_array($this->m_postvars['atkselector'])) {
+          foreach ($this->m_postvars['atkselector'] as $selector) {
+          $handler = "";
+          $this->action_desasignar($handler, array(), "", $selector);
+          }
+          }
+          $this->redirect(); */
+    }
+
+    function rowColor($record) {
+        $stockMinimo = intval($record["stockMinimo"]);
+        $stockActual = intval($record["cantidad"]);
+        
+        if($stockActual == 0)
+            return array(ROJO, ROJO_HIGHLIGHT); 
+        
+        if (intval($stockActual) <= intval($stockMinimo)) {
+            return array(NARANJA, NARANJA_HIGHLIGHT);
+        }
+        return array(BLANCO);
+    }
+
+}
