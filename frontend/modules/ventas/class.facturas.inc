@@ -10,7 +10,7 @@ class facturas extends atkNode {
     $this->add(new atkNumberAttribute("numeroFactura" ,AF_OBLIGATORY)); // El número de factura lo ingresan a mano. 
     
     
-    $this->add(new atkManyToOneRelation("tipoFacturaId", "ventas.tiposFactura", AF_RELATION_AUTOLINK|AF_HIDE_LIST));    
+    $this->add(new atkManyToOneRelation("tipoFacturaId", "ventas.tiposFactura", AF_OBLIGATORY | AF_RELATION_AUTOLINK| AF_HIDE_LIST));
     
     $this->setTable("facturas", "facturas");
     $this->setDescriptorTemplate("[numeroFactura]");
