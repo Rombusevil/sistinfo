@@ -6,7 +6,7 @@ include_once("modules/constantes.inc");
 class productos extends atkNode {
 
     function productos($name = "productos", $flags = 0) {
-        $this->atkNode($name, $flags | NF_ADD_LINK | NF_EDITAFTERADD);
+        $this->atkNode($name, $flags | NF_ADD_LINK | NF_EDITAFTERADD | NF_MRA);
 
         $this->add(new atkNumberAttribute("id", AF_AUTOKEY));
         $this->add(new atkNumberAttribute("codigoProducto", AF_OBLIGATORY));
@@ -95,29 +95,29 @@ class productos extends atkNode {
     }
 
     function recordActions($record, &$actions, &$mraactions) {
-        global $ATK_VARS, $g_sessionManager;
-        if ($ATK_VARS['atkaction'] == 'edit') {
-            // $actions["cerrar"]= session_url(dispatch_url($this->atknodetype(), "cerrar", array($record["ticket_id"])));
-        }
-        $actions["desasignar"] = session_url(dispatch_url($this->atknodetype(), "desasignar", array($record["id"])));
-        $mraactions["mra_editar"] = "mra_editar";
-        array_splice($mraactions, array_search("delete", $mraactions), 1);
+        $mraactions["mra_editar_precio"] = "mra_editar_precio";
     }
 
-    function action_desasignar(&$handler, $record = array(), $mode = "", $selector = NULL) {
-        
+    function aumentar10porciento($productoId) {
+        $db = &atkGetDb();
+        $query = "SELECT p.precio FROM productos p WHERE p.id = $productoId";
+        $row = $db->getrows($query);
+        $precioAnterior = $row[0]["precio"];
+        $precio_nuevo = $precioAnterior * 1.1;
+        $db->query("UPDATE productos SET precio = $precio_nuevo WHERE id = $productoId");
     }
-
-    function action_mra_editar() {
-        /*  if (is_array($this->m_postvars['atkselector'])) {
+    
+    function action_mra_editar_precio() {        
+        if (is_array($this->m_postvars['atkselector'])) {
           foreach ($this->m_postvars['atkselector'] as $selector) {
-          $handler = "";
-          $this->action_desasignar($handler, array(), "", $selector);
+            $aux = explode("=", $selector);
+            $procudtoId = $aux[1];
+            $this->aumentar10porciento($procudtoId);   
           }
           }
-          $this->redirect(); */
+          $this->redirect();
     }
-
+    
     function rowColor($record) {
         $stockMinimo = intval($record["stockMinimo"]);
         $stockActual = intval($record["cantidad"]);
