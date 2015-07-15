@@ -7,9 +7,14 @@ class gama extends atkNode {
 		$this->add(new atkNumberAttribute("gamaId" ,AF_AUTOKEY));
 		$this->add(new atkAttribute("nombreGama",AF_OBLIGATORY, 30));
                 
-        $this->add(new atkColorPickerAttribute("imagen",$arr="", AF_OBLIGATORY|AF_POPUP));		
+                $this->add(new atkColorPickerAttribute("imagen",$arr="", AF_OBLIGATORY|AF_POPUP|AF_FORCE_LOAD));		
 		
 		$this->setTable("gama", "gama");
 		$this->setDescriptorTemplate("[nombreGama]");
 	}
+        
+        function rowColor($record) { 
+            $color = $record["imagen"];
+            return array($color);
+        }
 }

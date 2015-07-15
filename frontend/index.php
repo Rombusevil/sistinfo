@@ -56,11 +56,11 @@
       $indexpage->setTopCenterPieceLinks($centerpiecelinks);
       if($user["name"]=="administrator")
       {
-        $destination = array("atknodetype"=>"pim.pim","atkaction"=>"adminpim");
+        $destination = array("atknodetype"=>"ventas.ventas","atkaction"=>"admin");
       }
       else 
       {
-        $destination = array("atknodetype"=>"pim.pim","atkaction"=>"pim");
+        $destination = array("atknodetype"=>"ventas.ventas","atkaction"=>"admin");
       }
       $indexpage->setDefaultDestination($destination);
       $indexpage->generate();

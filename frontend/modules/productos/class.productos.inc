@@ -18,7 +18,7 @@ class productos extends atkNode {
 
         // Foraneas
         $this->add(new atkManyToOneRelation("marcaId", "productos.marca", AF_OBLIGATORY | AF_RELATION_AUTOLINK));
-        $this->add(new atkManyToOneRelation("tipoProductoId", "productos.tiposProducto", AF_OBLIGATORY | AF_RELATION_AUTOLINK | AF_SEARCHABLE));
+        $this->add(new atkManyToOneRelation("tipoProductoId", "productos.tiposProducto", AF_OBLIGATORY | AF_RELATION_AUTOLINK | AF_SEARCHABLE | AF_FORCE_LOAD));
 
         $datosEspecificos = &new atkOneToManyRelation("datosProductoId", "productos.datosProductos", "productoId", AF_HIDE_LIST);
         $datosEspecificos->setDestinationFilter("productoId");

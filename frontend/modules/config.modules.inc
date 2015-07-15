@@ -19,49 +19,22 @@
 	 * Turn on the default achievo modules, custom modules should be
 	 * added in the config.inc.php
 	 */
-	
-	
-	// TODO
-	// Sacamos todos los módulos, vamos a ir agregando según sea necesario.
-	// Finalmente limpiar la basura.
-
 
 	module("ventas");	
 	module("clientes");	
 	//module("empleados");	
 	module("productos");
 	module("color");	
-    module("basedatos");
+        module("basedatos");
 	
 
 	module("search");	// Funcionalidad de búsquedas de achievo
 	module("setup");	// Para el setup del administrator
-
-	// TODO: Este módulo es el primero que se muestra cuando carga la página.
-	// Reemplazar por lo que creamos necesario.
-	module("pim");
-
-
+        module("pim");
 // Módulos para perfiles y usuarios
 	module("person");
 	module("employee");
 	module("utils");
 	module("organization");
 	module("scheduler");
-	
-	/*
-	
-	module("email_template");
-	module("timereg");
-	module("project");
-	
-	module("notes");
-	
-	module("todo");
-	module("reports");
-	module("graph");
-	module("quotation");
-	module("docmanager");
-	module("crm");
-	*/
 ?>

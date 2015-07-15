@@ -60,11 +60,11 @@
   {
     if (atkArrayNvl(atkGetUser(), "name") == "administrator")
     {
-      $destination = session_url(dispatch_url("pim.pim", "adminpim"),SESSION_NEW);
+      $destination = session_url(dispatch_url("ventas.ventas", "admin"),SESSION_NEW);
     }
     else
     {
-      $destination = session_url(dispatch_url("pim.pim", "pim"),SESSION_NEW);
+      $destination = session_url(dispatch_url("ventas.ventas", "admin"),SESSION_NEW);
     }
   }
 

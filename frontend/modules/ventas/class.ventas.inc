@@ -29,13 +29,13 @@ class ventas extends atkNode {
     }
 
     function preAdd($record) {
-        global $ATK_VARS;
-        $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)
-        if (!isset($ATK_VARS['#STACK#'][$id]["ventas.ventas:detalle"])) {
-            return false;
-        }
+//        global $ATK_VARS;
+//        $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)
+//        if (!isset($ATK_VARS['#STACK#'][$id]["ventas.ventas:detalle"])) {
+//            return false;
+//        }
 
-        return true;
+        return false;
     }
 
     function postAdd($record) {

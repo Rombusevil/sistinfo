@@ -10,11 +10,17 @@ class color extends atkNode{
 		$this->add(new atkManyToOneRelation("gamaId", "color.gama", AF_OBLIGATORY | AF_RELATION_AUTOLINK));		
 		$this->add(new atkNumberAttribute("codigoColor", AF_OBLIGATORY));
 		$this->add(new atkFileAttribute("imagen", atkconfig("images_dir"), AF_FILE_NO_SELECT)); //images_dir está en atkconf.inc
-		$this->add(new atkManyToOneRelation("composicionId", "color.composicionColores", AF_RELATION_AUTOLINK));
+		$this->add(new atkManyToOneRelation("composicionId", "color.composicionColores", AF_RELATION_AUTOLINK|AF_UNIQUE));
 		
 
 		$this->setTable("color", "color");
 		
-		$this->setDescriptorTemplate("[gamaId.nombreGama] [codigoColor]"); //TODO Concatenar el descriptor de gama
+		$this->setDescriptorTemplate("[gamaId.nombreGama] [codigoColor]"); 
 	}
+        
+        function rowColor($record) { 
+            atk_var_dump($record);
+            $color = $record["gamaId"]["imagen"];
+            return array($color);
+        }
 }

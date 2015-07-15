@@ -10,11 +10,10 @@ class composicionColores extends atkNode {
 		
 		$this->add(new atkManyToOneRelation("colorPrimario", "color.color", AF_RELATION_AUTOLINK));
 		$this->add(new atkManyToOneRelation("colorSecundario", "color.color", AF_RELATION_AUTOLINK));
+
+                $this->setTable("composicionColores", "composicionColores");
 		
-		
-		
-		$this->setTable("composicionColores", "composicionColores");
-		
-		// TODO poner descriptor que indique % - color primario - color secundario
+                $this->setDescriptorTemplate("%[porcentaje] [colorPrimario.gamaId.nombreGama]-[colorSecundario.gamaId.nombreGama]");		
+// TODO No se ve en la vista de administracion de colres
 	}
 }

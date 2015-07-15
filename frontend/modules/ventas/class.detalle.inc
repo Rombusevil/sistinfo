@@ -5,7 +5,7 @@ class detalle extends atkNode {
 		$this->atkNode($name, $flags|NF_ADD_LINK);
 
 		$this->add(new atkNumberAttribute("detalleId" ,AF_AUTOKEY));
-		$this->add(new atkManyToOneRelation("ventaId", "ventas.ventas", AF_RELATION_AUTOLINK));
+		$this->add(new atkManyToOneRelation("ventaId", "ventas.ventas", AF_RELATION_AUTOLINK|AF_HIDE));
 		
 		$this->add(new atkManyToOneRelation("productoId", "productos.productos", AF_OBLIGATORY|AF_RELATION_AUTOLINK));		
 		$this->add(new atkManyToOneRelation("colorId", "color.color", AF_RELATION_AUTOLINK)); // TODO esto es condicional al producto (si es coloreable o no)
@@ -54,4 +54,18 @@ class detalle extends atkNode {
         
         return true;
 	}
+        
+    function editArray($mode = "add", $record = NULL, $forceList = "", $suppressList = "", $fieldprefix = "", $ignoreTab = false, $injectSections = true) {
+        $url = atkSelf() . "?atknodetype=" . $this->atkNodeType() . "&atkaction=" . $this->m_action;
+        $code = 'atkSubmit("' . atkurlencode(atkSessionManager::sessionUrl($url, SESSION_DEFAULT)) . '")';
+        $this->getAttribute('productoId')->addOnChangeHandler($code);
+
+        $esColoreable = $record["productoId"]["tipoProductoId"]["esColoreable"];
+        $this->getAttribute("colorId")->removeFlag(AF_HIDE);
+        
+        if ($esColoreable == false) {
+            $this->getAttribute("colorId")->addFlag(AF_HIDE);
+        }
+        return parent::editArray($mode, $record, $forceList, $suppressList, $fieldprefix, $ignoreTab, $injectSections);
+    }
 }
