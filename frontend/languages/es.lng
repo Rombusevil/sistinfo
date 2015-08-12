@@ -720,7 +720,7 @@
     "nombreCliente"	=> "Nombre cliente",
     "tipoVentaId"	=> "Tipo de venta",
     "detalle"	=> "Detalle",
-    "clientId" => "Cliente",
+    "clienteId" => "Cliente",
     "facturaId" => "N&uacute;mero factura",
     "precioTotal"	=> "Precio total",
 
