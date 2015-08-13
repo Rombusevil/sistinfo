@@ -1,0 +1,4 @@
+ALTER TABLE  `ventas` ADD  `precioTotalConIVA` DECIMAL( 5, 2 ) NULL AFTER `clienteId` ,
+ADD  `precioTotalSinIVA` DECIMAL( 5, 2 ) NULL AFTER  `precioTotalConIVA`
+ALTER TABLE  `detalle` CHANGE  `precio`  `precioIVA` DECIMAL( 5, 2 ) NULL DEFAULT NULL
+ALTER TABLE  `detalle` ADD  `precioSinIVA` DECIMAL( 5, 2 ) NULL

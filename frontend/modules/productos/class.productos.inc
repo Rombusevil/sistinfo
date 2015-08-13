@@ -22,7 +22,7 @@ class productos extends atkNode {
 
         $datosEspecificos = &new atkOneToManyRelation("datosProductoId", "productos.datosProductos", "productoId", AF_HIDE_LIST);
         $datosEspecificos->setDestinationFilter("productoId");
-        $this->add($datosEspecificos, "Datos_especificos");
+        $this->add($datosEspecificos);
 
         global $ATK_VARS;
         $tipoProducto = $ATK_VARS["atkdg"]["admin"]["atksearch"]["tipoProductoId"]["tipoProductoId"][0];
@@ -41,7 +41,7 @@ class productos extends atkNode {
                 $this->add(new atkDummyAttribute($row["nombreAtributo"], $row["valorAtributo"] . $row["tipoAtributo"], 0));
             }
         }
-
+     
         $this->setTable("productos", "productos");
         $this->setDescriptorTemplate("[nombreProducto]");
     }
@@ -107,15 +107,15 @@ class productos extends atkNode {
         $db->query("UPDATE productos SET precio = $precio_nuevo WHERE id = $productoId");
     }
     
-    function action_mra_editar_precio() {        
+    function action_mra_editar_precio() {
         if (is_array($this->m_postvars['atkselector'])) {
           foreach ($this->m_postvars['atkselector'] as $selector) {
             $aux = explode("=", $selector);
             $procudtoId = $aux[1];
             $this->aumentar10porciento($procudtoId);   
           }
-          }
-          $this->redirect();
+        }
+        $this->redirect();
     }
     
     function rowColor($record) {

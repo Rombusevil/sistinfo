@@ -4,22 +4,23 @@ include_once("modules/constantes.inc");
 
 class ventas extends atkNode {
     function ventas($name = "ventas", $flags = 0) {
-        $this->atkNode($name, $flags | NF_ADD_LINK );
+        $this->atkNode($name, $flags | NF_ADD_LINK | NF_MRA | NF_NO_EDIT);
 
         $this->add(new atkNumberAttribute("id", AF_AUTOKEY));
-        $this->add(new atkDateAttribute("fechaVencimiento"));
-        $this->add(new atkDateTimeAttribute("fechaVenta", AF_OBLIGATORY));
-        $this->add(new atkAttribute("nombreCliente", AF_OBLIGATORY));
+        $this->add(new atkDateAttribute("fechaVencimiento", AF_SEARCHABLE));
+        $this->add(new atkDateTimeAttribute("fechaVenta", AF_OBLIGATORY|AF_SEARCHABLE));
+        $this->add(new atkAttribute("nombreCliente", AF_OBLIGATORY|AF_SEARCHABLE));
         $this->add(new atkManyToOneRelation("clienteId", "clientes.clientes", AF_OBLIGATORY | AF_RELATION_AUTOLINK | AF_HIDE_LIST));
-        $this->add(new atkManyToOneRelation("tipoVentaId", "ventas.tiposVenta", AF_OBLIGATORY | AF_RELATION_AUTOLINK ));
+        $this->add(new atkManyToOneRelation("tipoVentaId", "ventas.tiposVenta", AF_OBLIGATORY | AF_RELATION_AUTOLINK|AF_SEARCHABLE ));
         $this->add(new atkManyToOneRelation("facturaId", "ventas.facturas", AF_RELATION_AUTOLINK | AF_HIDE_LIST | AF_FORCE_LOAD));
         $this->add(new atkManyToOneRelation("empleadoId", "employee.employee", AF_RELATION_AUTOLINK | AF_HIDE_LIST | AF_HIDE));
 
         $linDetalle = $this->add(new atkOneToManyRelation("detalle", "ventas.detalle", "ventaId", AF_ONETOMANY_SHOW_ADD));
         $linDetalle->setDestinationFilter("ventaId");
 
-        $this->add(new atkDummyAttribute("precioTotal", "", AF_HIDE_ADD));
-
+        $this->add(new atkCurrencyAttribute("precioTotalConIVA", AF_HIDE_ADD|AF_READONLY|AF_SEARCHABLE, 0, "$", 2));
+        $this->add(new atkCurrencyAttribute("precioTotalSinIVA", AF_HIDE_ADD|AF_READONLY|AF_SEARCHABLE, 0, "$", 2));
+        
         $this->setTable("ventas", "ventas");
     }
 
@@ -34,8 +35,7 @@ class ventas extends atkNode {
 //        if (!isset($ATK_VARS['#STACK#'][$id]["ventas.ventas:detalle"])) {
 //            return false;
 //        }
-
-        return false;
+        return true;
     }
 
     function postAdd($record) {
@@ -74,26 +74,20 @@ class ventas extends atkNode {
             $msg = 'Alerta de stock para \n' . $stockProductos;
             echo '<script language="javascript"> confirm("' . $msg . '");</script>';
         }
-
-        return true;
-    }
-
-    function precioTotal_edit($record, $prefix = "", $mode = "admin") {
-        $db = &atkGetDb();
-        $venta = $record["id"];
-
-        $rows = $db->getrows("SELECT precio, cantidad from detalle where ventaId = $venta;");
-        $total = 0;
-        atk_var_dump($rows, "ROWWWWWSSSS");
+        
+        $totalConIVA = 0.0;
+        $totalSinIVA = 0.0;
+        $rows = $db->getrows("SELECT precioIVA, precioSinIVA from detalle where ventaId = $recordId;");
         foreach ($rows as $row) {
-            atk_var_dump($row["precio"], "PRECIO");
-            atk_var_dump($row["cantidad"], "CANTIDAD");
-            $total += $row["precio"] * $row["cantidad"];
+            atk_var_dump($row["precioIVA"], "PRECIOSUMANDO");
+            $totalConIVA += $row["precioIVA"];
+            atk_var_dump($totalConIVA, "TOTAL");
+            $totalSinIVA += $row["precioSinIVA"];
         }
-
-        atk_var_dump($record, "DETALLEEEEE");
-
-        return "TOTAL: \$$total";
+        $db->query("UPDATE ventas set precioTotalConIVA = $totalConIVA where id = $recordId");
+        $db->query("UPDATE ventas set precioTotalSinIVA = $totalSinIVA where id = $recordId");
+               
+        return true;
     }
 
     //Permite actualizar los flags de los atributos al detectar cambios en un atributo, esta detección la realiza el addOnChangeHandler
@@ -128,5 +122,5 @@ class ventas extends atkNode {
         }        
         return array(BLANCO);
     }
-
+    
 }

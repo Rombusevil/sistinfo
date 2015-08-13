@@ -7,7 +7,7 @@ class tiposCliente extends atkNode {
 		$this->add(new atkNumberAttribute("tipoClienteId" ,AF_AUTOKEY));		
 		$this->add(new atkAttribute("nombreTipoCliente",AF_OBLIGATORY, 30));
 		
-		$this->add(new atkManyToOneRelation("tipoFacturaId", "ventas.tiposFactura", AF_OBLIGATORY | AF_RELATION_AUTOLINK|AF_HIDE_LIST));	
+		$this->add(new atkManyToOneRelation("tipoFacturaId", "ventas.tiposFactura", AF_OBLIGATORY | AF_RELATION_AUTOLINK));	
 		
 		$this->setTable("tiposCliente", "tiposCliente");
 		$this->setDescriptorTemplate("[nombreTipoCliente]");
