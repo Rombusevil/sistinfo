@@ -3,7 +3,12 @@ include_once("modules/constantes.inc");
 
 
 class ventas extends atkNode {
+    protected $fileName;// Archivo de intercambio para detectar si hay productos en alerta de stock
+    
     function ventas($name = "ventas", $flags = 0) {
+        $this->fileName = "alertaStock.txt"; // Defino el nombre del archivo
+        
+        
         $this->atkNode($name, $flags | NF_ADD_LINK | NF_MRA | NF_NO_EDIT);
 
         $this->add(new atkNumberAttribute("id", AF_AUTOKEY));
@@ -22,23 +27,41 @@ class ventas extends atkNode {
         $this->add(new atkCurrencyAttribute("precioTotalSinIVA", AF_HIDE_ADD|AF_READONLY|AF_SEARCHABLE, 0, "$", 2));
         
         $this->setTable("ventas", "ventas");
-    }
+        
+        
+        
+        // Gestión de alarmas
+        @$file = fopen($this->fileName,"r"); // Con el arroba suprimo el warning de file not found, está bien que no lo encuentre si no hay alerta de stock
+        if($file){
+            $script = "";
+            while($line = fgets($file)){
+                $script .= $line;
+            }
 
+            $page = &$this->getPage();
+            $page->addContent($script);
+
+            fclose($file);
+            unlink($this->fileName); // Borro el archivo
+        }
+    }
+    
     // Esta func carga un arreglo con key value los valores iniciales.
     function initial_values() {
         return array("fechaVenta" => date("Y-m-d"));
     }
 
     function preAdd($record) {
-//        global $ATK_VARS;
-//        $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)
-//        if (!isset($ATK_VARS['#STACK#'][$id]["ventas.ventas:detalle"])) {
-//            return false;
-//        }
+        global $ATK_VARS;
+        $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)
+        if (!isset($ATK_VARS['#STACK#'][$id]["ventas.ventas:detalle"])) {
+            return false;
+        }
+        
         return true;
     }
 
-    function postAdd($record) {
+    function postAdd($record) {        
         $user = &atkGetUser();
         $userId = $user["id"];
         $recordId = $record["id"];
@@ -72,7 +95,13 @@ class ventas extends atkNode {
 
 
             $msg = 'Alerta de stock para \n' . $stockProductos;
-            echo '<script language="javascript"> confirm("' . $msg . '");</script>';
+            $scriptAlert = '<script language="javascript"> confirm("' . $msg . '");</script>';
+            
+            
+            // Escribo el mensaje de alerta en un archivo para que cuando recargue la página lo muestre
+            $file = fopen($this->fileName,"w");
+            fwrite($file,$scriptAlert);
+            fclose($file);
         }
         
         $totalConIVA = 0.0;
@@ -86,7 +115,10 @@ class ventas extends atkNode {
         }
         $db->query("UPDATE ventas set precioTotalConIVA = $totalConIVA where id = $recordId");
         $db->query("UPDATE ventas set precioTotalSinIVA = $totalSinIVA where id = $recordId");
-               
+        
+        
+        
+        
         return true;
     }
 
