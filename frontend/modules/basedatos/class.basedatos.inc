@@ -3,7 +3,7 @@
 class basedatos extends atkNode {
 
     function basedatos() {
-        $this->atkNode("basedatos", NF_NO_SECURITY);
+        $this->atkNode("basedatos", 0);
     }
 
     function action_view(&$handler) {
