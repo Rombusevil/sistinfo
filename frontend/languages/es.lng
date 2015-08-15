@@ -67,8 +67,8 @@
   "archivedprojects" => "Proyectos archivados", //"Archived projects",
   "archived_projects" => "Proyectos archivados",
   "assigned_to" => "Asignado a",
-  "attendee_contactsearch" => "Añadir contactos",
-  "attendee_empsearch" => "Añadir empleados",
+  "attendee_contactsearch" => "A&ntilde;adir contactos",
+  "attendee_empsearch" => "A&ntilde;adir empleados",
   "attendee_fuzzyhint" => "Agregue una lista de nombres separados por comas.",//"Add a comma-separated list of names below. The database will be searched for matches."
   "balance" => "Balance",
   "bankaccount" => "Cuenta bancaria",
@@ -195,7 +195,7 @@
   "fsa_pleasemakeselection" => "Mas de una coincidencia encontrada. Por favor seleccione.",
   "function" => "Puesto",
   "functionlevel" => "Nivel funcional",
-  "ganttexplanation" => "Las barras representan el tamaño de la fase. La barra negra dentro de la anaranjada es una indicaci&oacute;n del n&uacute;mero de horas reservadas contra las planeadas. La l&iacute;nea punteada indica el lanzamiento del proyecto.",
+  "ganttexplanation" => "Las barras representan el tama&ntilde;o de la fase. La barra negra dentro de la anaranjada es una indicaci&oacute;n del n&uacute;mero de horas reservadas contra las planeadas. La l&iacute;nea punteada indica el lanzamiento del proyecto.",
   "generate" => "Generar",
   
   "goto" => "Ir",
@@ -207,7 +207,7 @@
   "holiday_date" => "Fecha",
   "hourlock_month_explanation" => "Enter 4 digit year followed by 2 digit month number (e.g. 200601) for january 2006", // Missing string!!!
   "hourlock_userid_explanation" => "Seleccione el usuario que desea bloquear, o seleccione 'Ninguno' para bloquear a todos los usuarios.",
-  "hourlock_week_explanation" => "Introduzca el  año en 4 d&iacute;gitos seguidos por el n&uacute;mero de semana en 2 d&iacute;gitos (ejemplo: 200234)",
+  "hourlock_week_explanation" => "Introduzca el  a&ntilde;o en 4 d&iacute;gitos seguidos por el n&uacute;mero de semana en 2 d&iacute;gitos (ejemplo: 200234)",
   "hours" => "Horas",
   "hoursleft" => "Horas restantes",
   "hourspda" => "Horas", //"Hours", 
@@ -241,7 +241,7 @@
   "language_ca" => "Catalan", //"Catalan"
   "language_cs" => "Checo", //"Czech"
   "language_da" => "Checo", //"Czech"
-  "language_es" => "Español", //"Spanish"
+  "language_es" => "Espa&ntilde;ol", //"Spanish"
   "language_fi" => "Finland&eacute;s", //"Finnish" 
   "language_hu" => "H&uacute;ngaro", //"Hungarian"
   "language_it" => "Italiano", //"Italian"
@@ -256,8 +256,8 @@
   "lastname" => "Apellidos",
   "last_modified_by" => "Ultima modificaci&oacute;n de", //"Last modified by"
   "last_modified_on" => "Última modificaci&oacute;n en", //"Last modified on"
-  "link_contact_add" => "Añadir persona de contacto",
-  "link_contracts_add" => "Añadir contrato",
+  "link_contact_add" => "A&ntilde;adir persona de contacto",
+  "link_contracts_add" => "A&ntilde;adir contrato",
   "link_phase_add" => "Agregar fase",
   "link_project_add" => "Agregar proyecto",
   "link_project_notes_add" => "Agragar una nota nueva",
@@ -268,7 +268,7 @@
   "link_select_select_contact" => "Seleccione un contacto",
   "link_select_select_person" => "Seleccione una persona",
   "link_todo_add" => "Nueva tarea",
-  "link_tpl_project_phase_add" => "Añadir fase a este proyecto",
+  "link_tpl_project_phase_add" => "A&ntilde;adir fase a este proyecto",
   "link_usercontracts_add" => "Agregar contrato",
   "link_userpimitems_add" => "Agregar items al inicio", //"Add pim items"
   "lng" => "Lenguaje", //"Language"
@@ -360,7 +360,7 @@
   "monthly" => "Mes",
   "months" => "Mes",
   "monthview" => "Vista mensual",
-  "morning" => "Mañana",
+  "morning" => "Ma&ntilde;ana",
   "mra_activate" => "Activo", //"Activate"
   "mra_complete" => "Completo", //"Complete"
   "mra_deactivate" => "Desactivado", //"Deactivate"
@@ -404,8 +404,8 @@
   "overtime_balance" => "Balance horas extras",
   "owner" => "Propietario",
   "parameters" => "Par&aacute;metros",
-  "password" => "Contraseña", //"Clave de acceso",
-  "password_leaveblankifunchanged" => "Deje la contraseña en blanco para manterner la contraseña actual.",
+  "password" => "Contrase&ntilde;a", //"Clave de acceso",
+  "password_leaveblankifunchanged" => "Deje la contrase&ntilde;a en blanco para manterner la contrase&ntilde;a actual.",
   "payment" => "Pago", //"Payment"
   "payment_id" => "Pago", //"Payment"
   "paymethod" => "Forma de pago",
@@ -486,7 +486,7 @@
   "projectstatus" => "Estado del proyecto", //"Projectstatus"
   "project_category" => "Categoria", //"Category"
   "project_members" => "Miembros del equipo",
-  "project_member_fuzzyhint" => "Añade, separados por comas, los miembros del equipo y selecciona el role para estos.",
+  "project_member_fuzzyhint" => "A&ntilde;ade, separados por comas, los miembros del equipo y selecciona el role para estos.",
   "project_notes" => "Notas",
   "project_notesview" => "Notas",
   "project_personcontact" => "Contact person", // Missing string!!!
@@ -710,7 +710,7 @@
   "workingdays" => "Dias laborables",
   "workperiod" => "Per&iacute;odo de trabajo", //"Worktime period"
   "written_by" => "Escrita por",
-  "year" => "Año", //"Year"
+  "year" => "A&ntilde;o", //"Year"
   "yearly" => "Anual",
   "youareinthearchive" => "Est&aacute; viendo el archivo.",
   "zipcode" => "C&oacute;digo postal",
