@@ -146,7 +146,7 @@ class productos extends atkNode {
             $productId = substr($productId, 0, -2); // Le saco el ", " final que está de más.
           
             // Escribo el mensaje de alerta en un archivo para que cuando recargue la página lo muestre
-            $msg = 'Estos son los prods ID\'s a afectar: \n' . $productId . '\n\nIngrece porcentaje\n\n';
+            $msg = 'Ingrese el porcentaje de IVA a aplicar\n\n';
             $scriptAlert = '<script language="javascript"> '
                     . 'var percent = prompt("' . $msg . '");'
                     . '$.post("getMraValue.php", {value: percent}, null);'

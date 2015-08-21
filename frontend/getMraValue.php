@@ -30,39 +30,41 @@ class getMraValue extends atkNode {
   
 $percent = $_POST['value']; // Agarro el valor que me manda el cliente desde el prompt
 
-$productIdsFile = fopen("pId.txt","r");// Este archivo tiene separados por coma todos los productId que tienen que verse afectados
+// Avanzo solo si me pasaron un porcentaje numérico, sino lo ignoro
+if(is_numeric($percent)){
+    $productIdsFile = fopen("pId.txt","r");// Este archivo tiene separados por coma todos los productId que tienen que verse afectados
 
-// Leo el archivo con los productIds
-$productsRaw= "";
-while($line = fgets($productIdsFile)){
-    $productsRaw .= $line;
+    // Leo el archivo con los productIds
+    $productsRaw= "";
+    while($line = fgets($productIdsFile)){
+        $productsRaw .= $line;
+    }
+
+    // Cierro el archivo y lo borro, ya no lo necesito.
+    fclose($productIdsFile);
+    unlink($productIdsFile);
+
+    // Creo un arreglo con cada productId
+    $productosId = split(",",$productsRaw);
+
+    // Armo el query con cada productId que me pidieron
+    $query ="UPDATE productos SET precio = precio + (precio / 100 * $percent) WHERE id = ";
+    foreach ($productosId as $id){
+        $query .= $id . " or id = ";
+    }
+    $query = substr($query, 0, -9);  // Borro el último " or p .id = "
+    $query .= ";";
+
+    // Para debuggear el query
+    //$f = fopen ("debug.txt","w");
+    //fwrite($f, $query);
+    //fclose($f);
+
+
+    // Ejecuto la consulta
+    $dbk = new getMraValue();
+    $dbk->execQuery($query);
 }
-
-// Cierro el archivo y lo borro, ya no lo necesito.
-fclose($productIdsFile);
-unlink($productIdsFile);
-
-// Creo un arreglo con cada productId
-$productosId = split(",",$productsRaw);
-
-// Armo el query con cada productId que me pidieron
-$query ="UPDATE productos SET precio = precio + (precio / 100 * $percent) WHERE id = ";
-foreach ($productosId as $id){
-    $query .= $id . " or id = ";
-}
-$query = substr($query, 0, -9);  // Borro el último " or p .id = "
-$query .= ";";
-
-// Para debuggear el query
-//$f = fopen ("debug.txt","w");
-//fwrite($f, $query);
-//fclose($f);
-
-
-// Ejecuto la consulta
-$dbk = new getMraValue();
-$dbk->execQuery($query);
-
 
 
 
