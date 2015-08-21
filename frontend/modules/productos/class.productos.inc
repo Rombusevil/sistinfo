@@ -1,7 +1,6 @@
 <?php
 
 include_once("modules/constantes.inc");
-//userelation("atkmanytoonerelation");
 
 class productos extends atkNode {
     protected $fileMraPopup;// Archivo de intercambio para detectar si tengo que mandar popup pidiendo input de usuario
@@ -122,17 +121,6 @@ class productos extends atkNode {
 
     function recordActions($record, &$actions, &$mraactions) {
         $mraactions["mra_editar_precio"] = "mra_editar_precio";
-    }
-
-    
-    // TODO esta func va a quedar deprecated
-    function aumentar10porciento($productoId) {
-        $db = &atkGetDb();
-        $query = "SELECT p.precio FROM productos p WHERE p.id = $productoId";
-        $row = $db->getrows($query);
-        $precioAnterior = $row[0]["precio"];
-        $precio_nuevo = $precioAnterior * 1.1;
-        $db->query("UPDATE productos SET precio = $precio_nuevo WHERE id = $productoId");
     }
     
     function action_mra_editar_precio() {
