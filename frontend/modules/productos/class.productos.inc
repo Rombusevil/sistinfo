@@ -4,8 +4,13 @@ include_once("modules/constantes.inc");
 //userelation("atkmanytoonerelation");
 
 class productos extends atkNode {
+    protected $fileMraPopup;// Archivo de intercambio para detectar si tengo que mandar popup pidiendo input de usuario
+    protected $productIds;// Archivo de intercambio que contiene el valor seleccionado por el usuario para hacer el MRA
 
     function productos($name = "productos", $flags = 0) {
+        $this->fileMraPopup = "mraPopup.txt"; // Defino el nombre del archivo
+        $this->productIds = "pId.txt"; // Defino el nombre del archivo
+        
         $this->atkNode($name, $flags | NF_ADD_LINK | NF_EDITAFTERADD | NF_MRA);
 
         $this->add(new atkNumberAttribute("id", AF_AUTOKEY));
@@ -44,6 +49,27 @@ class productos extends atkNode {
      
         $this->setTable("productos", "productos");
         $this->setDescriptorTemplate("[nombreProducto]");
+        
+        $page = &$this->getPage();
+        $page->register_script(moduleDir("productos")."js/jquery.js");
+        
+        
+        // Gestión de MRA - popup
+        @$file = fopen($this->fileMraPopup,"r"); // Con el arroba suprimo el warning de file not found, está bien que no lo encuentre si no hay alerta de stock
+        if($file){
+            $script = "";
+            while($line = fgets($file)){
+                $script .= $line;
+            }
+                
+
+            $page = &$this->getPage();
+            $page->addContent($script);
+            
+
+            fclose($file);
+            unlink($this->fileMraPopup); // Borro el archivo
+        }
     }
 
     // Devuelve el nextid y lo aumenta en 1
@@ -98,6 +124,8 @@ class productos extends atkNode {
         $mraactions["mra_editar_precio"] = "mra_editar_precio";
     }
 
+    
+    // TODO esta func va a quedar deprecated
     function aumentar10porciento($productoId) {
         $db = &atkGetDb();
         $query = "SELECT p.precio FROM productos p WHERE p.id = $productoId";
@@ -109,18 +137,38 @@ class productos extends atkNode {
     
     function action_mra_editar_precio() {
         if (is_array($this->m_postvars['atkselector'])) {
-          foreach ($this->m_postvars['atkselector'] as $selector) {
-            $aux = explode("=", $selector);
-            $procudtoId = $aux[1];
-            $this->aumentar10porciento($procudtoId);   
-          }
+            $productId = "";
+            foreach ($this->m_postvars['atkselector'] as $selector) {
+                $aux = explode("=", $selector);
+                $productId .= substr($aux[1],1,-1) . ", "; // El id está entre comillas, se las saco y también le agrego una coma.
+                //$this->aumentar10porciento($procudtoId);
+            }
+            $productId = substr($productId, 0, -2); // Le saco el ", " final que está de más.
+          
+            // Escribo el mensaje de alerta en un archivo para que cuando recargue la página lo muestre
+            $msg = 'Estos son los prods ID\'s a afectar: \n' . $productId . '\n\nIngrece porcentaje\n\n';
+            $scriptAlert = '<script language="javascript"> '
+                    . 'var percent = prompt("' . $msg . '");'
+                    . '$.post("getMraValue.php", {value: percent}, null);'
+                    . '</script>';            
+            
+            // En este archivo escribo todo el js que se tiene que ejecutar
+            $file = fopen($this->fileMraPopup,"w");
+            fwrite($file,$scriptAlert);
+            fclose($file);
+            
+            // Escribo solo los productID acá
+            $file = fopen($this->productIds, "w");
+            fwrite($file,$productId);
+            fclose($file);
         }
+        
         $this->redirect();
     }
     
     function rowColor($record) {
         $stockMinimo = intval($record["stockMinimo"]);
-        $stockActual = intval($record["cantidad"]);
+        $stodckActual = intval($record["cantidad"]);
         
         if($stockActual == 0)
             return array(ROJO, ROJO_HIGHLIGHT); 
