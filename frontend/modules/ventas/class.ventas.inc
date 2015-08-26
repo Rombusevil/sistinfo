@@ -9,22 +9,22 @@ class ventas extends atkNode {
         $this->fileName = "alertaStock.txt"; // Defino el nombre del archivo
         
         
-        $this->atkNode($name, $flags | NF_ADD_LINK | NF_MRA | NF_NO_EDIT);
+        $this->atkNode($name, $flags | NF_ADD_LINK | NF_MRA | NF_NO_EDIT | NF_EDITAFTERADD);
 
         $this->add(new atkNumberAttribute("id", AF_AUTOKEY));
         $this->add(new atkDateAttribute("fechaVencimiento", AF_SEARCHABLE));
         $this->add(new atkDateTimeAttribute("fechaVenta", AF_OBLIGATORY|AF_SEARCHABLE));
-        $this->add(new atkAttribute("nombreCliente", AF_OBLIGATORY|AF_SEARCHABLE));
-        $this->add(new atkManyToOneRelation("clienteId", "clientes.clientes", AF_OBLIGATORY | AF_RELATION_AUTOLINK | AF_HIDE_LIST));
+        $this->add(new atkAttribute("nombreCliente", AF_SEARCHABLE));
+        $this->add(new atkManyToOneRelation("clienteId", "clientes.clientes", AF_RELATION_AUTOLINK ));
         $this->add(new atkManyToOneRelation("tipoVentaId", "ventas.tiposVenta", AF_OBLIGATORY | AF_RELATION_AUTOLINK|AF_SEARCHABLE ));
-        $this->add(new atkManyToOneRelation("facturaId", "ventas.facturas", AF_RELATION_AUTOLINK | AF_HIDE_LIST | AF_FORCE_LOAD));
-        $this->add(new atkManyToOneRelation("empleadoId", "employee.employee", AF_RELATION_AUTOLINK | AF_HIDE_LIST | AF_HIDE));
+        $this->add(new atkManyToOneRelation("facturaId", "ventas.facturas", AF_RELATION_AUTOLINK | AF_FORCE_LOAD));
+        $this->add(new atkManyToOneRelation("empleadoId", "employee.employee", AF_RELATION_AUTOLINK | AF_HIDE));
 
-        $linDetalle = $this->add(new atkOneToManyRelation("detalle", "ventas.detalle", "ventaId", AF_ONETOMANY_SHOW_ADD));
+        $linDetalle = $this->add(new atkOneToManyRelation("detalle", "ventas.detalle", "ventaId", AF_HIDE_ADD | AF_CASCADE_DELETE /* | AF_ONETOMANY_SHOW_ADD*/));
         $linDetalle->setDestinationFilter("ventaId");
 
-        $this->add(new atkCurrencyAttribute("precioTotalConIVA", AF_HIDE_ADD|AF_READONLY|AF_SEARCHABLE, 0, "$", 2));
-        $this->add(new atkCurrencyAttribute("precioTotalSinIVA", AF_HIDE_ADD|AF_READONLY|AF_SEARCHABLE, 0, "$", 2));
+        $this->add(new atkCurrencyAttribute("precioTotalConIVA", AF_HIDE_ADD|AF_HIDE_EDIT|AF_READONLY|AF_SEARCHABLE, 0, "$", 2));
+        $this->add(new atkCurrencyAttribute("precioTotalSinIVA", AF_HIDE_ADD|AF_HIDE_EDIT|AF_READONLY|AF_SEARCHABLE, 0, "$", 2));
         
         $this->setTable("ventas", "ventas");
         
@@ -51,17 +51,7 @@ class ventas extends atkNode {
         return array("fechaVenta" => date("Y-m-d"));
     }
 
-    function preAdd($record) {
-        global $ATK_VARS;
-        $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)
-        if (!isset($ATK_VARS['#STACK#'][$id]["ventas.ventas:detalle"])) {
-            return false;
-        }
-        
-        return true;
-    }
-
-    function postAdd($record) {        
+    function postAdd($record) {
         $user = &atkGetUser();
         $userId = $user["id"];
         $recordId = $record["id"];
@@ -70,55 +60,6 @@ class ventas extends atkNode {
         $db = &atkGetDb();
         $db->query("UPDATE ventas set empleadoId = $userId where id= $recordId");
 
-        // Traigo los productos de esta venta para controlar las alertas de stock
-        $dbQuery = $db->getrows("SELECT productoId FROM detalle WHERE ventaId = $recordId");
-        $arrayProductos = array();
-        foreach ($dbQuery as $producto) {
-            $arrayProductos[] = $producto['productoId'];
-        }
-        // Meto los id de los productos en un string para el query
-        $strProductos = implode(' OR id= ', $arrayProductos);
-
-        $productosAlerta = $db->getrows("SELECT nombreProducto, cantidad, stockMinimo "
-                . "FROM productos WHERE (id = $strProductos)" 
-                . " AND cantidad < stockMinimo");
-
-
-        // Muestro alerta si hay productos con alerta de stock
-        if ($productosAlerta) {
-            // Armo el mensaje para mostrarlo en un solo alert
-            $str = '';
-            foreach ($productosAlerta as $row) {
-                $str .= '\t' . $row['nombreProducto'] . ' - stock: ' . $row['cantidad'] . ' unidades \n';
-            }
-            $stockProductos = $str;
-
-
-            $msg = 'Alerta de stock para \n' . $stockProductos;
-            $scriptAlert = '<script language="javascript"> confirm("' . $msg . '");</script>';
-            
-            
-            // Escribo el mensaje de alerta en un archivo para que cuando recargue la página lo muestre
-            $file = fopen($this->fileName,"w");
-            fwrite($file,$scriptAlert);
-            fclose($file);
-        }
-        
-        $totalConIVA = 0.0;
-        $totalSinIVA = 0.0;
-        $rows = $db->getrows("SELECT precioIVA, precioSinIVA from detalle where ventaId = $recordId;");
-        foreach ($rows as $row) {
-            atk_var_dump($row["precioIVA"], "PRECIOSUMANDO");
-            $totalConIVA += $row["precioIVA"];
-            atk_var_dump($totalConIVA, "TOTAL");
-            $totalSinIVA += $row["precioSinIVA"];
-        }
-        $db->query("UPDATE ventas set precioTotalConIVA = $totalConIVA where id = $recordId");
-        $db->query("UPDATE ventas set precioTotalSinIVA = $totalSinIVA where id = $recordId");
-        
-        
-        
-        
         return true;
     }
 
@@ -155,4 +96,11 @@ class ventas extends atkNode {
         return array(BLANCO);
     }
     
+    function validate(&$record, $mode, $ignoreList = array())
+    {
+        if($record["clienteId"] == null && $record["nombreCliente"] == "")
+        {
+            triggerError($record, "Error", "Se debe seleccionar un cliente o asignar un nombre de cliente");
+        }
+    }
 }

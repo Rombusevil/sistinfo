@@ -1,7 +1,7 @@
 <?php
 class mod_ventas extends achievoModule {
 	function getNodes() {
-		registerNode("ventas.ventas", array("admin", "add", "edit", "delete" ));
+		registerNode("ventas.ventas", array("admin", "add", "edit", "delete"));
 		registerNode("ventas.detalle", array("admin", "add", "edit", "delete" ));
 		registerNode("ventas.tiposFactura", array("admin", "add", "edit", "delete" ));
 		registerNode("ventas.ivas", array("admin", "add", "edit", "delete" ));
