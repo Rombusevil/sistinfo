@@ -54,7 +54,7 @@ class detalle extends atkNode {
             $ventaId = $record["ventaId"]["id"];
             $result = $db->getrows("select fechaVenta from ventas where id = $ventaId");
             $fechaVenta = $result[0]["fechaVenta"];
-            $result = $db->getrows("select valorIva from ivas where fechaVigencia <= '$fechaVenta'");
+            $result = $db->getrows("select valorIva from ivas where fechaVigencia <= '$fechaVenta' order by fechaVigencia desc");
             $iva = $result[0]["valorIva"]/100.0;
             $precioSinIVA = $cantidadDetalle*$precio;
             $precioIVA = $precioSinIVA+$precioSinIVA*$iva;

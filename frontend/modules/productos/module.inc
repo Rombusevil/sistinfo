@@ -1,7 +1,7 @@
 <?php
 class mod_productos extends achievoModule {
 	function getNodes() {
-            registerNode("productos.productos", array("admin", "add", "edit", "delete", "mra_editar_precio" ));
+            registerNode("productos.productos", array("admin", "add", "edit", "delete"));
             registerNode("productos.marca", array("admin", "add", "edit", "delete" ));
             registerNode("productos.tiposProducto", array("admin", "add", "edit", "delete" ));
             registerNode("productos.ingresos", array("admin", "add", "edit", "delete" ));

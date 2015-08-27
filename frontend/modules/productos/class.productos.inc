@@ -17,7 +17,7 @@ class productos extends atkNode {
         $this->add(new atkAttribute("nombreProducto", AF_OBLIGATORY | AF_SEARCHABLE, 30));
         $this->add(new atkAttribute("descripcion", 0, 100));
         $this->add(new atkCurrencyAttribute("precio", AF_OBLIGATORY, 0, "$", 2));
-        $this->add(new atkNumberAttribute("cantidad"));
+        $this->add(new atkNumberAttribute("cantidad", AF_HIDE_ADD));
         $this->add(new atkNumberAttribute("stockMinimo", AF_OBLIGATORY));
 
         // Foraneas
@@ -28,29 +28,29 @@ class productos extends atkNode {
         $datosEspecificos->setDestinationFilter("productoId");
         $this->add($datosEspecificos);
 
-        global $ATK_VARS;
-        $tipoProducto = $ATK_VARS["atkdg"]["admin"]["atksearch"]["tipoProductoId"]["tipoProductoId"][0];
-        atk_var_dump($ATK_VARS);
-        if ($tipoProducto != NULL) {
-            $db = &atkGetDb();
-            $query = "SELECT adp.nombreAtributo, dp.valorAtributo, dp.tipoAtributo
-          FROM atributosDeProductos adp 
-          join tiposAtributosDeProductos tap
-          join datosproductos dp
-          where adp.atributoId = tap.atributoId
-          and adp.nombreAtributo = dp.nombreAtributo
-          and tap.tipoProductoId =$tipoProducto;";
-            $result = $db->getrows($query);
-            foreach ($result as $row) {
-                $this->add(new atkDummyAttribute($row["nombreAtributo"], $row["valorAtributo"] . $row["tipoAtributo"], 0));
-            }
-        }
+//        global $ATK_VARS;
+//        $tipoProducto = $ATK_VARS["atkdg"]["admin"]["atksearch"]["tipoProductoId"]["tipoProductoId"][0];
+//        atk_var_dump($ATK_VARS);
+//        if ($tipoProducto != NULL) {
+//            $db = &atkGetDb();
+//            $query = "SELECT adp.nombreAtributo, dp.valorAtributo, dp.tipoAtributo
+//          FROM atributosDeProductos adp 
+//          join tiposAtributosDeProductos tap
+//          join datosproductos dp
+//          where adp.atributoId = tap.atributoId
+//          and adp.nombreAtributo = dp.nombreAtributo
+//          and tap.tipoProductoId =$tipoProducto;";
+//            $result = $db->getrows($query);
+//            foreach ($result as $row) {
+//                $this->add(new atkDummyAttribute($row["nombreAtributo"], $row["valorAtributo"] . $row["tipoAtributo"], 0));
+//            }
+//        }
      
         $this->setTable("productos", "productos");
         $this->setDescriptorTemplate("[nombreProducto]");
         
-        $page = &$this->getPage();
-        $page->register_script(moduleDir("productos")."js/jquery.js");
+//        $page = &$this->getPage();
+//        $page->register_script(moduleDir("productos")."js/jquery.js");
         
         
         // Gestión de MRA - popup
@@ -156,7 +156,7 @@ class productos extends atkNode {
     
     function rowColor($record) {
         $stockMinimo = intval($record["stockMinimo"]);
-        $stodckActual = intval($record["cantidad"]);
+        $stockActual = intval($record["cantidad"]);
         
         if($stockActual == 0)
             return array(ROJO, ROJO_HIGHLIGHT); 

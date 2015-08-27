@@ -734,7 +734,7 @@
     "stockMinimo" => "Stock m&iacute;nimo",
     "marcaId" => "Marca",
     "tipoProductoId" => "Tipo producto",
-    "datosProductoId" => "ID Datos producto",
+    "datosProductoId" => "Caracteristicas",
     "atributoId" => "Atributo",
     "nombreAtributo" => "Nombre",
     "tipoAtributo" => "Unidad",
@@ -751,7 +751,7 @@
     // Colores
     "gamaId" => "Gama",
     "codigoColor" => "C&oacute;digo color",
-    "imagen" => "Im&aacute;gen",
+    "imagen" => "Imagen",
     "composicionId" => "Composici&oacute;n",   
       
     // Gamas
