@@ -156,7 +156,7 @@ class productos extends atkNode {
     
     function rowColor($record) {
         $stockMinimo = intval($record["stockMinimo"]);
-        $stodckActual = intval($record["cantidad"]);
+        $stodkActual = intval($record["cantidad"]);
         
         if($stockActual == 0)
             return array(ROJO, ROJO_HIGHLIGHT); 
