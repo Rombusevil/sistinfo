@@ -33,8 +33,7 @@
 
 
 
-	$fecha = new DateTime();
-	$timestamp = $fecha->getTimestamp();
+	$timestamp = date('Y-m-d'); // Voy a guardar un backup por dia
 
 	$pwd = "-p".$pwd;
 	$pwd = str_replace(" ","",$pwd); // Necesito que no haya espacios

@@ -28,8 +28,8 @@
 	else return "Error al exportar base de datos";
 	
 
-
-	$name = 'pqllana.sql.gz';
+	$timestamp = date('Y-m-d');
+	$name = "pqllana-$timestamp.sql.gz";
 	$baseUrl = $_SERVER['SERVER_NAME'].":".$_SERVER['SERVER_PORT'];
 
 	system("mysqldump -u $usr -p$pwd pqllana | gzip -9 > $name");
