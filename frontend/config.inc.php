@@ -25,7 +25,6 @@
   $config_db["default"]["host"]     = "localhost";
   $config_db["default"]["db"]       = "pqllana";
   $config_db["default"]["user"]     = "root";
-//  $config_db["default"]["password"] = "debianServer";
   $config_db["default"]["password"] = "root";
   
   // -------------------------------------------

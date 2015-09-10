@@ -1,8 +1,12 @@
 <?php
 
 class detalle extends atkNode {
+    protected $fileName;// Archivo de intercambio para detectar si hay productos en alerta de stock
+    
 	function detalle($name="detalle", $flags=0) {
-                $this->atkNode($name, $flags/*|NF_ADD_LINK*/);
+        $this->fileName = "alertaStock.txt"; // Defino el nombre del archivo
+        
+        $this->atkNode($name, $flags/*|NF_ADD_LINK*/);
 
 		$this->add(new atkNumberAttribute("detalleId" ,AF_AUTOKEY));
 		$this->add(new atkManyToOneRelation("ventaId", "ventas.ventas", AF_RELATION_AUTOLINK|AF_HIDE|AF_FORCE_LOAD));
@@ -63,8 +67,10 @@ class detalle extends atkNode {
             $rows = $db->getrows("SELECT precioTotalConIVA, precioTotalSinIVA from ventas where id = $ventaId;");      
             $totalConIVA = $rows[0]["precioTotalConIVA"] + $precioIVA;
             $totalSinIVA = $rows[0]["precioTotalSinIVA"] + $precioSinIVA;
-            atk_var_dump($totalConIVA,"Con IVA");
-            atk_var_dump($totalSinIVA,"Sin IVA");
+            
+            //atk_var_dump($totalConIVA,"Con IVA");
+            //atk_var_dump($totalSinIVA,"Sin IVA");
+            
             $db->query("UPDATE ventas set precioTotalConIVA = $totalConIVA where id = $ventaId");
             $db->query("UPDATE ventas set precioTotalSinIVA = $totalSinIVA where id = $ventaId");
             
@@ -87,47 +93,33 @@ class detalle extends atkNode {
         return parent::editArray($mode, $record, $forceList, $suppressList, $fieldprefix, $ignoreTab, $injectSections);
     }
     
+    
+    // Meto lógica para mostrar el popup de alerta de stock
     function preAdd($record) {
-        atk_var_dump($record,"PREADD");
-        $ventaId = $record["ventaId"]["id"];
+        //atk_var_dump($record,"PREADD");
         $db = &atkGetDb();
-        // Traigo los productos de esta venta para controlar las alertas de stock
-//        $dbQuery = $db->getrows("SELECT productoId FROM detalle WHERE ventaId = $ventaId");
-//        $arrayProductos = array();
-//        foreach ($dbQuery as $producto) {
-//            $arrayProductos[] = $producto['productoId'];
-//        }
-//        atk_var_dump($arrayProductos,"PRODUCTOS");
-//        //$arrayProductos = $record["productoId"];
-//        
-//        // Meto los id de los productos en un string para el query
-//        $strProductos = implode(' OR id= ', $arrayProductos);
-//
-//        $productosAlerta = $db->getrows("SELECT nombreProducto, cantidad, stockMinimo "
-//                . "FROM productos WHERE (id = $strProductos)" 
-//                . " AND cantidad < stockMinimo");
-//
-//
-//        // Muestro alerta si hay productos con alerta de stock
-//        if ($productosAlerta) {
-//            // Armo el mensaje para mostrarlo en un solo alert
-//            $str = '';
-//            foreach ($productosAlerta as $row) {
-//                $str .= '\t' . $row['nombreProducto'] . ' - stock: ' . $row['cantidad'] . ' unidades \n';
-//            }
-//            $stockProductos = $str;
-//
-//
-//            $msg = 'Alerta de stock para \n' . $stockProductos;
-//            $scriptAlert = '<script language="javascript"> confirm("' . $msg . '");</script>';
-//            
-//            
-//            // Escribo el mensaje de alerta en un archivo para que cuando recargue la página lo muestre
-////            $file = fopen($this->fileName,"w");
-////            fwrite($file,$scriptAlert);
-////            fclose($file);
-//        }
+              
+        $productoId = $record["productoId"]["id"];
+        $productosAlerta = $db->getrows("SELECT nombreProducto, cantidad, stockMinimo "
+                . "FROM productos WHERE (id = $productoId)" 
+                . " AND cantidad < stockMinimo")[0];    // Solo devuelve 1 resultado, así que pido el index 0
+        
+        //atk_var_dump($productosAlerta, "Resultado del query");
+        //atk_var_dump($productosAlerta['nombreProducto'], "Nombre producto");
 
+        // Muestro alerta si hay productos con alerta de stock
+        if ($productosAlerta) {
+            $stockProductos = '\t' . $productosAlerta['nombreProducto'] . ' - stock: ' . $productosAlerta['cantidad'] . ' unidades \n';;
+
+            $msg = 'Alerta de stock para \n' . $stockProductos;
+            $scriptAlert = '<script language="javascript"> confirm("' . $msg . '");</script>';
+
+
+            // Escribo el mensaje de alerta en un archivo para que cuando recargue la página lo muestre
+            $file = fopen($this->fileName,"w");
+            fwrite($file,$scriptAlert);
+            fclose($file);
+        }
                 
         return true;
     }

@@ -1,7 +1,7 @@
 <?php
+	$outputPath = "frontend/bdbackup/";
 	// Defino el path al archivo de config
-	$path = $_SERVER['DOCUMENT_ROOT'];
-	$path .= "/frontend/config.inc.php";
+	$path = "frontend/config.inc.php";
 	$varsFile = fopen($path,"r");
 
 	// Parseo el archivo de config para obtener el usr y pass
@@ -23,17 +23,25 @@
 				break;
 		}
 
+		$usr = substr($usr,0,-2);
+		$pwd = substr($pwd,0,-2);
+
 		fclose($varsFile);
 	}
-	else return "Error al exportar base de datos";
-	
+	else 
+		echo "error";
 
-	$timestamp = date('Y-m-d');
-	$name = "pqllana-$timestamp.sql.gz";
-	$baseUrl = $_SERVER['SERVER_NAME'].":".$_SERVER['SERVER_PORT'];
 
-	system("mysqldump -u $usr -p$pwd pqllana | gzip -9 > $name");
-	system("mv $name ..");
 
-	header("Location: http://$baseUrl/$name"); /* Redirect browser */
+	$timestamp = date('Y-m-d'); // Voy a guardar un backup por dia
+
+	$pwd = "-p".$pwd;
+	$pwd = str_replace(" ","",$pwd); // Necesito que no haya espacios
+
+	$name = "pqllana-$timestamp.sql.gz"; // Agregar un timestamp
+	$str = "mysqldump -u $usr $pwd pqllana | gzip -9 > $name";
+
+	system("mkdir -p $outputPath");
+	system($str);
+	system("mv $name $outputPath");
 	exit();
