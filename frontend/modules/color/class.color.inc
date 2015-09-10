@@ -8,7 +8,7 @@ class color extends atkNode{
 
 		$this->add(new atkNumberAttribute("colorId" ,AF_AUTOKEY));
 		$this->add(new atkManyToOneRelation("gamaId", "color.gama", AF_OBLIGATORY | AF_RELATION_AUTOLINK));		
-		$this->add(new atkNumberAttribute("codigoColor", AF_OBLIGATORY));
+		$this->add(new atkAttribute("codigoColor", AF_OBLIGATORY));
 		$this->add(new atkFileAttribute("imagen", atkconfig("images_dir"), AF_FILE_NO_SELECT)); //images_dir está en atkconf.inc
 		$this->add(new atkManyToOneRelation("composicionId", "color.composicionColores", AF_RELATION_AUTOLINK|AF_UNIQUE|AF_HIDE_LIST));
 		

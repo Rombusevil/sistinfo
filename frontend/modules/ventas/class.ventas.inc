@@ -7,6 +7,7 @@ class ventas extends atkNode {
     
     function ventas($name = "ventas", $flags = 0) {
         $this->fileName = "alertaStock.txt"; // Defino el nombre del archivo
+
         $this->atkNode($name, $flags | NF_ADD_LINK | NF_MRA | NF_EDITAFTERADD); //NF_NO_EDIT TODO: se quita hasta resolver el tema de asignacion de factura luego de la venta
 
         $this->add(new atkNumberAttribute("id", AF_AUTOKEY));
