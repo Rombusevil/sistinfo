@@ -1410,7 +1410,7 @@
       <dia:attribute name="attributes">
         <dia:composite type="umlattribute">
           <dia:attribute name="name">
-            <dia:string>#movimientoId#</dia:string>
+            <dia:string>#id#</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
             <dia:string>#int(11)#</dia:string>
@@ -6502,13 +6502,13 @@ es pq es un color primario.#</dia:string>
     </dia:object>
     <dia:object type="UML - Class" version="0" id="O48">
       <dia:attribute name="obj_pos">
-        <dia:point val="51.1435,9.89645"/>
+        <dia:point val="51.3832,9.84851"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="51.0935,9.84645;63.2435,14.3464"/>
+        <dia:rectangle val="51.3332,9.79851;63.4832,14.2985"/>
       </dia:attribute>
       <dia:attribute name="elem_corner">
-        <dia:point val="51.1435,9.89645"/>
+        <dia:point val="51.3832,9.84851"/>
       </dia:attribute>
       <dia:attribute name="elem_width">
         <dia:real val="12.050000000000001"/>
@@ -6721,16 +6721,16 @@ es pq es un color primario.#</dia:string>
         <dia:point val="44.1537,12.0796"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="43.4037,11.3296;51.1431,12.9464"/>
+        <dia:rectangle val="43.4037,11.2985;51.3828,12.9296"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
         <dia:point val="44.1537,12.0796"/>
-        <dia:point val="47.9734,12.0796"/>
-        <dia:point val="47.9734,12.0964"/>
-        <dia:point val="51.0931,12.0964"/>
+        <dia:point val="48.0932,12.0796"/>
+        <dia:point val="48.0932,12.0485"/>
+        <dia:point val="51.3328,12.0485"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
         <dia:enum val="0"/>
