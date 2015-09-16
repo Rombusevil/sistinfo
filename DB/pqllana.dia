@@ -5669,8 +5669,8 @@
       </dia:attribute>
       <dia:attribute name="orth_points">
         <dia:point val="38.8483,15.13"/>
-        <dia:point val="38.8483,17.1388"/>
-        <dia:point val="38.833,17.1388"/>
+        <dia:point val="38.8483,17.1387"/>
+        <dia:point val="38.833,17.1387"/>
         <dia:point val="38.833,18.4475"/>
       </dia:attribute>
       <dia:attribute name="orth_orient">
@@ -6655,7 +6655,7 @@ es pq es un color primario.#</dia:string>
             <dia:string>#tipoOperacion#</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
-            <dia:string>#int(11)#</dia:string>
+            <dia:string>#varchar(30)#</dia:string>
           </dia:attribute>
           <dia:attribute name="value">
             <dia:string>##</dia:string>
@@ -6718,16 +6718,16 @@ es pq es un color primario.#</dia:string>
         <dia:boolean val="false"/>
       </dia:attribute>
       <dia:attribute name="obj_pos">
-        <dia:point val="44.1537,12.0796"/>
+        <dia:point val="44.1536,12.0796"/>
       </dia:attribute>
       <dia:attribute name="obj_bb">
-        <dia:rectangle val="43.4037,11.2985;51.3828,12.9296"/>
+        <dia:rectangle val="43.4036,11.2985;51.3828,12.9296"/>
       </dia:attribute>
       <dia:attribute name="meta">
         <dia:composite type="dict"/>
       </dia:attribute>
       <dia:attribute name="orth_points">
-        <dia:point val="44.1537,12.0796"/>
+        <dia:point val="44.1536,12.0796"/>
         <dia:point val="48.0932,12.0796"/>
         <dia:point val="48.0932,12.0485"/>
         <dia:point val="51.3328,12.0485"/>

@@ -1,0 +1,53 @@
+Manual de instalación.
+
+	INDICE
+		Requisitos mínimos del sistema.
+		Sistema operativo linux debian stable 8.
+		Servidor web apache con módulo PHP
+		Motor de base de datos MySql
+		Instalación del sistema
+			Base de datos
+			Frontend
+			Cron
+	
+	
+	
+	Requisitos mínimos del sistema
+		Los requisitos mínimos para el servidor son
+			1 GB de memoria RAM.
+			80 GB de almacenamiento.
+			CPU xxx
+			Conectividad a red interna o internet mediante alguna interfaz de red (por ejemplo ethernet o wifi).
+		
+		Requisitos mínimos para el cliente
+			1 GB de memoria RAM.
+			(obtener sistemas operativos capaces de ejecutar firefox xxxx)
+			CPU xxx
+			Monitor con al menos 1024x768 píxeles de resolución.	
+			Conectividad a la red del servidor mediante alguna interfaz de red (por ejemplo ethernet o wifi).
+	
+	Instalación del sistema operativo
+		Junto con el software se distribuye la imágen de instalación del sistema operativo Debian Debian 8.1 Jessie.
+		De no contar con dicha imágen se debe descargarla desde la siguiente URL ___.
+		
+		Pasos de instalación.
+			Encender el servidor con el CD de instalación de Debian 8.1 insertado.
+			Seleccionar instalación.
+			..
+			..
+			..
+			..
+			..
+			
+	Instalación del sistema base
+		Instalación apache
+		Instalación mysql + php
+		Configuración cron
+	
+	Instalación del frontend
+		Descomprimir el archivo XXXX.tar.gz en el directorio /var/www/html/ con el siguiente comando.
+		tar -xvzf XXXX.tar.gz
+		
+		Configurar permisos
+		
+		
