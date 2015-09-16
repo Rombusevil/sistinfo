@@ -31,7 +31,7 @@ class getMraValue extends atkNode {
 $percent = $_POST['value']; // Agarro el valor que me manda el cliente desde el prompt
 
 // Avanzo solo si me pasaron un porcentaje numérico, sino lo ignoro
-if(is_numeric($percent)){
+//if(is_numeric($percent)){
     $productIdsFile = fopen("pId.txt","r");// Este archivo tiene separados por coma todos los productId que tienen que verse afectados
 
     // Leo el archivo con los productIds
@@ -56,16 +56,12 @@ if(is_numeric($percent)){
     $query .= ";";
 
     // Para debuggear el query
-    //$f = fopen ("debug.txt","w");
-    //fwrite($f, $query);
-    //fclose($f);
+    $f = fopen ("debug.txt","w");
+    fwrite($f, $query);
+    fclose($f);
 
 
     // Ejecuto la consulta
     $dbk = new getMraValue();
     $dbk->execQuery($query);
-}
-
-
-
-
+//}

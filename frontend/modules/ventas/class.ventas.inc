@@ -6,10 +6,18 @@ class ventas extends atkNode {
     protected $fileName;// Archivo de intercambio para detectar si hay productos en alerta de stock
     
     function ventas($name = "ventas", $flags = 0) {
+     
         $this->fileName = "alertaStock.txt"; // Defino el nombre del archivo
-
+        $user = &atkGetUser();        
+        if($user["id"] == 2) { //Si es Vendedor
+            global $ATK_VARS;
+            if($ATK_VARS["atkaction"] == "admin")
+            {
+                $this->redirect(session_url(dispatch_url("ventas.ventas", "add"), SESSION_DEFAULT));
+            }                
+        }
         $this->atkNode($name, $flags | NF_ADD_LINK | NF_MRA | NF_EDITAFTERADD); //NF_NO_EDIT TODO: se quita hasta resolver el tema de asignacion de factura luego de la venta
-
+  
         $this->add(new atkNumberAttribute("id", AF_AUTOKEY));
         $this->add(new atkDateTimeAttribute("fechaVenta", AF_OBLIGATORY|AF_SEARCHABLE));
         $this->add(new atkAttribute("nombreCliente", AF_SEARCHABLE));

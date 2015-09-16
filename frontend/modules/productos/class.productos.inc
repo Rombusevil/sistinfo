@@ -21,7 +21,7 @@ class productos extends atkNode {
         $this->add(new atkNumberAttribute("stockMinimo", AF_OBLIGATORY));
 
         // Foraneas
-        $this->add(new atkManyToOneRelation("marcaId", "productos.marca", AF_OBLIGATORY | AF_RELATION_AUTOLINK));
+        $this->add(new atkManyToOneRelation("marcaId", "productos.marca", AF_RELATION_AUTOLINK));
         $this->add(new atkManyToOneRelation("tipoProductoId", "productos.tiposProducto", AF_OBLIGATORY | AF_RELATION_AUTOLINK | AF_SEARCHABLE | AF_FORCE_LOAD));
 
         $datosEspecificos = &new atkOneToManyRelation("datosProductoId", "productos.datosProductos", "productoId", AF_HIDE_LIST);
@@ -48,10 +48,6 @@ class productos extends atkNode {
      
         $this->setTable("productos", "productos");
         $this->setDescriptorTemplate("[nombreProducto]");
-        
-//        $page = &$this->getPage();
-//        $page->register_script(moduleDir("productos")."js/jquery.js");
-        
         
         // Gestión de MRA - popup
         @$file = fopen($this->fileMraPopup,"r"); // Con el arroba suprimo el warning de file not found, está bien que no lo encuentre si no hay alerta de stock
@@ -137,7 +133,11 @@ class productos extends atkNode {
             $msg = 'Ingrese el porcentaje de aumento del precio\n\n';
             $scriptAlert = '<script language="javascript"> '
                     . 'var percent = prompt("' . $msg . '");'
-                    . '$.post("getMraValue.php", {value: percent}, null);'
+                    //. '$.post("getMraValue.php", {value: percent}, null);'
+                    . 'var xhr = new XMLHttpRequest();'
+                    . 'xhr.open("POST", "getMraValue.php", true);'
+                    . 'xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");'
+                    . 'xhr.send("value="+percent);'
                     . '</script>';            
             
             // En este archivo escribo todo el js que se tiene que ejecutar
@@ -167,4 +167,11 @@ class productos extends atkNode {
         return array(BLANCO);
     }
 
+    function preAdd(&$record) {
+        $marca_id = $record["marca_id"]["id"];
+        if($marca_id == NULL)
+        {
+            triggerError($record, "Error", "marca es obligatorio");
+        }
+    }
 }

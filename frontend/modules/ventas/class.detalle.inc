@@ -102,14 +102,14 @@ class detalle extends atkNode {
         $productoId = $record["productoId"]["id"];
         $productosAlerta = $db->getrows("SELECT nombreProducto, cantidad, stockMinimo "
                 . "FROM productos WHERE (id = $productoId)" 
-                . " AND cantidad < stockMinimo")[0];    // Solo devuelve 1 resultado, así que pido el index 0
+                . " AND cantidad < stockMinimo");    // Solo devuelve 1 resultado, así que pido el index 0
         
         //atk_var_dump($productosAlerta, "Resultado del query");
         //atk_var_dump($productosAlerta['nombreProducto'], "Nombre producto");
 
         // Muestro alerta si hay productos con alerta de stock
         if ($productosAlerta) {
-            $stockProductos = '\t' . $productosAlerta['nombreProducto'] . ' - stock: ' . $productosAlerta['cantidad'] . ' unidades \n';;
+            $stockProductos = '\t' . $productosAlerta[0]['nombreProducto'] . ' - stock: ' . $productosAlerta[0]['cantidad'] . ' unidades \n';;
 
             $msg = 'Alerta de stock para \n' . $stockProductos;
             $scriptAlert = '<script language="javascript"> confirm("' . $msg . '");</script>';
