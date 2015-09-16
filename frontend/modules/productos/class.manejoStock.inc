@@ -21,18 +21,36 @@ class manejoStock extends atkNode {
         }
 	}
 
+    function preAdd(&$record) {
+        $db = &atkGetDb();
+        $recordId = $record["productoId"]["id"];
+        $tipoOperacion = $record["tipoMovimientoId"]["tipoOperacion"];
+        
+        if($tipoOperacion == "Decremento")
+        {
+            $stock = $db->getrows("select cantidad from productos where id = $recordId;");
+            $stock = $stock[0]["cantidad"];
+            if($stock < $record["cantidad"])
+            {
+                triggerError($record, "Stock insuficiente", "La cantidad es ".$stock.".");
+            }    
+        }
+    }
     
     // Cargo el stock en el producto
     function postAdd($record) {
         $db = &atkGetDb();
         $recordId = $record["productoId"]["id"];
-        
+        $tipoOperacion = $record["tipoMovimientoId"]["tipoOperacion"];
+        $cantidad = $record["cantidad"];
         // Me traigo el stock actual y le sumo lo que voy a agregar
-        $stock = $db->getrows("select cantidad from productos where id = $recordId;");        
-        $stock = $stock[0]["cantidad"] + $record["cantidad"];
+        $stock = $db->getrows("select cantidad from productos where id = $recordId;");
         
-        atk_var_dump($record["productoId"]);
-        atk_var_dump($record);
+        if($tipoOperacion == "Decremento")
+        {
+            $cantidad = $cantidad * (-1);
+        }            
+        $stock = $stock[0]["cantidad"] + $cantidad;
         
         $db->query("UPDATE productos set cantidad = $stock where id= $recordId;");
     }

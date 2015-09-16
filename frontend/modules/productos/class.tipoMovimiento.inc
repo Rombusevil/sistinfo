@@ -7,7 +7,7 @@ class tipoMovimiento extends atkNode {
 
         $this->add(new atkNumberAttribute("tipoMovimientoId", AF_AUTOKEY));
         $this->add(new atkAttribute("nombreMovimiento", AF_OBLIGATORY));
-        $this->add(new atkListAttribute("tipoOperacion", array(0 => "Incremento", 1 => "Decremento")));
+        $this->add(new atkListAttribute("tipoOperacion", array(0 => "Incremento", 1 => "Decremento"), AF_FORCE_LOAD));
 
         $this->setTable("tipoMovimiento", "tipoMovimiento");
         $this->setDescriptorTemplate("[nombreMovimiento]");
