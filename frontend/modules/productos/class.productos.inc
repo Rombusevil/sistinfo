@@ -21,7 +21,7 @@ class productos extends atkNode {
         $this->add(new atkNumberAttribute("stockMinimo", AF_OBLIGATORY));
 
         // Foraneas
-        $this->add(new atkManyToOneRelation("marcaId", "productos.marca", AF_OBLIGATORY | AF_RELATION_AUTOLINK));
+        $this->add(new atkManyToOneRelation("marcaId", "productos.marca", AF_RELATION_AUTOLINK));
         $this->add(new atkManyToOneRelation("tipoProductoId", "productos.tiposProducto", AF_OBLIGATORY | AF_RELATION_AUTOLINK | AF_SEARCHABLE | AF_FORCE_LOAD));
 
         $datosEspecificos = &new atkOneToManyRelation("datosProductoId", "productos.datosProductos", "productoId", AF_HIDE_LIST);
@@ -167,4 +167,11 @@ class productos extends atkNode {
         return array(BLANCO);
     }
 
+    function preAdd(&$record) {
+        $marca_id = $record["marca_id"]["id"];
+        if($marca_id == NULL)
+        {
+            triggerError($record, "Error", "marca es obligatorio");
+        }
+    }
 }

@@ -11,7 +11,8 @@ class mod_ventas extends achievoModule {
 
 	function getMenuItems() {
 		$this->menuitem("Ventas",dispatch_url("ventas.ventas", "admin"),"main",array("ventas.ventas", "admin"),600);
-		$this->menuitem("Administrar", dispatch_url("ventas.ventas", "admin"), "Ventas", array("ventas.ventas", "admin"));
+		$this->menuitem("Agregar Venta", dispatch_url("ventas.ventas", "add"), "Ventas", array("ventas.ventas", "add"));
+                $this->menuitem("Listar Ventas", dispatch_url("ventas.ventas", "admin"), "Ventas", array("ventas.ventas", "admin"));
 		$this->menuitem("Tipos Factura", dispatch_url("ventas.tiposFactura", "admin"), "Ventas", array("ventas.tiposFactura", "admin"));
 		$this->menuitem("IVA", dispatch_url("ventas.ivas", "admin"), "Ventas", array("ventas.ivas", "admin"));
 		
