@@ -9,7 +9,7 @@ class tiposProducto extends atkNode {
 		$this->add(new atkNumberAttribute("id" ,AF_AUTOKEY));
 		$this->add(new atkBoolAttribute("esColoreable" ,AF_OBLIGATORY|AF_FORCE_LOAD));
 		$this->add(new atkAttribute("tipoProducto",AF_OBLIGATORY, 30));
-		$this->add(new atkNumberAttribute("stockMinimoPorDefecto" ,AF_OBLIGATORY));
+		$this->add(new atkNumberAttribute("stockMinimoPorDefecto" ,AF_OBLIGATORY|AF_FORCE_LOAD));
 		
 		
 		$rel = $this->add(new atkShuttleRelation("Atributos", "productos.tiposAtributosDeProductos", "productos.atributosDeProductos"));

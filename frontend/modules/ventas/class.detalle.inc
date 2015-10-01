@@ -11,7 +11,7 @@ class detalle extends atkNode {
 		$this->add(new atkNumberAttribute("detalleId" ,AF_AUTOKEY));
 		$this->add(new atkManyToOneRelation("ventaId", "ventas.ventas", AF_RELATION_AUTOLINK|AF_HIDE|AF_FORCE_LOAD));
 		
-		$this->add(new atkManyToOneRelation("productoId", "productos.productos", AF_OBLIGATORY|AF_RELATION_AUTOLINK));		
+		$this->add(new atkManyToOneRelation("productoId", "productos.productos", AF_RELATION_AUTOLINK));		
 		$this->add(new atkManyToOneRelation("colorId", "color.color", AF_RELATION_AUTOLINK)); // TODO esto es condicional al producto (si es coloreable o no)
 		$this->add(new atkNumberAttribute("cantidad" ,AF_OBLIGATORY));
                 $this->add(new atkCurrencyAttribute("precioIVA", AF_HIDE_ADD|AF_HIDE_EDIT|AF_READONLY|AF_SEARCHABLE, 0, "$", 2));
@@ -24,19 +24,22 @@ class detalle extends atkNode {
 	
 	function cantidad_validate(&$record){
 		$db = &atkGetDb();
-		$producto= $record["productoId"]["id"];		
-		$result = $db->getrows("select cantidad from productos where id = $producto");
-		$cantidad = $result[0]["cantidad"];
-		
-		$cantidadNueva = $cantidad-$record["cantidad"];
-		
-		if($cantidadNueva < 0){		
-			triggerError($record, "No hay suficiente stock", "la cantidad actual es $cantidad");
-		}
-        
-        if($record["cantidad"]< 0){
-            triggerError($record, "Error", "cantidad negativa");
-        }   
+		$producto = $record["productoId"]["id"];
+                if($producto != NULL)
+		{
+                    $result = $db->getrows("select cantidad from productos where id = $producto");
+                    $cantidad = $result[0]["cantidad"];
+
+                    $cantidadNueva = $cantidad-$record["cantidad"];
+
+                    if($cantidadNueva < 0){		
+                        triggerError($record, "No hay suficiente stock", "la cantidad actual es $cantidad");
+                    }
+
+                    if($record["cantidad"]< 0){
+                        triggerError($record, "Error", "cantidad negativa");
+                    }   
+                }
 	}
 	
 	
@@ -95,11 +98,19 @@ class detalle extends atkNode {
     
     
     // Meto lógica para mostrar el popup de alerta de stock
-    function preAdd($record) {
-        //atk_var_dump($record,"PREADD");
-        $db = &atkGetDb();
-              
+    function preAdd(&$record) {
+        atk_var_dump($record,"PREADD");
+  
         $productoId = $record["productoId"]["id"];
+        
+        if($productoId == NULL)
+        {
+            atk_var_dump($record,"ENtre!!!");
+            triggerError($record, "Error", "productId es obligatorio");
+            return false;
+        }
+        atk_var_dump($record,"Saliii!!!");
+        $db = &atkGetDb();
         $productosAlerta = $db->getrows("SELECT nombreProducto, cantidad, stockMinimo "
                 . "FROM productos WHERE (id = $productoId)" 
                 . " AND cantidad < stockMinimo");    // Solo devuelve 1 resultado, así que pido el index 0

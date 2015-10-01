@@ -16,19 +16,19 @@ class ventas extends atkNode {
                 $this->redirect(session_url(dispatch_url("ventas.ventas", "add"), SESSION_DEFAULT));
             }                
         }
-        $this->atkNode($name, $flags | NF_ADD_LINK | NF_MRA | NF_EDITAFTERADD); //NF_NO_EDIT TODO: se quita hasta resolver el tema de asignacion de factura luego de la venta
+        $this->atkNode($name, $flags | NF_ADD_LINK | NF_MRA /*| NF_EDITAFTERADD*/); //NF_NO_EDIT TODO: se quita hasta resolver el tema de asignacion de factura luego de la venta
   
         $this->add(new atkNumberAttribute("id", AF_AUTOKEY));
+        $this->add(new atkManyToOneRelation("tipoVentaId", "ventas.tiposVenta", AF_RELATION_AUTOLINK|AF_SEARCHABLE ));
         $this->add(new atkDateTimeAttribute("fechaVenta", AF_OBLIGATORY|AF_SEARCHABLE));
         $this->add(new atkAttribute("nombreCliente", AF_SEARCHABLE));
-        $this->add(new atkManyToOneRelation("clienteId", "clientes.clientes", AF_RELATION_AUTOLINK ));
-        $this->add(new atkManyToOneRelation("tipoVentaId", "ventas.tiposVenta", AF_OBLIGATORY | AF_RELATION_AUTOLINK|AF_SEARCHABLE ));
+        $this->add(new atkManyToOneRelation("clienteId", "clientes.clientes", AF_RELATION_AUTOLINK ));        
         $this->add(new atkDateAttribute("fechaVencimiento", AF_SEARCHABLE));
         $this->add(new atkManyToOneRelation("facturaId", "ventas.facturas", AF_RELATION_AUTOLINK | AF_FORCE_LOAD));
         $this->add(new atkManyToOneRelation("empleadoId", "employee.employee", AF_RELATION_AUTOLINK | AF_HIDE));
         
-        $linDetalle = $this->add(new atkOneToManyRelation("detalle", "ventas.detalle", "ventaId", AF_HIDE_ADD | AF_CASCADE_DELETE /* | AF_ONETOMANY_SHOW_ADD*/));
-        $linDetalle->setDestinationFilter("ventaId");
+        $linDetalle = $this->add(new atkOneToManyRelation("detalle", "ventas.detalle", "ventaId", AF_CASCADE_DELETE |  AF_FORCE_LOAD));
+        //$linDetalle->setDestinationFilter("ventaId"); todo: esto por que estaba?
 
         $this->add(new atkCurrencyAttribute("precioTotalConIVA", AF_HIDE_ADD|AF_HIDE_EDIT|AF_READONLY|AF_SEARCHABLE, 0, "$", 2));
         $this->add(new atkCurrencyAttribute("precioTotalSinIVA", AF_HIDE_ADD|AF_HIDE_EDIT|AF_READONLY|AF_SEARCHABLE, 0, "$", 2));
@@ -67,10 +67,7 @@ class ventas extends atkNode {
         // El usuario actual es el que hace la venta
         $db = &atkGetDb();
         $db->query("UPDATE ventas set empleadoId = $userId where id= $recordId");
-        
-        
-        
-        
+
         atk_var_dump($record,"PREADD");
         $ventaId = $record["id"];
         
@@ -112,7 +109,7 @@ class ventas extends atkNode {
                 fclose($file);
             }
         }
-
+       
         return true;
     }
 
@@ -125,6 +122,12 @@ class ventas extends atkNode {
         $tipoVentaId = $record["tipoVentaId"]["tipoVentaId"];
         $this->getAttribute("facturaId")->removeFlag(AF_HIDE);
         $this->getAttribute("fechaVencimiento")->removeFlag(AF_OBLIGATORY);
+        $this->getAttribute("detalle")->removeFlag(AF_ONETOMANY_SHOW_ADD);
+        
+        if($tipoVentaId != NULL)
+        {
+            $this->getAttribute("detalle")->addFlag(AF_ONETOMANY_SHOW_ADD);
+        }         
         
         if ($tipoVentaId == VENTA_NORMAL) {
             $this->getAttribute("fechaVencimiento")->addFlag(AF_HIDE);
@@ -155,5 +158,13 @@ class ventas extends atkNode {
         {
             triggerError($record, "Error", "Se debe seleccionar un cliente o asignar un nombre de cliente");
         }
+    }
+    
+    function preAdd(&$record) {
+        global $ATK_VARS;
+        $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)
+        if (!isset($ATK_VARS['#STACK#'][$id]["ventas.ventas:detalle"])){
+            triggerError($record, "Error", "Falta agregar el detalle.");
+        }        
     }
 }

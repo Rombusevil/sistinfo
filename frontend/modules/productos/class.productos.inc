@@ -13,6 +13,7 @@ class productos extends atkNode {
         $this->atkNode($name, $flags | NF_ADD_LINK | NF_EDITAFTERADD | NF_MRA);
 
         $this->add(new atkNumberAttribute("id", AF_AUTOKEY));
+        $this->add(new atkManyToOneRelation("tipoProductoId", "productos.tiposProducto", AF_RELATION_AUTOLINK | AF_SEARCHABLE | AF_FORCE_LOAD));
         $this->add(new atkNumberAttribute("codigoProducto", AF_OBLIGATORY));
         $this->add(new atkAttribute("nombreProducto", AF_OBLIGATORY | AF_SEARCHABLE, 30));
         $this->add(new atkAttribute("descripcion", 0, 100));
@@ -22,12 +23,12 @@ class productos extends atkNode {
 
         // Foraneas
         $this->add(new atkManyToOneRelation("marcaId", "productos.marca", AF_RELATION_AUTOLINK));
-        $this->add(new atkManyToOneRelation("tipoProductoId", "productos.tiposProducto", AF_OBLIGATORY | AF_RELATION_AUTOLINK | AF_SEARCHABLE | AF_FORCE_LOAD));
-
+        
         $datosEspecificos = &new atkOneToManyRelation("datosProductoId", "productos.datosProductos", "productoId", AF_HIDE_LIST);
         $datosEspecificos->setDestinationFilter("productoId");
         $this->add($datosEspecificos);
 
+//        TODO: Hay que revisar si esto se va a terminar. Posiblemente no
 //        global $ATK_VARS;
 //        $tipoProducto = $ATK_VARS["atkdg"]["admin"]["atksearch"]["tipoProductoId"]["tipoProductoId"][0];
 //        atk_var_dump($ATK_VARS);
@@ -168,10 +169,28 @@ class productos extends atkNode {
     }
 
     function preAdd(&$record) {
+        $tipo_producto_id = $record["tipo_producto_id"]["id"];
+        if($tipo_producto_id == NULL)
+        {
+            triggerError($record, "Error", "El tipo de producto es obligatorio");
+        }
         $marca_id = $record["marca_id"]["id"];
         if($marca_id == NULL)
         {
-            triggerError($record, "Error", "marca es obligatorio");
+            triggerError($record, "Error", "La marca es obligatoria");
         }
+    }
+    
+    function editArray($mode = "add", $record = NULL, $forceList = "", $suppressList = "", $fieldprefix = "", $ignoreTab = false, $injectSections = true) {
+        $url = atkSelf() . "?atknodetype=" . $this->atkNodeType() . "&atkaction=" . $this->m_action;
+        $code = 'atkSubmit("' . atkurlencode(atkSessionManager::sessionUrl($url, SESSION_DEFAULT)) . '")';
+        $this->getAttribute('tipoProductoId')->addOnChangeHandler($code);
+    
+        $tipoProducto = $record["tipoProductoId"];
+        if($tipoProducto != NULL)
+        {            
+            $record["stockMinimo"] = $tipoProducto["stockMinimoPorDefecto"];
+        }
+        return parent::editArray($mode, $record, $forceList, $suppressList, $fieldprefix, $ignoreTab, $injectSections);
     }
 }
