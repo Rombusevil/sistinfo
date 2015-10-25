@@ -113,7 +113,13 @@ class ventas extends atkNode {
                 fclose($file);
             }
         }
-       
+
+        // Hago esto para arreglar el bug de que te persistía el detalle.
+        global $ATK_VARS;
+        $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)        
+        unset($_SESSION["achievo"]["default"]["stack"][$id][1]["atkformdata"]);
+        unset($_SESSION["achievo"]["default"]["globals"]["#STACK#"][$id]); 
+
         return true;
     }
 
