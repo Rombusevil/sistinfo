@@ -4,7 +4,10 @@ class detalle extends atkNode {
     protected $fileName;// Archivo de intercambio para detectar si hay productos en alerta de stock
     
 	function detalle($name="detalle", $flags=0) {
-        $this->fileName = "alertaStock.txt"; // Defino el nombre del archivo
+        global $ATK_VARS;
+        $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)        
+        $this->fileName = "alertaStock$id.txt"; // Defino el nombre del archivo
+        
         
         $this->atkNode($name, $flags/*|NF_ADD_LINK*/);
 

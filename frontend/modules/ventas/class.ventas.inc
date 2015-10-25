@@ -6,40 +6,42 @@ class ventas extends atkNode {
     protected $fileName;// Archivo de intercambio para detectar si hay productos en alerta de stock
     
     function ventas($name = "ventas", $flags = 0) {
-     
-        $this->fileName = "alertaStock.txt"; // Defino el nombre del archivo
-        $user = &atkGetUser();
         global $ATK_VARS;
+        
+        $user = &atkGetUser();
         if($user["id"] == 2) { //Si es Vendedor            
             if($ATK_VARS["atkaction"] == "admin")
             {
                 $this->redirect(session_url(dispatch_url("ventas.ventas", "add"), SESSION_DEFAULT));
             }                
         }
-        $this->atkNode($name, $flags | NF_ADD_LINK | NF_MRA /*| NF_EDITAFTERADD*/); //NF_NO_EDIT TODO: se quita hasta resolver el tema de asignacion de factura luego de la venta
+        
+        $this->atkNode($name, $flags | NF_ADD_LINK | NF_MRA  | NF_ADDAFTERADD /*| NF_EDITAFTERADD*/); //NF_NO_EDIT TODO: se quita hasta resolver el tema de asignacion de factura luego de la venta
         $flags_not_admin = 0;
         if($ATK_VARS["atkaction"] != "admin")
         {
             $flags_not_admin = AF_HIDE;
         }   
+        
         $this->add(new atkNumberAttribute("id", AF_AUTOKEY));
         $this->add(new atkManyToOneRelation("tipoVentaId", "ventas.tiposVenta", AF_RELATION_AUTOLINK|AF_SEARCHABLE ));
         $this->add(new atkDateTimeAttribute("fechaVenta", AF_OBLIGATORY|AF_SEARCHABLE));
         $this->add(new atkDateAttribute("fechaVencimiento", AF_SEARCHABLE|$flags_not_admin));
         $this->add(new atkManyToOneRelation("clienteId", "clientes.clientes", AF_RELATION_AUTOLINK ));
-           
         $this->add(new atkAttribute("nombreCliente", AF_SEARCHABLE));
         $this->add(new atkOneToOneRelation("factura", "ventas.facturas", "facturaId", AF_HIDE | AF_FORCE_LOAD));
         $this->add(new atkManyToOneRelation("empleadoId", "employee.employee", AF_RELATION_AUTOLINK | AF_HIDE));
-        $linDetalle = $this->add(new atkOneToManyRelation("detalle", "ventas.detalle", "ventaId", AF_ONETOMANY_SHOW_ADD | AF_CASCADE_DELETE |  AF_FORCE_LOAD));
-        //$linDetalle->setDestinationFilter("ventaId"); todo: esto por que estaba?
-
+        $this->add(new atkOneToManyRelation("detalle", "ventas.detalle", "ventaId", AF_ONETOMANY_SHOW_ADD | AF_CASCADE_DELETE |  AF_FORCE_LOAD));
+        
         $this->add(new atkCurrencyAttribute("precioTotalConIVA", AF_HIDE_ADD|AF_HIDE_EDIT|AF_READONLY|AF_SEARCHABLE, 0, "$", 2));
         $this->add(new atkCurrencyAttribute("precioTotalSinIVA", AF_HIDE_ADD|AF_HIDE_EDIT|AF_READONLY|AF_SEARCHABLE, 0, "$", 2));
         
         $this->setTable("ventas", "ventas");
         
         // Gestión de alarmas
+        $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)        
+        $this->fileName = "alertaStock$id.txt"; // Defino el nombre del archivo
+        
         @$file = fopen($this->fileName,"r"); // Con el arroba suprimo el warning de file not found, está bien que no lo encuentre si no hay alerta de stock
         if($file){
             $script = "";
@@ -71,8 +73,6 @@ class ventas extends atkNode {
         // El usuario actual es el que hace la venta
         $db = &atkGetDb();
         $db->query("UPDATE ventas set empleadoId = $userId where id= $recordId");
-
-        atk_var_dump($record,"PREADD");
         $ventaId = $record["id"];
         
         // Traigo los productos de esta venta para controlar las alertas de stock
@@ -81,7 +81,6 @@ class ventas extends atkNode {
         foreach ($dbQuery as $producto) {
             $arrayProductos[] = $producto['productoId'];
         }
-        atk_var_dump($arrayProductos,"PRODUCTOS");
         //$arrayProductos = $record["productoId"];
         
         // Meto los id de los productos en un string para el query
