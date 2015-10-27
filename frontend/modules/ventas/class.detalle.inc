@@ -9,7 +9,7 @@ class detalle extends atkNode {
         $this->fileName = "alertaStock$id.txt"; // Defino el nombre del archivo
         
         
-        $this->atkNode($name, $flags/*|NF_ADD_LINK*/);
+        $this->atkNode($name, $flags | NF_ADDAFTERADD /*|NF_ADD_LINK*/);
 
 		$this->add(new atkNumberAttribute("detalleId" ,AF_AUTOKEY));
 		$this->add(new atkManyToOneRelation("ventaId", "ventas.ventas", AF_RELATION_AUTOLINK|AF_HIDE|AF_FORCE_LOAD));
