@@ -51,6 +51,23 @@ class detalle extends atkNode {
                 }
 	}
 	
+        function incrementSequence($tabla) {
+            $db = &atkGetDb();
+
+            $result = $db->getrows("SELECT nextid from db_sequence where seq_name = '$tabla';");
+
+            if ($result == NULL) {
+                $db->query("INSERT INTO db_sequence (seq_name, nextid) VALUES ('$tabla', 2);");
+                $seq = 1;
+            } else {
+                $newId = $result[0]["nextid"] + 1;
+                $db->query("UPDATE db_sequence set nextid =$newId where seq_name = '$tabla';");
+                $seq = $result[0]["nextid"];
+            }
+
+            $db->commit();
+            return $seq;
+        }
 	
 	function postAdd($record){        
             $db = &atkGetDb();        
@@ -85,6 +102,10 @@ class detalle extends atkNode {
             
             $db->query("UPDATE ventas set precioTotalConIVA = $totalConIVA where id = $ventaId");
             $db->query("UPDATE ventas set precioTotalSinIVA = $totalSinIVA where id = $ventaId");
+            
+            $manejoStockId = $this->incrementSequence("manejoStock");
+            $tipoMovimiento = 2; //2 = Venta
+            $db->query("INSERT INTO manejoStock values ($manejoStockId,$producto,'$fechaVenta',$cantidadDetalle,$tipoMovimiento)");
             
             $db->commit();
             
