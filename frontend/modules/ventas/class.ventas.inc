@@ -235,7 +235,26 @@ class ventas extends atkNode {
         atk_var_dump($_SESSION["achievo"]["default"]["stack"][$id][0]["atkformdata"]["#STACK#"], " buscá el ID acá a ver si es el mismo");
         atk_var_dump($_SESSION["achievo"]["default"]["stack"][$id][0]["atkformdata"]["#STACK#"][$id]["ventas.ventas:detalle"], " FOOOOOOOOOOORM DATAAAAAAAAAAAAAAAAAAA"); 
         */
-                
+        
+        // Triggereo error si no te da el stock para hacer la venta (pq alguien te lo vendió mientras estabas trabajando)
+        $db = &atkGetDb();
+        $cantDetalles = count($ATK_VARS['#STACK#'][$id]["ventas.ventas:detalle"]);
+        
+        for($i=0; $i < $cantDetalles; $i++){        // Recorro cada producto agregado al detalle
+            $prodId = $ATK_VARS['#STACK#'][$id]["ventas.ventas:detalle"][$i]["productoId"]["id"];
+            $cant = $ATK_VARS['#STACK#'][$id]["ventas.ventas:detalle"][$i]["cantidad"];
+            
+            $getStock= "SELECT cantidad, nombreProducto FROM productos WHERE id = $prodId;";
+            $rows = $db->getrows($getStock);
+            $nombreProducto = $rows[0]["nombreProducto"];
+            $stock = $rows[0]["cantidad"];
+            
+            if($cant > $stock){
+                triggerError($record, "Error", "No hay suficiente stock para el producto $nombreProducto");
+            }
+        }
+        //---------------------------------------------------------
+        
         // Triggerea el error si es necesario
         if (!isset($ATK_VARS['#STACK#'][$id]["ventas.ventas:detalle"])){
             triggerError($record, "Error", "Falta agregar el detalle.");
