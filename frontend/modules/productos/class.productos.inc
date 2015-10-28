@@ -77,15 +77,14 @@ class productos extends atkNode {
 
         if ($result == NULL) {
             $db->query("INSERT INTO db_sequence (seq_name, nextid) VALUES ('$tabla', 2);");
-            $seq = 1;
+            $newId = 1;
         } else {
             $newId = $result[0]["nextid"] + 1;
             $db->query("UPDATE db_sequence set nextid =$newId where seq_name = '$tabla';");
-            $seq = $result[0]["nextid"];
         }
 
         $db->commit();
-        return $seq;
+        return $newId;
     }
 
     function postAdd($record) {

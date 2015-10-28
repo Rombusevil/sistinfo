@@ -24,8 +24,8 @@ class detalle extends atkNode {
 		$this->add(new atkManyToOneRelation("productoId", "productos.productos", AF_RELATION_AUTOLINK));		
 		$this->add(new atkManyToOneRelation("colorId", "color.color", AF_RELATION_AUTOLINK)); // TODO esto es condicional al producto (si es coloreable o no)
 		$this->add(new atkNumberAttribute("cantidad" ,AF_OBLIGATORY));
-                $this->add(new atkCurrencyAttribute("precioIVA", $not_factura_flags|AF_HIDE_ADD|AF_HIDE_EDIT|AF_READONLY|AF_SEARCHABLE, 0, "$", 2));
-		$this->add(new atkCurrencyAttribute("precioSinIVA", AF_HIDE_ADD|AF_HIDE_EDIT|AF_READONLY|AF_SEARCHABLE, 0, "$", 2));
+                $this->add(new atkCurrencyAttribute("precioIVA", $not_factura_flags|AF_SEARCHABLE, 0, "$", 2));
+		$this->add(new atkCurrencyAttribute("precioSinIVA", AF_SEARCHABLE, 0, "$", 2));
                 
 		$this->setTable("detalle", "detalle");
 		$this->setDescriptorTemplate("[productoId.nombreProducto] ([cantidad])");
@@ -59,15 +59,14 @@ class detalle extends atkNode {
 
         if ($result == NULL) {
             $db->query("INSERT INTO db_sequence (seq_name, nextid) VALUES ('$tabla', 2);");
-            $seq = 1;
+            $newId = 1;
         } else {
             $newId = $result[0]["nextid"] + 1;
             $db->query("UPDATE db_sequence set nextid =$newId where seq_name = '$tabla';");
-            $seq = $result[0]["nextid"];
         }
 
         $db->commit();
-        return $seq;
+        return $newId;
     }
 	
 	function postAdd($record){        
