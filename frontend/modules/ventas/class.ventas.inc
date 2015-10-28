@@ -42,6 +42,8 @@ class ventas extends atkNode {
         $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)        
         $this->fileName = "alertaStock$id.txt"; // Defino el nombre del archivo
         
+        
+        
         @$file = fopen($this->fileName,"r"); // Con el arroba suprimo el warning de file not found, está bien que no lo encuentre si no hay alerta de stock
         if($file){
             $script = "";
@@ -55,7 +57,6 @@ class ventas extends atkNode {
             fclose($file);
             unlink($this->fileName); // Borro el archivo
         }
-        
     }
     
     
@@ -115,8 +116,9 @@ class ventas extends atkNode {
 
         // Hago esto para arreglar el bug de que te persistía el detalle.
         global $ATK_VARS;
-        $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)        
-        unset($_SESSION["achievo"]["default"]["stack"][$id][1]["atkformdata"]);
+        $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)       
+        
+        unset($_SESSION["achievo"]["default"]["stack"][$id][1]["atkformdata"]);        
         unset($_SESSION["achievo"]["default"]["globals"]["#STACK#"][$id]); 
 
         return true;
@@ -124,6 +126,19 @@ class ventas extends atkNode {
 
     //Permite actualizar los flags de los atributos al detectar cambios en un atributo, esta detección la realiza el addOnChangeHandler
     function editArray($mode = "add", $record = NULL, $forceList = "", $suppressList = "", $fieldprefix = "", $ignoreTab = false, $injectSections = true) {
+        
+        // Limpio todos los errores del triggerError, si vuelve a grabar una venta se volverá a validar.
+        global $ATK_VARS;
+        $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)        
+                
+        $cant = count($_SESSION["achievo"]["default"]["stack"][$id]);
+        for($i=0; $i <=$cant; $i++){
+            unset($_SESSION["achievo"]["default"]["stack"][$id][$i]["atkreject"]);
+        }
+        // ---------------------------------------------------------------------------------------------
+        
+        
+        
         $url = atkSelf() . "?atknodetype=" . $this->atkNodeType() . "&atkaction=" . $this->m_action;
         $code = 'atkSubmit("' . atkurlencode(atkSessionManager::sessionUrl($url, SESSION_DEFAULT)) . '")';
         $this->getAttribute('tipoVentaId')->addOnChangeHandler($code);
@@ -184,10 +199,46 @@ class ventas extends atkNode {
     }
     
     function preAdd(&$record) {
+        // -----------------------------------------------
+        // Limpio la sesión de los detalles que fueron borrados
+        // -----------------------------------------------
+        // TODO: hay un bug cuando generás una venta habiendo agregado detalle y luego borrándolo, todo este código comentado
+        // estaba hecho para ver de solucionar ese bug.
+        /*
         global $ATK_VARS;
         $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)
+        
+        
+        $detalles = $_SESSION["achievo"]["default"]["stack"][$id][0]["atkformdata"]["#STACK#"][$id]["ventas.ventas:detalle"];
+        
+        $borrados = 0;
+        for ($i=0; i<count($detalles); $i++){       // Recorro cada línea de detalle
+            if($detalles[$i]["detalleId"] != -1){   // Si no se muestra en la grilla lo borro
+                unset($_SESSION["achievo"]["default"]["stack"][$id][0]["atkformdata"]["#STACK#"][$id]["ventas.ventas:detalle"][$i]);
+                $borrados++;
+            }
+        }
+        
+        // Si no hay ningún detalle que no haya sido borrado tengo que tirar error
+        if($borrados == count($detalles)){  
+            unset($ATK_VARS['#STACK#'][$id]["ventas.ventas:detalle"]);
+        }
+        
+         
+        atk_var_dump(count($detalles), " COUNT DETALLESSSSSSSSSSSSSSSSSSSSSSSSSs");
+         
+         
+        atk_var_dump($id, " ID    ..");
+        atk_var_dump(atkStackID(), " ID con func    ..");
+        
+        atk_var_dump($_SESSION["achievo"]["default"]["stack"][$id], " RESUMIDO, FREON EN ID");
+        atk_var_dump($_SESSION["achievo"]["default"]["stack"][$id][0]["atkformdata"]["#STACK#"], " buscá el ID acá a ver si es el mismo");
+        atk_var_dump($_SESSION["achievo"]["default"]["stack"][$id][0]["atkformdata"]["#STACK#"][$id]["ventas.ventas:detalle"], " FOOOOOOOOOOORM DATAAAAAAAAAAAAAAAAAAA"); 
+        */
+                
+        // Triggerea el error si es necesario
         if (!isset($ATK_VARS['#STACK#'][$id]["ventas.ventas:detalle"])){
             triggerError($record, "Error", "Falta agregar el detalle.");
-        }        
+        }
     }
 }

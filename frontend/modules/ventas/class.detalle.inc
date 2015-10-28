@@ -13,13 +13,14 @@ class detalle extends atkNode {
 
 		$this->add(new atkNumberAttribute("detalleId" ,AF_AUTOKEY));
 		$this->add(new atkManyToOneRelation("ventaId", "ventas.ventas", AF_RELATION_AUTOLINK|AF_HIDE|AF_FORCE_LOAD));
+        
 		global $ATK_VARS;
-                atk_var_dump($ATK_VARS,"RECORD_DETALLE!!!");
-                $not_factura_flags = 0;
-                if($ATK_VARS["factura"] == NULL)
-                {
-                    $not_factura_flags = AF_HIDE;
-                }
+        $not_factura_flags = 0;
+        if($ATK_VARS["factura"] == NULL)
+        {
+            $not_factura_flags = AF_HIDE;
+        }
+        
 		$this->add(new atkManyToOneRelation("productoId", "productos.productos", AF_RELATION_AUTOLINK));		
 		$this->add(new atkManyToOneRelation("colorId", "color.color", AF_RELATION_AUTOLINK)); // TODO esto es condicional al producto (si es coloreable o no)
 		$this->add(new atkNumberAttribute("cantidad" ,AF_OBLIGATORY));
@@ -34,85 +35,97 @@ class detalle extends atkNode {
 	function cantidad_validate(&$record){
 		$db = &atkGetDb();
 		$producto = $record["productoId"]["id"];
-                if($producto != NULL)
+        if($producto != NULL)
 		{
-                    $result = $db->getrows("select cantidad from productos where id = $producto");
-                    $cantidad = $result[0]["cantidad"];
+            $result = $db->getrows("select cantidad from productos where id = $producto");
+            $cantidad = $result[0]["cantidad"];
 
-                    $cantidadNueva = $cantidad-$record["cantidad"];
+            $cantidadNueva = $cantidad-$record["cantidad"];
 
-                    if($cantidadNueva < 0){		
-                        triggerError($record, "No hay suficiente stock", "la cantidad actual es $cantidad");
-                    }
-
-                    if($record["cantidad"]< 0){
-                        triggerError($record, "Error", "cantidad negativa");
-                    }   
-                }
-	}
-	
-        function incrementSequence($tabla) {
-            $db = &atkGetDb();
-
-            $result = $db->getrows("SELECT nextid from db_sequence where seq_name = '$tabla';");
-
-            if ($result == NULL) {
-                $db->query("INSERT INTO db_sequence (seq_name, nextid) VALUES ('$tabla', 2);");
-                $seq = 1;
-            } else {
-                $newId = $result[0]["nextid"] + 1;
-                $db->query("UPDATE db_sequence set nextid =$newId where seq_name = '$tabla';");
-                $seq = $result[0]["nextid"];
+            if($cantidadNueva < 0){		
+                triggerError($record, "No hay suficiente stock", "la cantidad actual es $cantidad");
             }
 
-            $db->commit();
-            return $seq;
+            if($record["cantidad"]< 0){
+                triggerError($record, "Error", "cantidad negativa");
+            }   
         }
+	}
+	
+    function incrementSequence($tabla) {
+        $db = &atkGetDb();
+
+        $result = $db->getrows("SELECT nextid from db_sequence where seq_name = '$tabla';");
+
+        if ($result == NULL) {
+            $db->query("INSERT INTO db_sequence (seq_name, nextid) VALUES ('$tabla', 2);");
+            $seq = 1;
+        } else {
+            $newId = $result[0]["nextid"] + 1;
+            $db->query("UPDATE db_sequence set nextid =$newId where seq_name = '$tabla';");
+            $seq = $result[0]["nextid"];
+        }
+
+        $db->commit();
+        return $seq;
+    }
 	
 	function postAdd($record){        
-            $db = &atkGetDb();        
-            
-    // Se modifica el stock del producto TODO: esto no debería estar cuando guardás la venta en vez del detalle?
-            $producto= $record["productoId"]["id"];
-            $detalle = $record["detalleId"];
-            $cantidadDetalle = $record["cantidad"];
-            
-            $result = $db->getrows("select cantidad, stockMinimo, precio from productos where id = $producto");
-            $cantidad = $result[0]["cantidad"];
-            $precio = $result[0]["precio"];
-            // Me preparo para descontar el stock vendido
-            $cantidad -= $cantidadDetalle;
-            $db->query("UPDATE productos set cantidad = $cantidad where id= $producto");
-            
-            $ventaId = $record["ventaId"]["id"];
-            $result = $db->getrows("select fechaVenta from ventas where id = $ventaId");
-            $fechaVenta = $result[0]["fechaVenta"];
-            $result = $db->getrows("select valorIva from ivas where fechaVigencia <= '$fechaVenta' order by fechaVigencia desc");
-            $iva = $result[0]["valorIva"]/100.0;
-            $precioSinIVA = $cantidadDetalle*$precio;
-            $precioIVA = $precioSinIVA+$precioSinIVA*$iva;
-            $db->query("UPDATE detalle set precioIVA=$precioIVA, precioSinIVA=$precioSinIVA where detalleId = $detalle");       
+        $db = &atkGetDb();        
 
-            $rows = $db->getrows("SELECT precioTotalConIVA, precioTotalSinIVA from ventas where id = $ventaId;");      
-            $totalConIVA = $rows[0]["precioTotalConIVA"] + $precioIVA;
-            $totalSinIVA = $rows[0]["precioTotalSinIVA"] + $precioSinIVA;
-            
-            //atk_var_dump($totalConIVA,"Con IVA");
-            //atk_var_dump($totalSinIVA,"Sin IVA");
-            
-            $db->query("UPDATE ventas set precioTotalConIVA = $totalConIVA where id = $ventaId");
-            $db->query("UPDATE ventas set precioTotalSinIVA = $totalSinIVA where id = $ventaId");
-            
-            $manejoStockId = $this->incrementSequence("manejoStock");
-            $tipoMovimiento = 2; //2 = Venta
-            $db->query("INSERT INTO manejoStock values ($manejoStockId,$producto,'$fechaVenta',$cantidadDetalle,$tipoMovimiento)");
-            
-            $db->commit();
-            
-            return true;
+// Se modifica el stock del producto TODO: esto no debería estar cuando guardás la venta en vez del detalle?
+        $producto= $record["productoId"]["id"];
+        $detalle = $record["detalleId"];
+        $cantidadDetalle = $record["cantidad"];
+
+        $result = $db->getrows("select cantidad, stockMinimo, precio from productos where id = $producto");
+        $cantidad = $result[0]["cantidad"];
+        $precio = $result[0]["precio"];
+        // Me preparo para descontar el stock vendido
+        $cantidad -= $cantidadDetalle;
+        $db->query("UPDATE productos set cantidad = $cantidad where id= $producto");
+
+        $ventaId = $record["ventaId"]["id"];
+        $result = $db->getrows("select fechaVenta from ventas where id = $ventaId");
+        $fechaVenta = $result[0]["fechaVenta"];
+        $result = $db->getrows("select valorIva from ivas where fechaVigencia <= '$fechaVenta' order by fechaVigencia desc");
+        $iva = $result[0]["valorIva"]/100.0;
+        $precioSinIVA = $cantidadDetalle*$precio;
+        $precioIVA = $precioSinIVA+$precioSinIVA*$iva;
+        $db->query("UPDATE detalle set precioIVA=$precioIVA, precioSinIVA=$precioSinIVA where detalleId = $detalle");       
+
+        $rows = $db->getrows("SELECT precioTotalConIVA, precioTotalSinIVA from ventas where id = $ventaId;");      
+        $totalConIVA = $rows[0]["precioTotalConIVA"] + $precioIVA;
+        $totalSinIVA = $rows[0]["precioTotalSinIVA"] + $precioSinIVA;
+
+        //atk_var_dump($totalConIVA,"Con IVA");
+        //atk_var_dump($totalSinIVA,"Sin IVA");
+
+        $db->query("UPDATE ventas set precioTotalConIVA = $totalConIVA where id = $ventaId");
+        $db->query("UPDATE ventas set precioTotalSinIVA = $totalSinIVA where id = $ventaId");
+
+        $manejoStockId = $this->incrementSequence("manejoStock");
+        $tipoMovimiento = 2; //2 = Venta
+        $db->query("INSERT INTO manejoStock values ($manejoStockId,$producto,'$fechaVenta',$cantidadDetalle,$tipoMovimiento)");
+
+        $db->commit();
+
+        return true;
 	}
         
     function editArray($mode = "add", $record = NULL, $forceList = "", $suppressList = "", $fieldprefix = "", $ignoreTab = false, $injectSections = true) {
+        
+        // Limpio todos los errores del triggerError, si vuelve a grabar una venta se volverá a validar.
+        global $ATK_VARS;
+        $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)        
+                
+        $cant = count($_SESSION["achievo"]["default"]["stack"][$id]);
+        for($i=0; $i <=$cant; $i++){
+            unset($_SESSION["achievo"]["default"]["stack"][$id][$i]["atkreject"]);
+        }
+        // ---------------------------------------------------------------------------------------------
+        
+        
         $url = atkSelf() . "?atknodetype=" . $this->atkNodeType() . "&atkaction=" . $this->m_action;
         $code = 'atkSubmit("' . atkurlencode(atkSessionManager::sessionUrl($url, SESSION_DEFAULT)) . '")';
         $this->getAttribute('productoId')->addOnChangeHandler($code);
@@ -129,8 +142,6 @@ class detalle extends atkNode {
     
     // Meto lógica para mostrar el popup de alerta de stock
     function preAdd(&$record) {
-        atk_var_dump($record,"PREADD");
-  
         $productoId = $record["productoId"]["id"];
         
         if($productoId == NULL)
