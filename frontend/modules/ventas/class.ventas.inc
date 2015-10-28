@@ -204,10 +204,10 @@ class ventas extends atkNode {
         // -----------------------------------------------
         // TODO: hay un bug cuando generás una venta habiendo agregado detalle y luego borrándolo, todo este código comentado
         // estaba hecho para ver de solucionar ese bug.
-        /*
         global $ATK_VARS;
         $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)
-        
+
+        /* 
         
         $detalles = $_SESSION["achievo"]["default"]["stack"][$id][0]["atkformdata"]["#STACK#"][$id]["ventas.ventas:detalle"];
         
