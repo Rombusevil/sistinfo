@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 08-04-2015 a las 00:29:42
+-- Tiempo de generación: 31-10-2015 a las 12:04:59
 -- Versión del servidor: 5.5.41
--- Versión de PHP: 5.4.36-0+deb7u3
+-- Versión de PHP: 5.4.41-0+deb7u1
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `atributosDeProductos` (
   `tipoAtributo` varchar(11) DEFAULT NULL,
   PRIMARY KEY (`atributoId`),
   KEY `tipoAtributo` (`tipoAtributo`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `clientes` (
   KEY `localidadId` (`localidadId`),
   KEY `tipoClienteId` (`tipoClienteId`),
   KEY `sociedadId` (`sociedadId`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `color` (
   `composicionId` int(11) DEFAULT NULL,
   PRIMARY KEY (`colorId`),
   KEY `gamaId` (`gamaId`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `composicionColores` (
   PRIMARY KEY (`id`),
   KEY `colorPrimario` (`colorPrimario`),
   KEY `colorSecundario` (`colorSecundario`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -115,7 +115,7 @@ CREATE TABLE IF NOT EXISTS `datosProductos` (
   `tipoAtributo` int(11) DEFAULT NULL,
   PRIMARY KEY (`datosProductosId`),
   KEY `productoId` (`productoId`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -140,13 +140,14 @@ CREATE TABLE IF NOT EXISTS `detalle` (
   `productoId` int(11) DEFAULT NULL,
   `cantidad` int(11) DEFAULT NULL,
   `ventaId` int(11) DEFAULT NULL,
-  `precio` decimal(5,2) DEFAULT NULL,
+  `precioIVA` decimal(5,2) DEFAULT NULL,
   `colorId` int(11) DEFAULT NULL,
+  `precioSinIVA` decimal(5,2) DEFAULT NULL,
   PRIMARY KEY (`detalleId`),
   KEY `ventaId` (`ventaId`),
   KEY `productoId` (`productoId`),
   KEY `colorId` (`colorId`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -160,7 +161,7 @@ CREATE TABLE IF NOT EXISTS `empleados` (
   `perfilId` int(11) DEFAULT NULL,
   PRIMARY KEY (`empleadoId`),
   KEY `perfilId` (`perfilId`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -199,7 +200,7 @@ CREATE TABLE IF NOT EXISTS `facturas` (
   `tipoFacturaId` int(11) DEFAULT NULL,
   PRIMARY KEY (`facturaId`),
   KEY `tipoFacturaId` (`tipoFacturaId`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -225,22 +226,7 @@ CREATE TABLE IF NOT EXISTS `gama` (
   `nombreGama` varchar(30) DEFAULT NULL,
   `imagen` varchar(90) DEFAULT NULL,
   PRIMARY KEY (`gamaId`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `ingresos`
---
-
-CREATE TABLE IF NOT EXISTS `ingresos` (
-  `ingresosId` int(11) NOT NULL DEFAULT '0',
-  `productoId` int(11) DEFAULT NULL,
-  `fecha` date DEFAULT NULL,
-  `cantidad` int(11) DEFAULT NULL,
-  PRIMARY KEY (`ingresosId`),
-  KEY `productoId` (`productoId`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -271,6 +257,22 @@ CREATE TABLE IF NOT EXISTS `localidades` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `manejoStock`
+--
+
+CREATE TABLE IF NOT EXISTS `manejoStock` (
+  `id` int(11) NOT NULL DEFAULT '0',
+  `productoId` int(11) DEFAULT NULL,
+  `fecha` timestamp NULL DEFAULT NULL,
+  `cantidad` int(11) DEFAULT NULL,
+  `tipoMovimientoId` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `productoId` (`productoId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `marca`
 --
 
@@ -278,7 +280,7 @@ CREATE TABLE IF NOT EXISTS `marca` (
   `marcaId` int(11) NOT NULL DEFAULT '0',
   `nombreMarca` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`marcaId`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -345,7 +347,7 @@ CREATE TABLE IF NOT EXISTS `perfiles` (
   `perfilId` int(11) NOT NULL DEFAULT '0',
   `nombrePerfil` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`perfilId`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -410,7 +412,7 @@ CREATE TABLE IF NOT EXISTS `productos` (
   PRIMARY KEY (`id`),
   KEY `marcaId` (`marcaId`),
   KEY `tipoProductoId` (`tipoProductoId`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -681,6 +683,18 @@ CREATE TABLE IF NOT EXISTS `sociedades` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `tipoMovimiento`
+--
+
+CREATE TABLE IF NOT EXISTS `tipoMovimiento` (
+  `tipoMovimientoId` int(11) DEFAULT NULL,
+  `nombreMovimiento` varchar(30) DEFAULT NULL,
+  `tipoOperacion` varchar(30) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `tiposAtributosDeProductos`
 --
 
@@ -690,7 +704,7 @@ CREATE TABLE IF NOT EXISTS `tiposAtributosDeProductos` (
   `atributoId` int(11) DEFAULT NULL,
   PRIMARY KEY (`tiposAtributosDeProductosId`),
   KEY `tipoProductoId` (`tipoProductoId`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -704,7 +718,7 @@ CREATE TABLE IF NOT EXISTS `tiposCliente` (
   `tipoFacturaId` int(11) DEFAULT NULL,
   PRIMARY KEY (`tipoClienteId`),
   KEY `tipoFacturaId` (`tipoFacturaId`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -717,7 +731,7 @@ CREATE TABLE IF NOT EXISTS `tiposFactura` (
   `nombreTipoFactura` varchar(30) DEFAULT NULL,
   `ivaId` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -731,7 +745,7 @@ CREATE TABLE IF NOT EXISTS `tiposProducto` (
   `esColoreable` tinyint(1) DEFAULT NULL,
   `stockMinimoPorDefecto` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -743,7 +757,7 @@ CREATE TABLE IF NOT EXISTS `tiposVenta` (
   `tipoVentaId` int(11) NOT NULL DEFAULT '0',
   `nombreTipoVenta` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`tipoVentaId`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -799,18 +813,20 @@ CREATE TABLE IF NOT EXISTS `userpimitems` (
 CREATE TABLE IF NOT EXISTS `ventas` (
   `id` int(11) NOT NULL DEFAULT '0',
   `nombreCliente` varchar(30) DEFAULT NULL,
-  `fechaVenta` date DEFAULT NULL,
-  `fechaVencimiento` date DEFAULT NULL,
+  `fechaVenta` timestamp NULL DEFAULT NULL,
+  `fechaVencimiento` timestamp NULL DEFAULT NULL,
   `facturaId` int(11) DEFAULT NULL,
   `tipoVentaId` int(11) DEFAULT NULL,
   `empleadoId` int(11) DEFAULT NULL,
   `clienteId` int(11) DEFAULT NULL,
+  `precioTotalConIVA` decimal(5,2) DEFAULT NULL,
+  `precioTotalSinIVA` decimal(5,2) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `clienteId` (`clienteId`),
   KEY `tipoVentaId` (`tipoVentaId`),
   KEY `empleadoId` (`empleadoId`),
   KEY `facturaId` (`facturaId`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
