@@ -62,7 +62,7 @@
   "autocomplete_no_results_contains" => "Ningún resultado encontrado que contenga el valor de búsqueda dado.",
   "autocomplete_no_results_exact" => "Ningún resultado encontrado que contenga exactamente el valor de búsqueda dado.",
   "autocomplete_no_results_startswith" => "Ningún resultado encontrado que empiece por el valor de búsqueda dado.",
-  "available" => "Available", // Missing string!!!
+  "available" => "Disponible", 
   "back" => "Volver",
   "back_to" => "Volver a",
   "below_minimum_value" => "Bajo el mínimo valor permitido",
@@ -94,7 +94,7 @@
   "criterium_mode" => "Modo del criterio",
   "criterium_value" => "Valor del criterio",
   "critical" => "Crítico",
-  "datagrid_norecordsfound_general" => "No records found.", // Missing string!!!
+  "datagrid_norecordsfound_general" => "No se encontraron registros.", 
   "datagrid_norecordsfound_search" => "No results found for the current search query.", // Missing string!!!
   "datagrid_summary" => "(Records [start] - [end] of [count])", // Missing string!!!
   "date_format_edit" => "j F Y",
