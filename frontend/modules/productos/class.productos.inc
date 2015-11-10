@@ -83,7 +83,6 @@ class productos extends atkNode {
             $db->query("UPDATE db_sequence set nextid =$newId where seq_name = '$tabla';");
         }
 
-        $db->commit();
         return $newId;
     }
 
@@ -111,7 +110,6 @@ class productos extends atkNode {
             $query = "INSERT INTO datosProductos (nombreAtributo, tipoAtributo, productoId, datosProductosId) 
                   VALUES ( '$nombreAtributo' , '$tipoAtributo', $productoId, $datosProductosId);";
             $db->query($query);
-            $db->commit();
         }
     }
 
