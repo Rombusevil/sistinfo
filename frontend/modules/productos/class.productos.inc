@@ -14,19 +14,17 @@ class productos extends atkNode {
 
         $this->add(new atkNumberAttribute("id", AF_AUTOKEY));
         $this->add(new atkManyToOneRelation("tipoProductoId", "productos.tiposProducto", AF_RELATION_AUTOLINK | AF_SEARCHABLE | AF_FORCE_LOAD));
-        $this->add(new atkNumberAttribute("codigoProducto", AF_OBLIGATORY));
+        $this->add(new atkNumberAttribute("codigoProducto", AF_OBLIGATORY| AF_UNIQUE| AF_SEARCHABLE));
         $this->add(new atkAttribute("nombreProducto", AF_OBLIGATORY | AF_SEARCHABLE, 30));
         $this->add(new atkAttribute("descripcion", 0, 100));
         $this->add(new atkCurrencyAttribute("precio", AF_OBLIGATORY, 0, "$", 2));
-        $this->add(new atkNumberAttribute("cantidad", AF_HIDE_ADD));
+        $this->add(new atkNumberAttribute("cantidad", AF_READONLY | AF_HIDE_ADD | AF_HIDE_EDIT));
         $this->add(new atkNumberAttribute("stockMinimo", AF_OBLIGATORY));
 
         // Foraneas
         $this->add(new atkManyToOneRelation("marcaId", "productos.marca", AF_RELATION_AUTOLINK));
-        
-        $datosEspecificos = &new atkOneToManyRelation("datosProductoId", "productos.datosProductos", "productoId", AF_HIDE_LIST);
-        $datosEspecificos->setDestinationFilter("productoId");
-        $this->add($datosEspecificos);
+        $this->add(new atkOneToManyRelation("datosProductoId", "productos.datosProductos", "productoId", AF_ONETOMANY_SHOW_ADD | AF_FORCE_LOAD));
+
 
 //        TODO: Hay que revisar si esto se va a terminar. Posiblemente no
 //        global $ATK_VARS;
@@ -48,7 +46,7 @@ class productos extends atkNode {
 //        }
      
         $this->setTable("productos", "productos");
-        $this->setDescriptorTemplate("[nombreProducto]");
+        $this->setDescriptorTemplate("[nombreProducto] | [codigoProducto]");
         
         // Gestión de MRA - popup
         @$file = fopen($this->fileMraPopup,"r"); // Con el arroba suprimo el warning de file not found, está bien que no lo encuentre si no hay alerta de stock
@@ -57,12 +55,10 @@ class productos extends atkNode {
             while($line = fgets($file)){
                 $script .= $line;
             }
-                
 
             $page = &$this->getPage();
             $page->addContent($script);
             
-
             fclose($file);
             unlink($this->fileMraPopup); // Borro el archivo
         }
@@ -85,7 +81,7 @@ class productos extends atkNode {
 
         return $newId;
     }
-
+    
     function postAdd($record) {
         $db = &atkGetDb();
         $tipoProductoId = $record["tipoProductoId"]["id"];
@@ -166,12 +162,12 @@ class productos extends atkNode {
     }
 
     function preAdd(&$record) {
-        $tipo_producto_id = $record["tipo_producto_id"]["id"];
+        $tipo_producto_id = $record["tipoProductoId"]["id"];
         if($tipo_producto_id == NULL)
         {
             triggerError($record, "Error", "El tipo de producto es obligatorio");
         }
-        $marca_id = $record["marca_id"]["id"];
+        $marca_id = $record["marcaId"]["marcaId"];
         if($marca_id == NULL)
         {
             triggerError($record, "Error", "La marca es obligatoria");
