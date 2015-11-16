@@ -24,8 +24,8 @@ class detalle extends atkNode {
 		$this->add(new atkManyToOneRelation("productoId", "productos.productos", AF_RELATION_AUTOLINK));		
 		$this->add(new atkManyToOneRelation("colorId", "color.color", AF_RELATION_AUTOLINK)); // TODO esto es condicional al producto (si es coloreable o no)
 		$this->add(new atkNumberAttribute("cantidad" ,AF_OBLIGATORY));
-                $this->add(new atkCurrencyAttribute("precioIVA", $not_factura_flags|AF_SEARCHABLE, 0, "$", 2));
-		$this->add(new atkCurrencyAttribute("precioSinIVA", AF_SEARCHABLE, 0, "$", 2));
+                $this->add(new atkCurrencyAttribute("precioIVA", $not_factura_flags|AF_SEARCHABLE, 10, "$", 2));
+		$this->add(new atkCurrencyAttribute("precioSinIVA", AF_SEARCHABLE, 10, "$", 2));
                 
 		$this->setTable("detalle", "detalle");
 		$this->setDescriptorTemplate("[productoId.nombreProducto] ([cantidad])");
@@ -128,6 +128,7 @@ class detalle extends atkNode {
         $url = atkSelf() . "?atknodetype=" . $this->atkNodeType() . "&atkaction=" . $this->m_action;
         $code = 'atkSubmit("' . atkurlencode(atkSessionManager::sessionUrl($url, SESSION_DEFAULT)) . '")';
         $this->getAttribute('productoId')->addOnChangeHandler($code);
+        $this->getAttribute('cantidad')->addOnChangeHandler($code);
 
         $esColoreable = $record["productoId"]["tipoProductoId"]["esColoreable"];
         $this->getAttribute("colorId")->removeFlag(AF_HIDE);
@@ -135,6 +136,29 @@ class detalle extends atkNode {
         if ($esColoreable == false) {
             $this->getAttribute("colorId")->addFlag(AF_HIDE);
         }
+        
+        //$ventaId = $record["ventaId"]["id"];
+        //$result = $db->getrows("select fechaVenta from ventas where id = $ventaId");
+        //$fechaVenta = $result[0]["fechaVenta"];
+        //$result = $db->getrows("select valorIva from ivas where fechaVigencia <= '$fechaVenta' order by fechaVigencia desc");
+        //$iva = $result[0]["valorIva"]/100.0;
+        atk_var_dump($ATK_VARS,"ATK_VARS!!!");
+        atk_var_dump($record,"RECORD!!!");
+        $precioSinIVA = $record["cantidad"]*$record["productoId"]["precio"];
+        $record["precioSinIVA"] = $precioSinIVA;
+//        $precioIVA = $precioSinIVA+$precioSinIVA*$iva;
+//        $db->query("UPDATE detalle set precioIVA=$precioIVA, precioSinIVA=$precioSinIVA where detalleId = $detalle");       
+//
+//        $rows = $db->getrows("SELECT precioTotalConIVA, precioTotalSinIVA from ventas where id = $ventaId;");      
+//        $totalConIVA = $rows[0]["precioTotalConIVA"] + $precioIVA;
+//        $totalSinIVA = $rows[0]["precioTotalSinIVA"] + $precioSinIVA;
+//
+//        //atk_var_dump($totalConIVA,"Con IVA");
+//        //atk_var_dump($totalSinIVA,"Sin IVA");
+//
+//        $db->query("UPDATE ventas set precioTotalConIVA = $totalConIVA where id = $ventaId");
+//        $db->query("UPDATE ventas set precioTotalSinIVA = $totalSinIVA where id = $ventaId");
+        
         return parent::editArray($mode, $record, $forceList, $suppressList, $fieldprefix, $ignoreTab, $injectSections);
     }
     

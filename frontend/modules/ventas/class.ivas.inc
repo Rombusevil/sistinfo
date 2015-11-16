@@ -2,7 +2,7 @@
 
 class ivas extends atkNode {
 	function ivas($name="ivas", $flags=0) {
-		$this->atkNode($name, $flags|NF_ADD_LINK);
+		$this->atkNode($name, $flags|NF_NO_VIEW);
 
 		$this->add(new atkNumberAttribute("id" ,AF_AUTOKEY));
 		$this->add(new atkDateAttribute("fechaVigencia",AF_OBLIGATORY, 30));

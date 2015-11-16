@@ -25,5 +25,5 @@ class facturas extends atkNode {
     
     return array("numeroFactura"=>$numFactura[0]["nextid"]);
   }
-  
+
 }  

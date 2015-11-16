@@ -16,7 +16,7 @@ class ventas extends atkNode {
             }                
         }
         
-        $this->atkNode($name, $flags | NF_ADD_LINK | NF_MRA  | NF_ADDAFTERADD /*| NF_EDITAFTERADD*/); //NF_NO_EDIT TODO: se quita hasta resolver el tema de asignacion de factura luego de la venta
+        $this->atkNode($name, $flags | NF_NO_VIEW | NF_MRA  | NF_ADDAFTERADD /*| NF_EDITAFTERADD*/); //NF_NO_EDIT TODO: se quita hasta resolver el tema de asignacion de factura luego de la venta
         $flags_not_admin = 0;
         if($ATK_VARS["atkaction"] != "admin")
         {
@@ -34,7 +34,7 @@ class ventas extends atkNode {
         $this->add(new atkOneToManyRelation("detalle", "ventas.detalle", "ventaId", AF_ONETOMANY_SHOW_ADD | AF_CASCADE_DELETE |  AF_FORCE_LOAD));
         
         $this->add(new atkCurrencyAttribute("precioTotalConIVA", AF_HIDE_ADD|AF_HIDE_EDIT|AF_READONLY|AF_SEARCHABLE, 0, "$", 2));
-        $this->add(new atkCurrencyAttribute("precioTotalSinIVA", AF_HIDE_ADD|AF_HIDE_EDIT|AF_READONLY|AF_SEARCHABLE, 0, "$", 2));
+        $this->add(new atkCurrencyAttribute("precioTotalSinIVA", AF_READONLY|AF_SEARCHABLE, 0, "$", 2));
         
         $this->setTable("ventas", "ventas");
         
@@ -137,13 +137,14 @@ class ventas extends atkNode {
         }
         // ---------------------------------------------------------------------------------------------
         
-        
+        atk_var_dump($ATK_VARS,"RECORD VENTA!!!");
         
         $url = atkSelf() . "?atknodetype=" . $this->atkNodeType() . "&atkaction=" . $this->m_action;
         $code = 'atkSubmit("' . atkurlencode(atkSessionManager::sessionUrl($url, SESSION_DEFAULT)) . '")';
         $this->getAttribute('tipoVentaId')->addOnChangeHandler($code);
         $this->getAttribute('clienteId')->addOnChangeHandler($code);
         $this->getAttribute('nombreCliente')->addOnChangeHandler($code);
+        $this->getAttribute('detalle')->addOnChangeHandler($code);
 
         $tipoVentaId = $record["tipoVentaId"]["tipoVentaId"];
         $clienteId = $record["clienteId"]["clienteId"];
@@ -174,6 +175,8 @@ class ventas extends atkNode {
             $this->getAttribute("fechaVencimiento")->addFlag(AF_OBLIGATORY);
             $this->getAttribute("fechaVencimiento")->removeFlag(AF_HIDE);
         }
+        
+        $record["precioTotalSinIVA"] = $record["detalle"][0]["precioSinIVA"];
         return parent::editArray($mode, $record, $forceList, $suppressList, $fieldprefix, $ignoreTab, $injectSections);
     }
 
