@@ -65,7 +65,6 @@ class detalle extends atkNode {
             $db->query("UPDATE db_sequence set nextid =$newId where seq_name = '$tabla';");
         }
 
-        $db->commit();
         return $newId;
     }
 	
@@ -107,7 +106,6 @@ class detalle extends atkNode {
         $tipoMovimiento = 2; //2 = Venta
         $db->query("INSERT INTO manejoStock values ($manejoStockId,$producto,'$fechaVenta',$cantidadDetalle,$tipoMovimiento)");
 
-        $db->commit();
 
         return true;
 	}

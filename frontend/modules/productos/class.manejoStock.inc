@@ -8,9 +8,14 @@ class manejoStock extends atkNode {
         $this->add(new atkNumberAttribute("id", AF_AUTOKEY));
         $this->add(new atkDateTimeAttribute("Fecha", AF_OBLIGATORY));
         $this->add(new atkNumberAttribute("cantidad", AF_OBLIGATORY));
-        $this->add(new atkManyToOneRelation("tipoMovimientoId", "productos.tipoMovimiento", AF_OBLIGATORY | AF_RELATION_AUTOLINK));
+        $tipoMov = new atkManyToOneRelation("tipoMovimientoId", "productos.tipoMovimiento", AF_OBLIGATORY | AF_RELATION_AUTOLINK);
+        $this->add($tipoMov);
+        
         $this->add(new atkManyToOneRelation("productoId", "productos.productos", AF_RELATION_AUTOLINK | AF_OBLIGATORY));
 
+        $tipoMov->setDestinationFilter("tipoMovimientoId <> 1"); // 1 es VENTA
+        
+        
         $this->setTable("manejoStock", "manejoStock");
     }
     
