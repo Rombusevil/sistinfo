@@ -7,13 +7,16 @@ class ventas extends atkNode {
 
     function ventas($name = "ventas", $flags = 0) {
         global $ATK_VARS;
+        atk_var_dump($ATK_VARS, "atk_vars!!!");
 
         // Si canceló la venta anterior voy a limpiar el detalle:
-        if(isset($ATK_VARS["atkcancel"])){
+        $lvl = $ATK_VARS["atkprevlevel"];
+        if(isset($ATK_VARS["atkcancel"]) && $lvl == 0) { // Si estoy en la pantalla de venta (y NO en la de detalle)
+            atk_var_dump("LIMPIO DETALLE!!!");
             $this->limpiaDetalle();
 
             // También limpio el flag de atkcancel y mando a redirect para empezar fresco
-            unset($ATK_VARS["atkcancel"]);
+            //unset($ATK_VARS["atkcancel"]); // EDIT: Con la forma nueva de venta esto no hace falta
             $this->redirect();
         }
 
@@ -44,7 +47,7 @@ class ventas extends atkNode {
 
         $this->add(new atkCurrencyAttribute("precioTotalConIVA", AF_HIDE_ADD|AF_HIDE_EDIT|AF_READONLY|AF_SEARCHABLE, 0, "$", 2));
         $this->add(new atkCurrencyAttribute("precioTotalSinIVA", AF_READONLY|AF_SEARCHABLE, 0, "$", 2));
-        
+
         $this->setTable("ventas", "ventas");
 
         // Gestión de alarmas
@@ -161,7 +164,7 @@ class ventas extends atkNode {
             unset($_SESSION["achievo"]["default"]["stack"][$id][$i]["atkreject"]);
         }
         // ---------------------------------------------------------------------------------------------
-        
+
         atk_var_dump($ATK_VARS,"RECORD VENTA!!!");
 
         $url = atkSelf() . "?atknodetype=" . $this->atkNodeType() . "&atkaction=" . $this->m_action;
@@ -200,7 +203,7 @@ class ventas extends atkNode {
             $this->getAttribute("fechaVencimiento")->addFlag(AF_OBLIGATORY);
             $this->getAttribute("fechaVencimiento")->removeFlag(AF_HIDE);
         }
-        
+
         $record["precioTotalSinIVA"] = $record["detalle"][0]["precioSinIVA"];
         return parent::editArray($mode, $record, $forceList, $suppressList, $fieldprefix, $ignoreTab, $injectSections);
     }
