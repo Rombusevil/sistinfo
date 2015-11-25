@@ -1,12 +1,8 @@
 <?php
 
 class utils extends atkNode {
-
-    function utils($name = "utils", $flags = 0) {
-    }
-    
     // Devuelve el nextid y lo aumenta en 1
-    function incrementSequence($tabla) {
+    static function incrementSequence($tabla) {
         $db = &atkGetDb();
 
         $result = $db->getrows("SELECT nextid from db_sequence where seq_name = '$tabla';");
