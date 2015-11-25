@@ -2,6 +2,9 @@
 
 class utils extends atkNode {
 
+    function utils($name = "utils", $flags = 0) {
+    }
+    
     // Devuelve el nextid y lo aumenta en 1
     function incrementSequence($tabla) {
         $db = &atkGetDb();
