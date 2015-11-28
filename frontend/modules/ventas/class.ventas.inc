@@ -7,12 +7,10 @@ class ventas extends atkNode {
 
     function ventas($name = "ventas", $flags = 0) {
         global $ATK_VARS;
-        atk_var_dump($ATK_VARS, "atk_vars!!!");
 
         // Si canceló la venta anterior voy a limpiar el detalle:
         $lvl = $ATK_VARS["atkprevlevel"];
         if(isset($ATK_VARS["atkcancel"]) && $lvl == 0) { // Si estoy en la pantalla de venta (y NO en la de detalle)
-            atk_var_dump("LIMPIO DETALLE!!!");
             $this->limpiaDetalle();
 
             // También limpio el flag de atkcancel y mando a redirect para empezar fresco
@@ -20,6 +18,7 @@ class ventas extends atkNode {
             $this->redirect();
         }
 
+        // Filtro según tipo de usuario
         $user = &atkGetUser();
         if($user["id"] == 2) { //Si es Vendedor
             if($ATK_VARS["atkaction"] == "admin")
@@ -165,7 +164,7 @@ class ventas extends atkNode {
         }
         // ---------------------------------------------------------------------------------------------
 
-        atk_var_dump($ATK_VARS,"RECORD VENTA!!!");
+        //atk_var_dump($ATK_VARS,"RECORD VENTA!!!");
 
         $url = atkSelf() . "?atknodetype=" . $this->atkNodeType() . "&atkaction=" . $this->m_action;
         $code = 'atkSubmit("' . atkurlencode(atkSessionManager::sessionUrl($url, SESSION_DEFAULT)) . '")';
@@ -225,13 +224,43 @@ class ventas extends atkNode {
         unset($_SESSION["achievo"]["default"]["globals"]["#STACK#"][$id]);
     }
 
+    // Comparador de fechas básico
+    // devuelve true si la $fechaVencimiento es posterior a la $fechaVenta
+    // Ignora la hora, no permite fiar una venta para el mismo día pero unas horas más tarde
+    function validarFechaFiada($fechaVenta, $fechaVencimiento){
+        $vy = $fechaVenta["year"];
+        $vm = $fechaVenta["month"];
+        $vd = $fechaVenta["day"];
+
+        $fy = $fechaVencimiento["year"];
+        $fm = $fechaVencimiento["month"];
+        $fd = $fechaVencimiento["day"];
+
+        if($vy > $fy){       // Año de venta mayor a año de vencimiento
+            return false;
+        }
+
+        if($vy == $fy){      // Si el año de vencimiento es el mismo que el de la venta
+            if($vm > $fm){   // Mes de venta mayor a mes de vencimiento
+                return false;
+            }
+
+            if($vm == $fm && $vd > $fd){  // Si el mes de vencimiento es el mismo que el de la venta y el día de venta es posterior al de vencimiento
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     function validate(&$record, $mode, $ignoreList = array())
     {
         if($record["clienteId"] == null && $record["nombreCliente"] == "")
         {
             triggerError($record, "Error", "Se debe seleccionar un cliente o asignar un nombre de cliente");
         }
-        if($record["fechaVencimiento"] != null && $record["fechaVencimiento"] < $record["fechaVenta"] )
+
+        if($record["fechaVencimiento"] != null && !$this->validarFechaFiada($record["fechaVenta"], $record["fechaVencimiento"]) )
     	{
             triggerError($record, "Error", "La fecha de vencimiento debe ser posterior a la de venta");
     	}
