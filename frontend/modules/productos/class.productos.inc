@@ -20,7 +20,7 @@ class productos extends atkNode {
         $this->add(new atkAttribute("descripcion", 0, 100));
         $this->add(new atkCurrencyAttribute("precio", AF_OBLIGATORY|AF_FORCE_LOAD, 0, "$", 2));
         $this->add(new atkNumberAttribute("cantidad", AF_READONLY | AF_HIDE_ADD | AF_HIDE_EDIT));
-        $this->add(new atkNumberAttribute("stockMinimo", AF_OBLIGATORY));
+        $this->add(new atkNumberAttribute("stockMinimo", AF_HIDE_ADD));
 
         // Foraneas
         $this->add(new atkManyToOneRelation("marcaId", "productos.marca", AF_RELATION_AUTOLINK));
@@ -151,6 +151,12 @@ class productos extends atkNode {
         {
             triggerError($record, "Error", "El tipo de producto es obligatorio");
         }
+        else{
+            // Cargo el stock mínimo por defecto para ese tipo de producto.
+            $tipoProducto = $record["tipoProductoId"];
+            $record["stockMinimo"] = $tipoProducto["stockMinimoPorDefecto"];
+        }
+
         $marca_id = $record["marcaId"]["marcaId"];
         if($marca_id == NULL)
         {
@@ -159,14 +165,18 @@ class productos extends atkNode {
     }
 
     function editArray($mode = "add", $record = NULL, $forceList = "", $suppressList = "", $fieldprefix = "", $ignoreTab = false, $injectSections = true) {
-        $url = atkSelf() . "?atknodetype=" . $this->atkNodeType() . "&atkaction=" . $this->m_action;
-        $code = 'atkSubmit("' . atkurlencode(atkSessionManager::sessionUrl($url, SESSION_DEFAULT)) . '")';
-        $this->getAttribute('tipoProductoId')->addOnChangeHandler($code);
+        // Limito esta funcionalidad al momento de editar el producto, y lo oculto al momento de agregarlo
+        // Esto arregla el bug de editAfterAdd que te borraba todos los campos.
+        if($mode == 'edit'){
+            $url = atkSelf() . "?atknodetype=" . $this->atkNodeType() . "&atkaction=" . $this->m_action;
+            $code = 'atkSubmit("' . atkurlencode(atkSessionManager::sessionUrl($url, SESSION_DEFAULT)) . '")';
+            $this->getAttribute('tipoProductoId')->addOnChangeHandler($code);
 
-        $tipoProducto = $record["tipoProductoId"];
-        if($tipoProducto != NULL)
-        {
-            $record["stockMinimo"] = $tipoProducto["stockMinimoPorDefecto"];
+            $tipoProducto = $record["tipoProductoId"];
+            if($tipoProducto != NULL)
+            {
+                $record["stockMinimo"] = $tipoProducto["stockMinimoPorDefecto"];
+            }
         }
         return parent::editArray($mode, $record, $forceList, $suppressList, $fieldprefix, $ignoreTab, $injectSections);
     }
