@@ -248,6 +248,10 @@ class ventas extends atkNode {
             if($vm == $fm && $vd > $fd){  // Si el mes de vencimiento es el mismo que el de la venta y el día de venta es posterior al de vencimiento
                 return false;
             }
+
+            if($vm == $fm && $vd == $fd){  // Si es el mismo día, mismo mes y mismo año devuelvo falso. No tengo en cuenta el horario.
+                return false;
+            }
         }
 
         return true;
@@ -260,6 +264,10 @@ class ventas extends atkNode {
             triggerError($record, "Error", "Se debe seleccionar un cliente o asignar un nombre de cliente");
         }
 
+        $tipoVentaId = $record["tipoVentaId"]["tipoVentaId"];
+        if($tipoVentaId == VENTA_FIADA && $record["fechaVencimiento"]==null){
+            triggerError($record, "Error", "Debe ingresar la fecha de vencimiento");
+        }
         if($record["fechaVencimiento"] != null && !$this->validarFechaFiada($record["fechaVenta"], $record["fechaVencimiento"]) )
     	{
             triggerError($record, "Error", "La fecha de vencimiento debe ser posterior a la de venta");
