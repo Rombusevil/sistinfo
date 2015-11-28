@@ -2,36 +2,36 @@
 
 class detalle extends atkNode {
     protected $fileName;// Archivo de intercambio para detectar si hay productos en alerta de stock
-    
+
 	function detalle($name="detalle", $flags=0) {
         global $ATK_VARS;
-        $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)        
+        $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)
         $this->fileName = "alertaStock$id.txt"; // Defino el nombre del archivo
-        
-        
+
+
         $this->atkNode($name, $flags | NF_ADDAFTERADD /*|NF_ADD_LINK*/);
 
 		$this->add(new atkNumberAttribute("detalleId" ,AF_AUTOKEY));
 		$this->add(new atkManyToOneRelation("ventaId", "ventas.ventas", AF_RELATION_AUTOLINK|AF_HIDE|AF_FORCE_LOAD));
-        
+
 		global $ATK_VARS;
         $not_factura_flags = 0;
         if($ATK_VARS["factura"] == NULL)
         {
             $not_factura_flags = AF_HIDE;
         }
-        
-		$this->add(new atkManyToOneRelation("productoId", "productos.productos", AF_RELATION_AUTOLINK));		
+
+		$this->add(new atkManyToOneRelation("productoId", "productos.productos", AF_RELATION_AUTOLINK));
 		$this->add(new atkManyToOneRelation("colorId", "color.color", AF_RELATION_AUTOLINK)); // TODO esto es condicional al producto (si es coloreable o no)
 		$this->add(new atkNumberAttribute("cantidad" ,AF_OBLIGATORY));
                 $this->add(new atkCurrencyAttribute("precioIVA", $not_factura_flags|AF_SEARCHABLE, 10, "$", 2));
 		$this->add(new atkCurrencyAttribute("precioSinIVA", AF_SEARCHABLE, 10, "$", 2));
-                
+
 		$this->setTable("detalle", "detalle");
 		$this->setDescriptorTemplate("[productoId.nombreProducto] ([cantidad])");
 	}
-	
-	
+
+
 	function cantidad_validate(&$record){
 		$db = &atkGetDb();
 		$producto = $record["productoId"]["id"];
@@ -42,16 +42,19 @@ class detalle extends atkNode {
 
             $cantidadNueva = $cantidad-$record["cantidad"];
 
-            if($cantidadNueva < 0){		
+            if($cantidad == 0){
+                triggerError($record, "Sin stock", "no hay stock registrado para el producto.");
+            }
+            else if($cantidadNueva < 0){
                 triggerError($record, "No hay suficiente stock", "la cantidad actual es $cantidad");
             }
 
             if($record["cantidad"]< 0){
                 triggerError($record, "Error", "cantidad negativa");
-            }   
+            }
         }
 	}
-	
+
     function incrementSequence($tabla) {
         $db = &atkGetDb();
 
@@ -67,9 +70,9 @@ class detalle extends atkNode {
 
         return $newId;
     }
-	
-	function postAdd($record){        
-        $db = &atkGetDb();        
+
+	function postAdd($record){
+        $db = &atkGetDb();
 
 // Se modifica el stock del producto TODO: esto no debería estar cuando guardás la venta en vez del detalle?
         $producto= $record["productoId"]["id"];
@@ -90,9 +93,9 @@ class detalle extends atkNode {
         $iva = $result[0]["valorIva"]/100.0;
         $precioSinIVA = $cantidadDetalle*$precio;
         $precioIVA = $precioSinIVA+$precioSinIVA*$iva;
-        $db->query("UPDATE detalle set precioIVA=$precioIVA, precioSinIVA=$precioSinIVA where detalleId = $detalle");       
+        $db->query("UPDATE detalle set precioIVA=$precioIVA, precioSinIVA=$precioSinIVA where detalleId = $detalle");
 
-        $rows = $db->getrows("SELECT precioTotalConIVA, precioTotalSinIVA from ventas where id = $ventaId;");      
+        $rows = $db->getrows("SELECT precioTotalConIVA, precioTotalSinIVA from ventas where id = $ventaId;");
         $totalConIVA = $rows[0]["precioTotalConIVA"] + $precioIVA;
         $totalSinIVA = $rows[0]["precioTotalSinIVA"] + $precioSinIVA;
 
@@ -109,20 +112,20 @@ class detalle extends atkNode {
 
         return true;
 	}
-        
+
     function editArray($mode = "add", $record = NULL, $forceList = "", $suppressList = "", $fieldprefix = "", $ignoreTab = false, $injectSections = true) {
-        
+
         // Limpio todos los errores del triggerError, si vuelve a grabar una venta se volverá a validar.
         global $ATK_VARS;
-        $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)        
-                
+        $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)
+
         $cant = count($_SESSION["achievo"]["default"]["stack"][$id]);
         for($i=0; $i <=$cant; $i++){
             unset($_SESSION["achievo"]["default"]["stack"][$id][$i]["atkreject"]);
         }
         // ---------------------------------------------------------------------------------------------
-        
-        
+
+
         $url = atkSelf() . "?atknodetype=" . $this->atkNodeType() . "&atkaction=" . $this->m_action;
         $code = 'atkSubmit("' . atkurlencode(atkSessionManager::sessionUrl($url, SESSION_DEFAULT)) . '")';
         $this->getAttribute('productoId')->addOnChangeHandler($code);
@@ -130,11 +133,11 @@ class detalle extends atkNode {
 
         $esColoreable = $record["productoId"]["tipoProductoId"]["esColoreable"];
         $this->getAttribute("colorId")->removeFlag(AF_HIDE);
-        
+
         if ($esColoreable == false) {
             $this->getAttribute("colorId")->addFlag(AF_HIDE);
         }
-        
+
         //$ventaId = $record["ventaId"]["id"];
         //$result = $db->getrows("select fechaVenta from ventas where id = $ventaId");
         //$fechaVenta = $result[0]["fechaVenta"];
@@ -145,9 +148,9 @@ class detalle extends atkNode {
         $precioSinIVA = $record["cantidad"]*$record["productoId"]["precio"];
         $record["precioSinIVA"] = $precioSinIVA;
 //        $precioIVA = $precioSinIVA+$precioSinIVA*$iva;
-//        $db->query("UPDATE detalle set precioIVA=$precioIVA, precioSinIVA=$precioSinIVA where detalleId = $detalle");       
+//        $db->query("UPDATE detalle set precioIVA=$precioIVA, precioSinIVA=$precioSinIVA where detalleId = $detalle");
 //
-//        $rows = $db->getrows("SELECT precioTotalConIVA, precioTotalSinIVA from ventas where id = $ventaId;");      
+//        $rows = $db->getrows("SELECT precioTotalConIVA, precioTotalSinIVA from ventas where id = $ventaId;");
 //        $totalConIVA = $rows[0]["precioTotalConIVA"] + $precioIVA;
 //        $totalSinIVA = $rows[0]["precioTotalSinIVA"] + $precioSinIVA;
 //
@@ -156,15 +159,15 @@ class detalle extends atkNode {
 //
 //        $db->query("UPDATE ventas set precioTotalConIVA = $totalConIVA where id = $ventaId");
 //        $db->query("UPDATE ventas set precioTotalSinIVA = $totalSinIVA where id = $ventaId");
-        
+
         return parent::editArray($mode, $record, $forceList, $suppressList, $fieldprefix, $ignoreTab, $injectSections);
     }
-    
-    
+
+
     // Meto lógica para mostrar el popup de alerta de stock
     function preAdd(&$record) {
         $productoId = $record["productoId"]["id"];
-        
+
         if($productoId == NULL)
         {
             atk_var_dump($record,"ENtre!!!");
@@ -174,9 +177,9 @@ class detalle extends atkNode {
         atk_var_dump($record,"Saliii!!!");
         $db = &atkGetDb();
         $productosAlerta = $db->getrows("SELECT nombreProducto, cantidad, stockMinimo "
-                . "FROM productos WHERE (id = $productoId)" 
+                . "FROM productos WHERE (id = $productoId)"
                 . " AND cantidad < stockMinimo");    // Solo devuelve 1 resultado, así que pido el index 0
-        
+
         //atk_var_dump($productosAlerta, "Resultado del query");
         //atk_var_dump($productosAlerta['nombreProducto'], "Nombre producto");
 
@@ -193,7 +196,7 @@ class detalle extends atkNode {
             fwrite($file,$scriptAlert);
             fclose($file);
         }
-                
+
         return true;
     }
 }
