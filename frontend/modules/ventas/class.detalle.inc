@@ -24,7 +24,7 @@ class detalle extends atkNode {
 		$this->add(new atkManyToOneRelation("productoId", "productos.productos", AF_RELATION_AUTOLINK));		
 		$this->add(new atkManyToOneRelation("colorId", "color.color", AF_RELATION_AUTOLINK)); // TODO esto es condicional al producto (si es coloreable o no)
 		$this->add(new atkNumberAttribute("cantidad" ,AF_OBLIGATORY));
-                $this->add(new atkCurrencyAttribute("precioIVA", $not_factura_flags|AF_SEARCHABLE, 10, "$", 2));
+                $this->add(new atkCurrencyAttribute("precioIVA", $not_factura_flags|AF_SEARCHABLE|AF_HIDE_LIST, 10, "$", 2));
 		$this->add(new atkCurrencyAttribute("precioSinIVA", AF_SEARCHABLE, 10, "$", 2));
                 
 		$this->setTable("detalle", "detalle");

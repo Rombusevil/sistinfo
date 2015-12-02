@@ -4,7 +4,7 @@ include_once("modules/constantes.inc");
 
 class ventas extends atkNode {
     protected $fileName;// Archivo de intercambio para detectar si hay productos en alerta de stock
-
+    
     function ventas($name = "ventas", $flags = 0) {
         global $ATK_VARS;
 
@@ -38,7 +38,8 @@ class ventas extends atkNode {
         $this->add(new atkDateAttribute("fechaVencimiento", AF_SEARCHABLE|$flags_not_admin));
         $this->add(new atkManyToOneRelation("clienteId", "clientes.clientes", AF_RELATION_AUTOLINK ));
         $this->add(new atkAttribute("nombreCliente", AF_SEARCHABLE));
-        $this->add(new atkOneToOneRelation("factura", "ventas.facturas", "facturaId", AF_HIDE | AF_FORCE_LOAD | AF_UNIQUE));
+        $this->add(new atkOneToOneRelation("factura", "ventas.facturas", "facturaId", AF_HIDE | AF_FORCE_LOAD | AF_UNIQUE | AF_ONETOONE_INTEGRATE | AF_ONETOONE_RESPECT_TABS |  AF_ONETOONE_ERROR));
+        //$this->add(new atkManyToOneRelation("tipoFactura", "ventas.tiposFactura", AF_RELATION_AUTOLINK ));
         $this->add(new atkManyToOneRelation("empleadoId", "employee.employee", AF_RELATION_AUTOLINK | AF_HIDE));
         $this->add(new atkOneToManyRelation("detalle", "ventas.detalle", "ventaId", AF_ONETOMANY_SHOW_ADD | AF_CASCADE_DELETE |  AF_FORCE_LOAD));
 
@@ -170,6 +171,7 @@ class ventas extends atkNode {
         $this->getAttribute('clienteId')->addOnChangeHandler($code);
         $this->getAttribute('nombreCliente')->addOnChangeHandler($code);
         $this->getAttribute('detalle')->addOnChangeHandler($code);
+        //$this->getAttribute('tipoFactura')->addOnChangeHandler($code);
 
         $tipoVentaId = $record["tipoVentaId"]["tipoVentaId"];
         $clienteId = $record["clienteId"]["clienteId"];
@@ -179,6 +181,7 @@ class ventas extends atkNode {
         $this->getAttribute("clienteId")->removeFlag(AF_HIDE);
         $this->getAttribute("nombreCliente")->removeFlag(AF_HIDE);
         $this->getAttribute("factura")->addFlag(AF_HIDE);
+        $this->getAttribute("precioTotalConIVA")->addFlag(AF_HIDE);
 
         if($clienteId != NULL) {
             $this->getAttribute("nombreCliente")->addFlag(AF_HIDE);
@@ -188,10 +191,21 @@ class ventas extends atkNode {
                 $this->getAttribute("clienteId")->addFlag(AF_HIDE);
             }
         }
-
+        $totalSinIva = $this->getTotalSinIva();
         if ($tipoVentaId == VENTA_NORMAL) {
             $this->getAttribute("fechaVencimiento")->addFlag(AF_HIDE);
             $this->getAttribute("factura")->removeFlag(AF_HIDE);
+            $this->getAttribute("precioTotalConIVA")->removeFlag(AF_HIDE);
+            
+            $tipoFactura = $record["factura"]["tipoFacturaId"]["id"];
+            
+            if($tipoFactura != NULL) {
+                $fechaVenta = $record["fechaVenta"];
+                $fechaVenta = $fechaVenta["year"]."-".$fechaVenta["month"]."-".$fechaVenta["day"];
+                $ivas = &getNode("ventas.ivas");
+                $iva = $ivas->getIva($tipoFactura,$fechaVenta);
+                $record["precioTotalConIVA"] = $totalSinIva + $totalSinIva*$iva/100;
+            }
         }
         else if ($tipoVentaId == DESCARGA_EN_OBRA) {
             $this->getAttribute("fechaVencimiento")->addFlag(AF_HIDE);
@@ -201,7 +215,7 @@ class ventas extends atkNode {
             $this->getAttribute("fechaVencimiento")->removeFlag(AF_HIDE);
         }
         
-        $record["precioTotalSinIVA"] = $record["detalle"][0]["precioSinIVA"];
+        $record["precioTotalSinIVA"] = $totalSinIva;
         return parent::editArray($mode, $record, $forceList, $suppressList, $fieldprefix, $ignoreTab, $injectSections);
     }
 
@@ -300,5 +314,18 @@ class ventas extends atkNode {
                 triggerError($record, "Error", "No hay suficiente stock para el producto $nombreProducto");
             }
         }
+    }
+    
+    function getTotalSinIva(){
+        global $ATK_VARS;
+        $sid = $ATK_VARS["atkstackid"]; // stack id
+        $sdetalle = $ATK_VARS["#STACK#"][$sid]["ventas.ventas:detalle"];
+        $acum = 0;
+        if($sdetalle != null){
+            foreach ($sdetalle as $linDetalle) {
+                $acum += $linDetalle["precioSinIVA"];   // El campo "precioSinIva" tiene el precio del producto sin iva multiplicado por la cantidad vendida
+            }
+        }
+        return $acum;
     }
 }

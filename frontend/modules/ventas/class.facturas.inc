@@ -1,6 +1,7 @@
 <?php 
 
 userelation("atkmanytoonerelation");
+include_once("class.ventas.inc");
 
 class facturas extends atkNode {  
   function facturas($name="facturas", $flags=0) {
@@ -8,9 +9,7 @@ class facturas extends atkNode {
     
     $this->add(new atkNumberAttribute("facturaId" ,AF_AUTOKEY));
     $this->add(new atkNumberAttribute("numeroFactura" ,AF_OBLIGATORY)); // El número de factura lo ingresan a mano. 
-    
-    
-    $this->add(new atkManyToOneRelation("tipoFacturaId", "ventas.tiposFactura", AF_OBLIGATORY | AF_RELATION_AUTOLINK| AF_HIDE_LIST));
+    $this->add(new atkManyToOneRelation("tipoFacturaId", "ventas.tiposFactura", AF_OBLIGATORY | AF_RELATION_AUTOLINK| AF_HIDE_LIST | AF_FORCE_LOAD));
     
     $this->setTable("facturas", "facturas");
     $this->setDescriptorTemplate("[numeroFactura]");
@@ -25,5 +24,5 @@ class facturas extends atkNode {
     
     return array("numeroFactura"=>$numFactura[0]["nextid"]);
   }
-
+  
 }  
