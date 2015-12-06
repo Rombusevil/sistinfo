@@ -1,6 +1,7 @@
 <?php
 
 include_once("modules/constantes.inc");
+include_once("modules/utils.php");
 
 class productos extends atkNode {
     protected $fileMraPopup;// Archivo de intercambio para detectar si tengo que mandar popup pidiendo input de usuario
@@ -9,7 +10,7 @@ class productos extends atkNode {
     function productos($name = "productos", $flags = 0) {
         $this->fileMraPopup = "mraPopup.txt"; // Defino el nombre del archivo
         $this->productIds = "pId.txt"; // Defino el nombre del archivo
-        
+
         $this->atkNode($name, $flags | NF_ADD_LINK | NF_EDITAFTERADD | NF_MRA);
 
         $this->add(new atkNumberAttribute("id", AF_AUTOKEY));
@@ -19,7 +20,7 @@ class productos extends atkNode {
         $this->add(new atkAttribute("descripcion", 0, 100));
         $this->add(new atkCurrencyAttribute("precio", AF_OBLIGATORY|AF_FORCE_LOAD, 0, "$", 2));
         $this->add(new atkNumberAttribute("cantidad", AF_READONLY | AF_HIDE_ADD | AF_HIDE_EDIT));
-        $this->add(new atkNumberAttribute("stockMinimo", AF_OBLIGATORY));
+        $this->add(new atkNumberAttribute("stockMinimo", AF_HIDE_ADD));
 
         // Foraneas
         $this->add(new atkManyToOneRelation("marcaId", "productos.marca", AF_RELATION_AUTOLINK));
@@ -33,7 +34,7 @@ class productos extends atkNode {
 //        if ($tipoProducto != NULL) {
 //            $db = &atkGetDb();
 //            $query = "SELECT adp.nombreAtributo, dp.valorAtributo, dp.tipoAtributo
-//          FROM atributosDeProductos adp 
+//          FROM atributosDeProductos adp
 //          join tiposAtributosDeProductos tap
 //          join datosproductos dp
 //          where adp.atributoId = tap.atributoId
@@ -44,10 +45,10 @@ class productos extends atkNode {
 //                $this->add(new atkDummyAttribute($row["nombreAtributo"], $row["valorAtributo"] . $row["tipoAtributo"], 0));
 //            }
 //        }
-     
+
         $this->setTable("productos", "productos");
         $this->setDescriptorTemplate("[nombreProducto] | [codigoProducto]");
-        
+
         // Gestión de MRA - popup
         @$file = fopen($this->fileMraPopup,"r"); // Con el arroba suprimo el warning de file not found, está bien que no lo encuentre si no hay alerta de stock
         if($file){
@@ -58,38 +59,20 @@ class productos extends atkNode {
 
             $page = &$this->getPage();
             $page->addContent($script);
-            
+
             fclose($file);
             unlink($this->fileMraPopup); // Borro el archivo
         }
     }
 
-    // Devuelve el nextid y lo aumenta en 1
-    // TODO poner en utils
-    function incrementSequence($tabla) {
-        $db = &atkGetDb();
-
-        $result = $db->getrows("SELECT nextid from db_sequence where seq_name = '$tabla';");
-
-        if ($result == NULL) {
-            $db->query("INSERT INTO db_sequence (seq_name, nextid) VALUES ('$tabla', 2);");
-            $newId = 1;
-        } else {
-            $newId = $result[0]["nextid"] + 1;
-            $db->query("UPDATE db_sequence set nextid =$newId where seq_name = '$tabla';");
-        }
-
-        return $newId;
-    }
-    
     function postAdd($record) {
         $db = &atkGetDb();
         $tipoProductoId = $record["tipoProductoId"]["id"];
 
         $query = "SELECT adp.atributoId, adp.nombreAtributo, adp.tipoAtributo
-                FROM atributosDeProductos adp 
+                FROM atributosDeProductos adp
                 join tiposAtributosDeProductos tap
-                where adp.atributoId = tap.atributoId 
+                where adp.atributoId = tap.atributoId
                 and tap.tipoProductoId =$tipoProductoId;";
 
         $atributosProducto = $db->getrows($query);
@@ -99,11 +82,12 @@ class productos extends atkNode {
             $nombreAtributo = $row["nombreAtributo"];
             $tipoAtributo = $row["tipoAtributo"];
             $productoId = $record["id"];
-            $datosProductosId = $this->incrementSequence("datosProductos");
 
-//TODO actualizar modelo de datos campo tipoAtributo es string
+            $utils = new utils();
+            $datosProductosId = $utils->incrementSequence("datosProductos");
 
-            $query = "INSERT INTO datosProductos (nombreAtributo, tipoAtributo, productoId, datosProductosId) 
+            //TODO actualizar modelo de datos campo tipoAtributo es string
+            $query = "INSERT INTO datosProductos (nombreAtributo, tipoAtributo, productoId, datosProductosId)
                   VALUES ( '$nombreAtributo' , '$tipoAtributo', $productoId, $datosProductosId);";
             $db->query($query);
         }
@@ -112,7 +96,7 @@ class productos extends atkNode {
     function recordActions($record, &$actions, &$mraactions) {
         $mraactions["mra_editar_precio"] = "mra_editar_precio";
     }
-    
+
     function action_mra_editar_precio() {
         if (is_array($this->m_postvars['atkselector'])) {
             $productId = "";
@@ -122,7 +106,7 @@ class productos extends atkNode {
                 //$this->aumentar10porciento($procudtoId);
             }
             $productId = substr($productId, 0, -2); // Le saco el ", " final que está de más.
-          
+
             // Escribo el mensaje de alerta en un archivo para que cuando recargue la página lo muestre
             $msg = 'Ingrese el porcentaje de aumento del precio\n\n';
             $scriptAlert = '<script language="javascript"> '
@@ -132,29 +116,29 @@ class productos extends atkNode {
                     . 'xhr.open("POST", "getMraValue.php", true);'
                     . 'xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");'
                     . 'xhr.send("value="+percent);'
-                    . '</script>';            
-            
+                    . '</script>';
+
             // En este archivo escribo todo el js que se tiene que ejecutar
             $file = fopen($this->fileMraPopup,"w");
             fwrite($file,$scriptAlert);
             fclose($file);
-            
+
             // Escribo solo los productID acá
             $file = fopen($this->productIds, "w");
             fwrite($file,$productId);
             fclose($file);
         }
-        
+
         $this->redirect();
     }
-    
+
     function rowColor($record) {
         $stockMinimo = intval($record["stockMinimo"]);
         $stockActual = intval($record["cantidad"]);
-        
+
         if($stockActual == 0)
-            return array(ROJO, ROJO_HIGHLIGHT); 
-        
+            return array(ROJO, ROJO_HIGHLIGHT);
+
         if (intval($stockActual) <= intval($stockMinimo)) {
             return array(NARANJA, NARANJA_HIGHLIGHT);
         }
@@ -167,22 +151,32 @@ class productos extends atkNode {
         {
             triggerError($record, "Error", "El tipo de producto es obligatorio");
         }
+        else{
+            // Cargo el stock mínimo por defecto para ese tipo de producto.
+            $tipoProducto = $record["tipoProductoId"];
+            $record["stockMinimo"] = $tipoProducto["stockMinimoPorDefecto"];
+        }
+
         $marca_id = $record["marcaId"]["marcaId"];
         if($marca_id == NULL)
         {
             triggerError($record, "Error", "La marca es obligatoria");
         }
     }
-    
+
     function editArray($mode = "add", $record = NULL, $forceList = "", $suppressList = "", $fieldprefix = "", $ignoreTab = false, $injectSections = true) {
-        $url = atkSelf() . "?atknodetype=" . $this->atkNodeType() . "&atkaction=" . $this->m_action;
-        $code = 'atkSubmit("' . atkurlencode(atkSessionManager::sessionUrl($url, SESSION_DEFAULT)) . '")';
-        $this->getAttribute('tipoProductoId')->addOnChangeHandler($code);
-    
-        $tipoProducto = $record["tipoProductoId"];
-        if($tipoProducto != NULL)
-        {            
-            $record["stockMinimo"] = $tipoProducto["stockMinimoPorDefecto"];
+        // Limito esta funcionalidad al momento de editar el producto, y lo oculto al momento de agregarlo
+        // Esto arregla el bug de editAfterAdd que te borraba todos los campos.
+        if($mode == 'edit'){
+            $url = atkSelf() . "?atknodetype=" . $this->atkNodeType() . "&atkaction=" . $this->m_action;
+            $code = 'atkSubmit("' . atkurlencode(atkSessionManager::sessionUrl($url, SESSION_DEFAULT)) . '")';
+            $this->getAttribute('tipoProductoId')->addOnChangeHandler($code);
+
+            $tipoProducto = $record["tipoProductoId"];
+            if($tipoProducto != NULL)
+            {
+                $record["stockMinimo"] = $tipoProducto["stockMinimoPorDefecto"];
+            }
         }
         return parent::editArray($mode, $record, $forceList, $suppressList, $fieldprefix, $ignoreTab, $injectSections);
     }
