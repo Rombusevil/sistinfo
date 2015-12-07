@@ -20,14 +20,11 @@ class facturas extends atkNode {
   function initial_values(){
         global $ATK_VARS;
         $ventaId = split("=", $ATK_VARS["atkselector"]);
+        $ventaId = $ventaId[1];
         $db = atkGetDb();
-
         // Si estoy en el edit de una venta, voy a tener el ventaId
-        if(!empty($ventaId)){
-            $ventaId = $ventaId[1];
+        if(!empty($ventaId)){            
             $numFactura = $db->getRows("SELECT `facturaId` FROM ventas WHERE `id`=$ventaId");
-
-            atk_var_dump($numFactura, " Esto devolvió el query que me trae el verdadero número de factura!!!");
             if($numFactura != ""){
                 return array("numeroFactura"=>$numFactura[0]["facturaId"]);
             }
