@@ -284,25 +284,26 @@
     */
    function lock($table, $mode="write")
    {
-     /* connect first */
-     if ($this->connect('w')==DB_SUCCESS)
-     {
-       /* lock */
-       $query = "lock tables $table $mode";
-
-       if (atkconfig("debug")>=0)
-       {
-         atkimport("atk.utils.atkdebugger");
-         atkDebugger::addQuery($query);
-       }
-
-       $result = @mysqli_query($this->m_link_id, $query);
-       if (!$result) $this->halt("$mode lock on $table failed.");
-
-       /* return result */
-       return $result;
-     }
-     return 0;
+//     /* connect first */
+//     if ($this->connect('w')==DB_SUCCESS)
+//     {
+//       /* lock */
+//       $query = "lock tables $table $mode";
+//
+//       if (atkconfig("debug")>=0)
+//       {
+//         atkimport("atk.utils.atkdebugger");
+//         atkDebugger::addQuery($query);
+//       }
+//
+//       $result = @mysqli_query($this->m_link_id, $query);
+//       if (!$result) $this->halt("$mode lock on $table failed.");
+//
+//       /* return result */
+//       return $result;
+//     }
+//     return 0;
+       return 1;
    }
 
    /**
@@ -312,17 +313,18 @@
    function unlock()
    {
      /* connect first */
-     if ($this->connect('w')==DB_SUCCESS)
-     {
-       /* unlock */
-       atkdebug("unlock tables");
-       $result = @mysqli_query($this->m_link_id, "unlock tables");
-       if (!$result) $this->halt("unlock tables failed.");
-
-       /* return result */
-       return $result;
-     }
-     return 0;
+//     if ($this->connect('w')==DB_SUCCESS)
+//     {
+//       /* unlock */
+//       atkdebug("unlock tables");
+//       $result = @mysqli_query($this->m_link_id, "unlock tables");
+//       if (!$result) $this->halt("unlock tables failed.");
+//
+//       /* return result */
+//       return $result;
+//     }
+//     return 0;
+       return 1;
    }
 
    /**
