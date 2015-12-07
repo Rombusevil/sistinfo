@@ -19,12 +19,12 @@ class facturas extends atkNode {
   // Esta func carga un arreglo con key value los valores iniciales.
   function initial_values(){
         global $ATK_VARS;
-        $ventaId = split("=", $ATK_VARS["atkselector"])[1];
-
+        $ventaId = split("=", $ATK_VARS["atkselector"]);
         $db = atkGetDb();
 
         // Si estoy en el edit de una venta, voy a tener el ventaId
         if(!empty($ventaId)){
+            $ventaId = $ventaId[1];
             $numFactura = $db->getRows("SELECT `facturaId` FROM ventas WHERE `id`=$ventaId");
 
             atk_var_dump($numFactura, " Esto devolvió el query que me trae el verdadero número de factura!!!");
