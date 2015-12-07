@@ -1,5 +1,1 @@
-ALTER TABLE `ventas` CHANGE `fechaVenta` `fechaVenta` TIMESTAMP NULL DEFAULT NULL
-
-ALTER TABLE `ventas` CHANGE `fechaVencimiento` `fechaVencimiento` TIMESTAMP NULL DEFAULT NULL 
-
-ALTER TABLE `manejostock` CHANGE `fecha` `fecha` TIMESTAMP NULL DEFAULT NULL 
+ALTER TABLE ventas ADD fechaCierre datetime;

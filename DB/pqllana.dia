@@ -2586,7 +2586,7 @@
         </dia:composite>
         <dia:composite type="umlattribute">
           <dia:attribute name="name">
-            <dia:string>#cerrada#</dia:string>
+            <dia:string>#fechaCierre#</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
             <dia:string>#date#</dia:string>
