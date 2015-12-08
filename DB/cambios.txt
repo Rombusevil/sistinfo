@@ -1,1 +1,2 @@
-ALTER TABLE ventas ADD fechaCierre datetime;
+ALTER TABLE `ventas` DROP `facturaId`;
+ALTER TABLE  `ventas` ADD  `numeroFactura` INT NULL;
