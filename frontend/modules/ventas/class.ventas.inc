@@ -11,7 +11,7 @@ class ventas extends atkNode {
         // Si canceló la venta anterior voy a limpiar el detalle:
         $lvl = $ATK_VARS["atkprevlevel"];
         if(isset($ATK_VARS["atkcancel"]) && $lvl == 0) { // Si estoy en la pantalla de venta (y NO en la de detalle)
-            $this->limpiaDetalle();
+            $this->limpiaFormulario();
 
             // También limpio el flag de atkcancel y mando a redirect para empezar fresco
             //unset($ATK_VARS["atkcancel"]); // EDIT: Con la forma nueva de venta esto no hace falta
@@ -109,8 +109,6 @@ class ventas extends atkNode {
         return array("fechaVenta" => date("Y-m-d"));
     }
 
-
-
     function postAdd($record) {
         $user = &atkGetUser();
         $userId = $user["id"];
@@ -159,7 +157,7 @@ class ventas extends atkNode {
         }
 
         // Hago esto para arreglar el bug de que te persistía el detalle.
-        $this->limpiaDetalle();
+        $this->limpiaFormulario();
         // --------------------------------------------------------------
 
 
@@ -266,11 +264,14 @@ class ventas extends atkNode {
         return array(BLANCO);
     }
 
-    function limpiaDetalle(){
+    function limpiaFormulario(){
         global $ATK_VARS;
         $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)
-
-        unset($_SESSION["achievo"]["default"]["stack"][$id][1]["atkformdata"]);
+        
+        // Borro todos los elementos del arreglo para que se limpie el formulario correctamente.
+        for($i=0; $i<count($_SESSION["achievo"]["default"]["stack"][$id]); $i++){
+            unset($_SESSION["achievo"]["default"]["stack"][$id][$i]["atkformdata"]);
+        }
         unset($_SESSION["achievo"]["default"]["globals"]["#STACK#"][$id]);
     }
 

@@ -80,7 +80,7 @@ function muestraAlertaStock() {
 
 function muestraAlertaVencimiento() {
     $db = &atkGetDb();
-    $sql = "SELECT * FROM ventas WHERE fechaVencimiento < now() + INTERVAL 1 WEEK AND facturaId IS NULL;";
+    $sql = "SELECT * FROM ventas WHERE fechaVencimiento < now() + INTERVAL 1 WEEK AND fechaCierre IS NULL;";
     $rows = $db->getrows($sql);
 
     // Si no tengo vencimientos que alertar salgo.
