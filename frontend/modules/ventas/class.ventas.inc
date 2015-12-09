@@ -87,15 +87,15 @@ class ventas extends atkNode {
         $result = $db->getRows("SELECT tipoVentaId, fechaCierre FROM ventas WHERE id = $ventaId");        
         $tipoVenta = $result[0]["tipoVentaId"];
         $fechaCierre = $result[0]["fechaCierre"];
-        if($tipoVenta == 3){ // 3 = FIADA
-            // TODO no anda el trigger error, hay que mostrar un mensaje de otra manera.
+        if(strcmp($tipoVenta,"3") != 0){ // 3 = FIADA        
+            // TODO no anda el trigger error, hay que mostrar un mensaje de otra manera.            
             triggerError($record, "Error", "Solo puede asignar factura a una venta fiada");
         }
         // Verificación 2: Solo procedo si es FIADA y no está cerrada.
-        else if (empty($fechaCierre)){
+        else if (!empty($fechaCierre)){            
             triggerError($record, "Error", "Esta venta ya tiene asignada una factura");
         }
-        else{
+        else{            
             $db->query("UPDATE ventas SET fechaCierre = NOW() WHERE id=$ventaId");
             //TODO: checkeo de si salió todo ok antes de commitear:
             $db->commit();            
