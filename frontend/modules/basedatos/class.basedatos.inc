@@ -27,8 +27,7 @@ class basedatos extends atkNode {
 
     function getViewText() {
         $baseUrl = $_SERVER['SERVER_NAME'].":".$_SERVER['SERVER_PORT'];
-
-        // TODO esto está horrible, hacer bien.
+        
         $urlBackupDb = "http://$baseUrl/bbd.php";
         
         return    "<a href=". $urlBackupDb . " >"

@@ -85,8 +85,7 @@ class productos extends atkNode {
 
             $utils = new utils();
             $datosProductosId = $utils->incrementSequence("datosProductos");
-
-            //TODO actualizar modelo de datos campo tipoAtributo es string
+            
             $query = "INSERT INTO datosProductos (nombreAtributo, tipoAtributo, productoId, datosProductosId)
                   VALUES ( '$nombreAtributo' , '$tipoAtributo', $productoId, $datosProductosId);";
             $db->query($query);

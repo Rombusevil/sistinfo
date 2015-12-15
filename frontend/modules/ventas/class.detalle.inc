@@ -22,7 +22,7 @@ class detalle extends atkNode {
         }
 
 		$this->add(new atkManyToOneRelation("productoId", "productos.productos", AF_RELATION_AUTOLINK));
-		$this->add(new atkManyToOneRelation("colorId", "color.color", AF_RELATION_AUTOLINK)); // TODO esto es condicional al producto (si es coloreable o no)
+		$this->add(new atkManyToOneRelation("colorId", "color.color", AF_RELATION_AUTOLINK));
 		$this->add(new atkNumberAttribute("cantidad" ,AF_OBLIGATORY));
                 $this->add(new atkCurrencyAttribute("precioIVA", $not_factura_flags|AF_SEARCHABLE|AF_HIDE_LIST, 10, "$", 2));
 		$this->add(new atkCurrencyAttribute("precioSinIVA", AF_SEARCHABLE, 10, "$", 2));
@@ -74,7 +74,6 @@ class detalle extends atkNode {
 	function postAdd($record){
         $db = &atkGetDb();
 
-// Se modifica el stock del producto TODO: esto no debería estar cuando guardás la venta en vez del detalle?
         $producto= $record["productoId"]["id"];
         $detalle = $record["detalleId"];
         $cantidadDetalle = $record["cantidad"];
