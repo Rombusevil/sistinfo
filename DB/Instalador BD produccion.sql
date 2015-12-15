@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 14-12-2015 a las 23:10:40
+-- Tiempo de generación: 14-12-2015 a las 23:31:04
 -- Versión del servidor: 5.5.41
 -- Versión de PHP: 5.4.41-0+deb7u1
 
@@ -421,6 +421,7 @@ INSERT INTO `db_sequence` (`seq_name`, `nextid`) VALUES
 ('ivas', 3),
 ('person', 1),
 ('profile', 1),
+('tipoMovimiento', 2),
 ('tiposFactura', 4),
 ('userpimitems', 3);
 
@@ -1100,6 +1101,14 @@ CREATE TABLE IF NOT EXISTS `tipoMovimiento` (
   `nombreMovimiento` varchar(30) DEFAULT NULL,
   `tipoOperacion` varchar(30) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `tipoMovimiento`
+--
+
+INSERT INTO `tipoMovimiento` (`tipoMovimientoId`, `nombreMovimiento`, `tipoOperacion`) VALUES
+(1, 'Venta', 'Decremento'),
+(2, 'Decremento', 'Decremento');
 
 -- --------------------------------------------------------
 
