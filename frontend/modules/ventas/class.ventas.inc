@@ -38,6 +38,7 @@ class ventas extends atkNode {
         $this->add(new atkManyToOneRelation("tipoVentaId", "ventas.tiposVenta", AF_RELATION_AUTOLINK|AF_SEARCHABLE ));
         $this->add(new atkDateTimeAttribute("fechaVenta", AF_OBLIGATORY|AF_SEARCHABLE));
         $this->add(new atkDateAttribute("fechaVencimiento", AF_SEARCHABLE|$flags_not_admin));
+        $this->add(new atkDateAttribute("fechaCierre", AF_READONLY_ADD | AF_HIDE | AF_HIDE_ADD));
         $this->add(new atkManyToOneRelation("clienteId", "clientes.clientes", AF_RELATION_AUTOLINK ));
         $this->add(new atkAttribute("nombreCliente", AF_SEARCHABLE));
         //$this->add(new atkOneToOneRelation("factura", "ventas.facturas", "facturaId", AF_HIDE | AF_FORCE_LOAD | AF_UNIQUE | AF_ONETOONE_INTEGRATE | AF_ONETOONE_RESPECT_TABS |  AF_ONETOONE_ERROR));
@@ -48,6 +49,8 @@ class ventas extends atkNode {
 
         $this->add(new atkCurrencyAttribute("precioTotalConIVA", AF_HIDE_ADD|AF_HIDE_EDIT|AF_READONLY|AF_SEARCHABLE, 0, "$", 2));
         $this->add(new atkCurrencyAttribute("precioTotalSinIVA", AF_READONLY|AF_SEARCHABLE, 0, "$", 2));
+        
+        
         
         $this->addSecurityMap("cierraVenta", "view"); // Agrego la action de cerrar venta
         $this->setTable("ventas", "ventas");
@@ -203,6 +206,7 @@ class ventas extends atkNode {
         $this->getAttribute('nombreCliente')->addOnChangeHandler($code);
         $this->getAttribute('detalle')->addOnChangeHandler($code);
         $this->getAttribute('tipoFactura')->addOnChangeHandler($code);
+        $this->getAttribute('fechaCierre')->addOnChangeHandler($code);
 
         $tipoVentaId = $record["tipoVentaId"]["tipoVentaId"];
         $clienteId = $record["clienteId"]["clienteId"];
@@ -214,6 +218,7 @@ class ventas extends atkNode {
         $this->getAttribute("tipoFactura")->addFlag(AF_HIDE);
         $this->getAttribute("precioTotalConIVA")->addFlag(AF_HIDE);
         $this->getAttribute("tipoFactura")->addFlag(numeroFactura);
+        $this->getAttribute("fechaCierre")->addFlag(AF_HIDE);
         
         if($clienteId != NULL) {
             $this->getAttribute("nombreCliente")->addFlag(AF_HIDE);
@@ -229,6 +234,7 @@ class ventas extends atkNode {
             $this->getAttribute("tipoFactura")->removeFlag(AF_HIDE);
             $this->getAttribute("numeroFactura")->removeFlag(AF_HIDE);
             $this->getAttribute("precioTotalConIVA")->removeFlag(AF_HIDE);
+            $this->getAttribute("fechaCierre")->addFlag(AF_HIDE);
             
             $tipoFactura = $record["tipoFactura"]["id"];
             
@@ -242,6 +248,7 @@ class ventas extends atkNode {
         }
         else if ($tipoVentaId == DESCARGA_EN_OBRA) {
             $this->getAttribute("fechaVencimiento")->addFlag(AF_HIDE);
+            $this->getAttribute("fechaCierre")->addFlag(AF_HIDE);
         }
         else if ($tipoVentaId == VENTA_FIADA) {
             $this->getAttribute("fechaVencimiento")->addFlag(AF_OBLIGATORY);
@@ -249,6 +256,9 @@ class ventas extends atkNode {
             $this->getAttribute("precioTotalConIVA")->removeFlag(AF_HIDE);
             $this->getAttribute("tipoFactura")->removeFlag(AF_HIDE);
             $this->getAttribute("numeroFactura")->removeFlag(AF_HIDE);
+            $this->getAttribute("fechaCierre")->removeFlag(AF_HIDE);
+            $this->getAttribute("fechaCierre")->addFlag(AF_HIDE_ADD | AF_READONLY_ADD);
+            
         }
         
         $record["precioTotalSinIVA"] = $totalSinIva;
@@ -257,8 +267,9 @@ class ventas extends atkNode {
 
     function rowColor($record) {
         $tipoVenta = $record["tipoVentaId"]["tipoVentaId"];
-        $facturaId = $record["factura"]["facturaId"];
-        if($tipoVenta == VENTA_FIADA && $facturaId == NULL) {
+        $ventaCerrada = $record["factura"]["fechaCierre"];
+        atk_var_dump($record, " BUSCA POR FECHACIERRE!!!");
+        if($tipoVenta == VENTA_FIADA && $ventaCerrada == NULL) {
             return array(ROJO,ROJO_HIGHLIGHT);
         }
         return array(BLANCO);
