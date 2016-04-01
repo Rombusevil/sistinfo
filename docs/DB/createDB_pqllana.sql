@@ -42,9 +42,9 @@ CREATE TABLE IF NOT EXISTS `accessright` (
 CREATE TABLE IF NOT EXISTS `atributosDeProductos` (
   `atributoId` int(11) NOT NULL DEFAULT '0',
   `nombreAtributo` varchar(30) DEFAULT NULL,
-  `tipoAtributo` varchar(11) DEFAULT NULL,
+  `unidadAtributo` varchar(11) DEFAULT NULL,
   PRIMARY KEY (`atributoId`),
-  KEY `tipoAtributo` (`tipoAtributo`)
+  KEY `unidadAtributo` (`unidadAtributo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
