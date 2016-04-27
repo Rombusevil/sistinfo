@@ -254,10 +254,19 @@ class ventas extends atkNode {
             $this->getAttribute("fechaVencimiento")->addFlag(AF_OBLIGATORY);
             $this->getAttribute("fechaVencimiento")->removeFlag(AF_HIDE);
             $this->getAttribute("precioTotalConIVA")->removeFlag(AF_HIDE);
-            $this->getAttribute("tipoFactura")->removeFlag(AF_HIDE);
-            $this->getAttribute("numeroFactura")->removeFlag(AF_HIDE);
+            $this->getAttribute("tipoFactura")->removeFlag(AF_HIDE);            
             $this->getAttribute("fechaCierre")->removeFlag(AF_HIDE);
             $this->getAttribute("fechaCierre")->addFlag(AF_HIDE_ADD | AF_READONLY_ADD);
+            
+            $tipoFactura = $record["tipoFactura"]["id"];
+            
+            if($tipoFactura != NULL) {
+                $fechaVenta = $record["fechaVenta"];
+                $fechaVenta = $fechaVenta["year"]."-".$fechaVenta["month"]."-".$fechaVenta["day"];
+                $ivas = &getNode("ventas.ivas");
+                $iva = $ivas->getIva($tipoFactura,$fechaVenta);
+                $record["precioTotalConIVA"] = $totalSinIva + $totalSinIva*$iva/100;
+            }
             
         }
         
