@@ -211,6 +211,7 @@ class ventas extends atkNode {
         $tipoVentaId = $record["tipoVentaId"]["tipoVentaId"];
         $clienteId = $record["clienteId"]["clienteId"];
         $nombreCliente = $record["nombreCliente"];
+        
 
         $this->getAttribute("fechaVencimiento")->removeFlag(AF_OBLIGATORY);
         $this->getAttribute("clienteId")->removeFlag(AF_HIDE);
@@ -228,7 +229,12 @@ class ventas extends atkNode {
                 $this->getAttribute("clienteId")->addFlag(AF_HIDE);
             }
         }
-        $totalSinIva = $this->getTotalSinIva();
+        
+        
+        $totalSinIva = $this->getTotalSinIva($record["id"]);
+            
+        
+        
         if ($tipoVentaId == VENTA_NORMAL) {
             $this->getAttribute("fechaVencimiento")->addFlag(AF_HIDE);
             $this->getAttribute("tipoFactura")->removeFlag(AF_HIDE);
@@ -413,7 +419,17 @@ class ventas extends atkNode {
         }
     }
     
-    function getTotalSinIva(){
+    function getTotalSinIva($idVenta){
+        // Si estás viendo una venta ya creada
+        if($idVenta != ""){
+            $sql = "SELECT precioTotalSinIVA FROM ventas WHERE id = $idVenta";
+            $db = atkGetDb();
+            $rows = $db->getrows($sql);
+        
+            return $rows[0]["precioTotalSinIVA"];
+        }
+        
+        // Si estás creando una venta
         global $ATK_VARS;
         $sid = $ATK_VARS["atkstackid"]; // stack id
         $sdetalle = $ATK_VARS["#STACK#"][$sid]["ventas.ventas:detalle"];
