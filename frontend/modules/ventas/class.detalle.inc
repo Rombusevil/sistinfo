@@ -71,7 +71,7 @@ class detalle extends atkNode {
         return $newId;
     }
 
-	function postAdd($record){
+    function postAdd($record){
         $db = &atkGetDb();
 
         $producto= $record["productoId"]["id"];
@@ -98,11 +98,6 @@ class detalle extends atkNode {
         $totalConIVA = $rows[0]["precioTotalConIVA"] + $precioIVA;
         $totalSinIVA = $rows[0]["precioTotalSinIVA"] + $precioSinIVA;
 
-        //atk_var_dump($totalConIVA,"Con IVA");
-        //atk_var_dump($totalSinIVA,"Sin IVA");
-
-        $db->query("UPDATE ventas set precioTotalConIVA = $totalConIVA where id = $ventaId");
-        $db->query("UPDATE ventas set precioTotalSinIVA = $totalSinIVA where id = $ventaId");
 
         $manejoStockId = $this->incrementSequence("manejoStock");
         $tipoMovimiento = 2; //2 = Venta
@@ -110,7 +105,7 @@ class detalle extends atkNode {
 
 
         return true;
-	}
+    }
 
     function editArray($mode = "add", $record = NULL, $forceList = "", $suppressList = "", $fieldprefix = "", $ignoreTab = false, $injectSections = true) {
 
