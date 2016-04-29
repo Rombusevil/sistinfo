@@ -35,20 +35,20 @@ class ventas extends atkNode {
         }
 
         $this->add(new atkNumberAttribute("id", AF_AUTOKEY));
-        $this->add(new atkManyToOneRelation("tipoVentaId", "ventas.tiposVenta", AF_RELATION_AUTOLINK|AF_SEARCHABLE ));
-        $this->add(new atkDateTimeAttribute("fechaVenta", AF_OBLIGATORY|AF_SEARCHABLE));
-        $this->add(new atkDateAttribute("fechaVencimiento", AF_SEARCHABLE|$flags_not_admin));
-        $this->add(new atkDateAttribute("fechaCierre", AF_READONLY_ADD | AF_HIDE | AF_HIDE_ADD));
-        $this->add(new atkManyToOneRelation("clienteId", "clientes.clientes", AF_RELATION_AUTOLINK ));
-        $this->add(new atkAttribute("nombreCliente", AF_SEARCHABLE));
+        $this->add(new atkManyToOneRelation("tipoVentaId", "ventas.tiposVenta", AF_RELATION_AUTOLINK|AF_SEARCHABLE | AF_READONLY_EDIT));
+        $this->add(new atkDateTimeAttribute("fechaVenta", AF_OBLIGATORY|AF_SEARCHABLE | AF_READONLY_EDIT));
+        $this->add(new atkDateAttribute("fechaVencimiento", AF_SEARCHABLE|$flags_not_admin | AF_READONLY_EDIT));
+        $this->add(new atkDateAttribute("fechaCierre", AF_READONLY_ADD | AF_HIDE_ADD | AF_FORCE_LOAD));
+        $this->add(new atkManyToOneRelation("clienteId", "clientes.clientes", AF_RELATION_AUTOLINK | AF_READONLY_EDIT));
+        $this->add(new atkAttribute("nombreCliente", AF_SEARCHABLE | AF_READONLY_EDIT));
         //$this->add(new atkOneToOneRelation("factura", "ventas.facturas", "facturaId", AF_HIDE | AF_FORCE_LOAD | AF_UNIQUE | AF_ONETOONE_INTEGRATE | AF_ONETOONE_RESPECT_TABS |  AF_ONETOONE_ERROR));
-        $this->add(new atkManyToOneRelation("tipoFactura", "ventas.tiposFactura", AF_HIDE | AF_RELATION_AUTOLINK ));
-        $this->add(new atkNumberAttribute("numeroFactura", AF_HIDE));
-        $this->add(new atkManyToOneRelation("empleadoId", "employee.employee", AF_RELATION_AUTOLINK | AF_HIDE));
-        $this->add(new atkOneToManyRelation("detalle", "ventas.detalle", "ventaId", AF_ONETOMANY_SHOW_ADD | AF_CASCADE_DELETE |  AF_FORCE_LOAD));
+        $this->add(new atkManyToOneRelation("tipoFactura", "ventas.tiposFactura", AF_HIDE | AF_RELATION_AUTOLINK | AF_READONLY_EDIT));
+        $this->add(new atkNumberAttribute("numeroFactura"));
+        $this->add(new atkManyToOneRelation("empleadoId", "employee.employee", AF_RELATION_AUTOLINK | AF_HIDE | AF_READONLY_EDIT));
+        $this->add(new atkOneToManyRelation("detalle", "ventas.detalle", "ventaId", AF_ONETOMANY_SHOW_ADD | AF_CASCADE_DELETE |  AF_FORCE_LOAD | AF_READONLY_EDIT));
 
         $this->add(new atkCurrencyAttribute("precioTotalConIVA", AF_HIDE_ADD|AF_HIDE_EDIT|AF_READONLY|AF_SEARCHABLE, 0, "$", 2));
-        $this->add(new atkCurrencyAttribute("precioTotalSinIVA", AF_READONLY|AF_SEARCHABLE, 0, "$", 2));
+        $this->add(new atkCurrencyAttribute("precioTotalSinIVA", AF_READONLY|AF_SEARCHABLE, 0, "$", 2 ));
         
         
         
@@ -207,6 +207,8 @@ class ventas extends atkNode {
         $this->getAttribute('detalle')->addOnChangeHandler($code);
         $this->getAttribute('tipoFactura')->addOnChangeHandler($code);
         $this->getAttribute('fechaCierre')->addOnChangeHandler($code);
+        
+        
 
         $tipoVentaId = $record["tipoVentaId"]["tipoVentaId"];
         $clienteId = $record["clienteId"]["clienteId"];
@@ -214,12 +216,18 @@ class ventas extends atkNode {
         
 
         $this->getAttribute("fechaVencimiento")->removeFlag(AF_OBLIGATORY);
+        $this->getAttribute("fechaVencimiento")->addFlag(AF_HIDE);
         $this->getAttribute("clienteId")->removeFlag(AF_HIDE);
         $this->getAttribute("nombreCliente")->removeFlag(AF_HIDE);
         $this->getAttribute("tipoFactura")->addFlag(AF_HIDE);
         $this->getAttribute("precioTotalConIVA")->addFlag(AF_HIDE);
-        $this->getAttribute("tipoFactura")->addFlag(numeroFactura);
+        $this->getAttribute("tipoFactura")->addFlag(AF_HIDE);
         $this->getAttribute("fechaCierre")->addFlag(AF_HIDE);
+        $this->getAttribute("fechaCierre")->addFlag(AF_READONLY_EDIT);
+        $this->getAttribute("numeroFactura")->addFlag(AF_HIDE_ADD);        
+        $this->getAttribute('numeroFactura')->addFlag(AF_READONLY_EDIT);
+        
+        
         
         if($clienteId != NULL) {
             $this->getAttribute("nombreCliente")->addFlag(AF_HIDE);
@@ -238,9 +246,8 @@ class ventas extends atkNode {
         if ($tipoVentaId == VENTA_NORMAL) {
             $this->getAttribute("fechaVencimiento")->addFlag(AF_HIDE);
             $this->getAttribute("tipoFactura")->removeFlag(AF_HIDE);
-            $this->getAttribute("numeroFactura")->removeFlag(AF_HIDE);
-            $this->getAttribute("precioTotalConIVA")->removeFlag(AF_HIDE);
-            $this->getAttribute("fechaCierre")->addFlag(AF_HIDE);
+            $this->getAttribute("numeroFactura")->removeFlag(AF_HIDE_ADD);
+            $this->getAttribute("precioTotalConIVA")->removeFlag(AF_HIDE);                   
             
             $tipoFactura = $record["tipoFactura"]["id"];
             
@@ -253,10 +260,16 @@ class ventas extends atkNode {
             }
         }
         else if ($tipoVentaId == DESCARGA_EN_OBRA) {
-            $this->getAttribute("fechaVencimiento")->addFlag(AF_HIDE);
-            $this->getAttribute("fechaCierre")->addFlag(AF_HIDE);
+            $this->getAttribute("fechaVencimiento")->addFlag(AF_HIDE);            
+            $this->getAttribute("numeroFactura")->addFlag(AF_HIDE);
         }
         else if ($tipoVentaId == VENTA_FIADA) {
+            atk_var_dump($record, " ver numeroFactura y fecha cierre");
+            if($record["numeroFactura"] == 0 || $record["fechaCierre"] == 0){
+                $this->getAttribute("fechaCierre")->removeFlag(AF_READONLY_EDIT);
+                $this->getAttribute("numeroFactura")->removeFlag(AF_READONLY_EDIT);                
+            }
+            
             $this->getAttribute("fechaVencimiento")->addFlag(AF_OBLIGATORY);
             $this->getAttribute("fechaVencimiento")->removeFlag(AF_HIDE);
             $this->getAttribute("precioTotalConIVA")->removeFlag(AF_HIDE);
@@ -280,10 +293,31 @@ class ventas extends atkNode {
         return parent::editArray($mode, $record, $forceList, $suppressList, $fieldprefix, $ignoreTab, $injectSections);
     }
 
+    public function preUpdate(&$record) {
+        parent::preUpdate($record);
+        
+        atk_var_dump($record, "preUpdate");
+        $id = $record["id"];
+        $sql = "Select numeroFactura from ventas where id = $id";
+        $db = atkGetDb();
+        $result = $db->getrows($sql);
+        atk_var_dump($result, " RESULTADO QUERY PREUPDATE");
+    }
+    
+    public function postUpdate($record) {
+        parent::postUpdate($record);
+        
+        atk_var_dump($record, "postUpdate");
+        $id = $record["id"];
+        $sql = "Select numeroFactura from ventas where id = $id";
+        $db = atkGetDb();
+        $result = $db->getrows($sql);
+        atk_var_dump($result, " RESULTADO QUERY POSTDATE");
+    }
+    
     function rowColor($record) {
         $tipoVenta = $record["tipoVentaId"]["tipoVentaId"];
-        $ventaCerrada = $record["factura"]["fechaCierre"];
-        atk_var_dump($record, " BUSCA POR FECHACIERRE!!!");
+        $ventaCerrada = $record["fechaCierre"];        
         if($tipoVenta == VENTA_FIADA && $ventaCerrada == NULL) {
             return array(ROJO,ROJO_HIGHLIGHT);
         }
