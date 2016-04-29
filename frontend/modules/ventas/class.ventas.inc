@@ -18,14 +18,15 @@ class ventas extends atkNode {
             $this->redirect();
         }
 
-        // Filtro según tipo de usuario
-        $user = &atkGetUser();
-        if($user["id"] == 2) { //Si es Vendedor
-            if($ATK_VARS["atkaction"] == "admin")
-            {
-                $this->redirect(session_url(dispatch_url("ventas.ventas", "add"), SESSION_DEFAULT));
-            }
-        }
+//        Esto lo comentamos por que debería ser no por usuario sino por permiso (si es que es necesario...)        
+//        // Filtro según tipo de usuario
+//        $user = &atkGetUser();
+//        if($user["id"] == 2) { //Si es Vendedor
+//            if($ATK_VARS["atkaction"] == "admin")
+//            {
+//                $this->redirect(session_url(dispatch_url("ventas.ventas", "add"), SESSION_DEFAULT));
+//            }
+//        }
 
         $this->atkNode($name, $flags | NF_NO_VIEW | NF_MRA  | NF_ADDAFTERADD /*| NF_EDITAFTERADD*/); //NF_NO_EDIT TODO: se quita hasta resolver el tema de asignacion de factura luego de la venta
         $flags_not_admin = 0;
@@ -45,7 +46,7 @@ class ventas extends atkNode {
         $this->add(new atkManyToOneRelation("tipoFactura", "ventas.tiposFactura", AF_HIDE | AF_RELATION_AUTOLINK | AF_READONLY_EDIT));
         $this->add(new atkNumberAttribute("numeroFactura"));
         $this->add(new atkManyToOneRelation("empleadoId", "employee.employee", AF_RELATION_AUTOLINK | AF_HIDE | AF_READONLY_EDIT));
-        $this->add(new atkOneToManyRelation("detalle", "ventas.detalle", "ventaId", AF_ONETOMANY_SHOW_ADD | AF_CASCADE_DELETE |  AF_FORCE_LOAD | AF_READONLY_EDIT));
+        $this->add(new atkOneToManyRelation("detalle", "ventas.detalle", "ventaId", AF_ONETOMANY_SHOW_ADD | AF_CASCADE_DELETE |  AF_FORCE_LOAD));
 
         $this->add(new atkCurrencyAttribute("precioTotalConIVA", AF_HIDE_ADD|AF_HIDE_EDIT|AF_READONLY|AF_SEARCHABLE, 0, "$", 2));
         $this->add(new atkCurrencyAttribute("precioTotalSinIVA", AF_READONLY|AF_SEARCHABLE, 0, "$", 2 ));
