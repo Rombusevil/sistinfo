@@ -40,9 +40,8 @@ class ventas extends atkNode {
         $this->add(new atkDateTimeAttribute("fechaVenta", AF_OBLIGATORY|AF_SEARCHABLE | AF_READONLY_EDIT));
         $this->add(new atkDateAttribute("fechaVencimiento", AF_SEARCHABLE|$flags_not_admin | AF_READONLY_EDIT));
         $this->add(new atkDateAttribute("fechaCierre", AF_READONLY_ADD | AF_HIDE_ADD | AF_FORCE_LOAD));
-        $this->add(new atkManyToOneRelation("clienteId", "clientes.clientes", AF_RELATION_AUTOLINK | AF_READONLY_EDIT));
-        $this->add(new atkAttribute("nombreCliente", AF_SEARCHABLE | AF_READONLY_EDIT));
-        //$this->add(new atkOneToOneRelation("factura", "ventas.facturas", "facturaId", AF_HIDE | AF_FORCE_LOAD | AF_UNIQUE | AF_ONETOONE_INTEGRATE | AF_ONETOONE_RESPECT_TABS |  AF_ONETOONE_ERROR));
+        $this->add(new atkManyToOneRelation("clienteId", "clientes.clientes", AF_RELATION_AUTOLINK | AF_READONLY_EDIT | AF_FORCE_LOAD));
+        $this->add(new atkAttribute("nombreCliente", AF_SEARCHABLE | AF_READONLY_EDIT));        
         $this->add(new atkManyToOneRelation("tipoFactura", "ventas.tiposFactura", AF_HIDE | AF_RELATION_AUTOLINK | AF_READONLY_EDIT));
         $this->add(new atkNumberAttribute("numeroFactura"));
         $this->add(new atkManyToOneRelation("empleadoId", "employee.employee", AF_RELATION_AUTOLINK | AF_HIDE | AF_READONLY_EDIT));
@@ -202,7 +201,7 @@ class ventas extends atkNode {
 
         $url = atkSelf() . "?atknodetype=" . $this->atkNodeType() . "&atkaction=" . $this->m_action;
         $code = 'atkSubmit("' . atkurlencode(atkSessionManager::sessionUrl($url, SESSION_DEFAULT)) . '")';
-        $this->getAttribute('tipoVentaId')->addOnChangeHandler($code);
+        $this->getAttribute('tipoVentaId')->addOnChangeHandler($code);        
         $this->getAttribute('clienteId')->addOnChangeHandler($code);
         $this->getAttribute('nombreCliente')->addOnChangeHandler($code);
         $this->getAttribute('detalle')->addOnChangeHandler($code);
@@ -210,7 +209,11 @@ class ventas extends atkNode {
         $this->getAttribute('fechaCierre')->addOnChangeHandler($code);
         
         
-
+        if($record["tipoFactura"] == NULL){
+            $tipoFactura = $record["clienteId"]["tipoClienteId"]["tipoFacturaId"];        
+            $record["tipoFactura"] = $tipoFactura;
+        }
+        
         $tipoVentaId = $record["tipoVentaId"]["tipoVentaId"];
         $clienteId = $record["clienteId"]["clienteId"];
         $nombreCliente = $record["nombreCliente"];
