@@ -15,7 +15,7 @@ class color extends atkNode{
 
 		$this->setTable("color", "color");
 		
-		$this->setDescriptorTemplate("[gamaId.nombreGama] [codigoColor]"); 
+		$this->setDescriptorTemplate("[codigoColor] | [gamaId.nombreGama]"); 
 	}
         
         function rowColor($record) { 
