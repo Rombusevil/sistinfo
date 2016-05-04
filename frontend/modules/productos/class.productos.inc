@@ -24,7 +24,7 @@ class productos extends atkNode {
 
         // Foraneas
         $this->add(new atkManyToOneRelation("marcaId", "productos.marca", AF_RELATION_AUTOLINK));
-        $this->add(new atkOneToManyRelation("datosProductoId", "productos.datosProductos", "productoId", AF_ONETOMANY_SHOW_ADD | AF_FORCE_LOAD));
+        $this->add(new atkOneToManyRelation("datosProductoId", "productos.datosProductos", "productoId",  AF_FORCE_LOAD | AF_HIDE_ADD));
 
 
 //        TODO: Hay que revisar si esto se va a terminar. Posiblemente no
@@ -47,7 +47,7 @@ class productos extends atkNode {
 //        }
 
         $this->setTable("productos", "productos");
-        $this->setDescriptorTemplate("[nombreProducto] | [codigoProducto]");
+        $this->setDescriptorTemplate("[codigoProducto] | [nombreProducto]");
 
         // Gestión de MRA - popup
         @$file = fopen($this->fileMraPopup,"r"); // Con el arroba suprimo el warning de file not found, está bien que no lo encuentre si no hay alerta de stock
@@ -65,6 +65,20 @@ class productos extends atkNode {
         }
     }
 
+    function preDelete($record) {
+        $db = &atkGetDb();
+        $productoID = $record["id"];
+        $sql = "select * from detalle where productoId = $productoID";
+        
+        $result = $db->getrows($sql);
+        atk_var_dump($result, "preDelete RESULT");
+        if($result != null){
+            //TODO mostrar un mensaje acorde
+            return false;
+        }
+        return true;
+    }
+    
     function postAdd($record) {
         $db = &atkGetDb();
         $tipoProductoId = $record["tipoProductoId"]["id"];

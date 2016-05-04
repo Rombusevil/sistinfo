@@ -15,6 +15,7 @@ class detalle extends atkNode {
             $editFlag = NF_NO_ADD ;
         }
         $this->atkNode($name, $flags | NF_ADDAFTERADD | $editFlag | NF_NO_EDIT);
+        
 
         $this->add(new atkNumberAttribute("detalleId", AF_AUTOKEY));
         $this->add(new atkManyToOneRelation("ventaId", "ventas.ventas", AF_RELATION_AUTOLINK | AF_HIDE | AF_FORCE_LOAD | AF_MANYTOONE_AUTOLINK ));
@@ -56,6 +57,12 @@ class detalle extends atkNode {
                 triggerError($record, "Error", "cantidad negativa");
             }
         }
+    }
+
+    function preDelete($record) {        
+        // No se puede borrar si ya está persistido en una venta.
+        // Este preDelete solo se ejecuta cuando lo eliminas desde una venta persistida.
+        return false;        
     }
 
     function incrementSequence($tabla) {

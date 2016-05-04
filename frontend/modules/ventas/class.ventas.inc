@@ -17,7 +17,7 @@ class ventas extends atkNode {
             //unset($ATK_VARS["atkcancel"]); // EDIT: Con la forma nueva de venta esto no hace falta
             $this->redirect();
         }
-
+        
 //        Esto lo comentamos por que debería ser no por usuario sino por permiso (si es que es necesario...)        
 //        // Filtro según tipo de usuario
 //        $user = &atkGetUser();
@@ -52,7 +52,7 @@ class ventas extends atkNode {
         
         
         
-        $this->addSecurityMap("cierraVenta", "view"); // Agrego la action de cerrar venta
+        
         $this->setTable("ventas", "ventas");
 
         // Gestión de alarmas
@@ -74,37 +74,6 @@ class ventas extends atkNode {
             fclose($file);
             unlink($this->fileName); // Borro el archivo
         }
-    }
-
-    function recordActions($record, &$actions, &$mraactions) {
-        $ventaId = $record["id"];
-        $actions["cierraVenta"] = session_url(dispatch_url($this->atknodetype(), "cierraVenta", array("ventaId" => $ventaId)));
-    }
-    
-    
-    function action_cierraVenta(&$handler){
-        $db = &atkGetDb();
-        $ventaId = $this->m_postvars["ventaId"];        
-        
-        // Verificación 1: Solo procedo si el tipo de venta es FIADA.
-        $result = $db->getRows("SELECT tipoVentaId, fechaCierre FROM ventas WHERE id = $ventaId");        
-        $tipoVenta = $result[0]["tipoVentaId"];
-        $fechaCierre = $result[0]["fechaCierre"];
-        if(strcmp($tipoVenta,"3") != 0){ // 3 = FIADA        
-            // TODO no anda el trigger error, hay que mostrar un mensaje de otra manera.            
-            triggerError($record, "Error", "Solo puede asignar factura a una venta fiada");
-        }
-        // Verificación 2: Solo procedo si es FIADA y no está cerrada.
-        else if (!empty($fechaCierre)){            
-            triggerError($record, "Error", "Esta venta ya tiene asignada una factura");
-        }
-        else{            
-            $db->query("UPDATE ventas SET fechaCierre = NOW() WHERE id=$ventaId");
-            //TODO: checkeo de si salió todo ok antes de commitear:
-            $db->commit();            
-        }
-        
-        $this->redirect(); // TODO ver si esto hace falta.
     }
 
     // Esta func carga un arreglo con key value los valores iniciales.
@@ -387,6 +356,10 @@ class ventas extends atkNode {
     	{
             triggerError($record, "Error", "La fecha de vencimiento debe ser posterior a la de venta");
     	}
+        
+        if($tipoVentaId == VENTA_NORMAL && $record["numeroFactura"] == NULL){
+            triggerError($record, "Error", "El numero de factura es obligatorio");
+        }
     }
 
     function preAdd(&$record) {
