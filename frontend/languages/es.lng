@@ -720,10 +720,19 @@
     "fechaVencimiento"	=> "Fecha vencimiento",
     "nombreCliente"	=> "Nombre cliente",
     "tipoVentaId"	=> "Tipo de venta",
+    "tipoFactura"	=> "Tipo de factura",
+    "numeroFactura"	=> "N&uacute;mero de factura",
     "detalle"	=> "Detalle",
     "clienteId" => "Cliente",
     "facturaId" => "N&uacute;mero factura",
     "precioTotal"	=> "Precio total",
+    "precioTotalSinIVA" => "Total s/IVA",
+    "precioTotalConIVA" => "Total c/IVA",
+      "nombreTipoFactura" => "Nombre de tipo factura",
+      "tiposFactura" => "Tipos de factura",
+      
+    // Detalle
+    "precioSinIVA" => "Precio s/IVA",
 
     // Productos,
     "codigoProducto" => "C&oacute;digo",
@@ -747,12 +756,18 @@
     "esColoreable" => "Es coloreable",
     "stockMinimoPorDefecto" => "Stock m&iacute;nimo por defecto", 
     "productoId" => "Producto",
+    "mra_editar_precio" => "Editar precio",
+    "manejoStock" => "Manejo de stock",
       
     // Colores
     "gamaId" => "Gama",
     "codigoColor" => "C&oacute;digo color",
     "imagen" => "Imagen",
     "composicionId" => "Composici&oacute;n",   
+      
+    //Localidades
+      "codigoPostal" => "C&oacute;digo postal",
+      "nombreLocalidad" =>"Nombre localidad",
       
     // Gamas
       "nombreGama" => "Nombre",
@@ -770,7 +785,7 @@
       "nombreSociedad" => "Nombre",
       "nombreTipoCliente" => "Nombre",
       "tipoFacturaId" => "Tipo factura",
-      
+      "tiposCliente" => "Tipos de clientes"
 );
 
 ?>
