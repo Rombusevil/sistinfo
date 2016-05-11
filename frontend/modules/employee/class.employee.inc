@@ -404,7 +404,26 @@ class employee extends person
 
     return $birthdays;
   }
+  
+  
+  
+  function preDelete($record) {
+        $vid = "employee_id";
+        $tid = "empleadoId";
+        $tabla = "ventas";
 
+        $db = &atkGetDb();
+        $id = $record["profiles"][0]["$vid"]["id"];
+        atk_var_dump($record, "RECORD");
+        $sql = "select * from $tabla where $tid = $id";
+
+        $result = $db->getrows($sql);
+        if ($result != null) {
+            //TODO mostrar un mensaje acorde
+            return false;
+        }
+        return true;
+    }
 
 }
 

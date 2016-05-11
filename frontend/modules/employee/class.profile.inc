@@ -49,6 +49,29 @@ class profile extends atkNode
   {
     return "[name]";
   }
-}
+  
+  
+  
+function preDelete($record) {    
+    $vid = "id";
+    $tid = "role_id";
+    $tabla = "employeerole";
 
+    $db = &atkGetDb();
+    $id = $record["$vid"];
+    atk_var_dump($record, "RECORD");
+    $sql = "select * from $tabla where $tid = $id";
+
+    $result = $db->getrows($sql);
+    if ($result != null) {
+        //TODO mostrar un mensaje acorde
+        return false;
+    }
+    return true;
+}
+  
+  
+  
+  
+}
 ?>

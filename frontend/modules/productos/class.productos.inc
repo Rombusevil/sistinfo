@@ -68,7 +68,9 @@ class productos extends atkNode {
     function preDelete($record) {
         $db = &atkGetDb();
         $productoID = $record["id"];
-        $sql = "select * from detalle where productoId = $productoID";
+        $sql = "select * from detalle d, manejoStock m "
+                . " where d.productoId = $productoID"
+                . " or m.productoId = $productoID";
         
         $result = $db->getrows($sql);
         atk_var_dump($result, "preDelete RESULT");

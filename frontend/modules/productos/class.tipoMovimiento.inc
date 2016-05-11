@@ -12,4 +12,22 @@ class tipoMovimiento extends atkNode {
         $this->setTable("tipoMovimiento", "tipoMovimiento");
         $this->setDescriptorTemplate("[nombreMovimiento]");
     }
+
+    function preDelete($record) {
+        $vid = "tipoMovimientoId";
+        $tid = $vid;
+        $tabla = "manejoStock";
+
+        $db = &atkGetDb();
+        $id = $record["$vid"];
+        $sql = "select * from $tabla where $tid = $id";
+
+        $result = $db->getrows($sql);
+        if ($result != null) {
+            //TODO mostrar un mensaje acorde
+            return false;
+        }
+        return true;
+    }
+
 }

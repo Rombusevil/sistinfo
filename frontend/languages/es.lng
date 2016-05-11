@@ -758,6 +758,7 @@
     "productoId" => "Producto",
     "mra_editar_precio" => "Editar precio",
     "manejoStock" => "Manejo de stock",
+    "tipoMovimientoId" => "Tipo de movimiento",
       
     // Colores
     "gamaId" => "Gama",
@@ -785,7 +786,10 @@
       "nombreSociedad" => "Nombre",
       "nombreTipoCliente" => "Nombre",
       "tipoFacturaId" => "Tipo factura",
-      "tiposCliente" => "Tipos de clientes"
+      "tiposCliente" => "Tipos de clientes",
+      
+      
+      
 );
 
 ?>

@@ -13,4 +13,21 @@ class atributosDeProductos extends atkNode {
         $this->setDescriptorTemplate("[nombreAtributo]");
     }
 
+    function preDelete($record) {
+        $vid = "atributoId";
+        $tid = $vid;
+        $tabla = "tiposAtributosDeProductos";
+
+        $db = &atkGetDb();
+        $id = $record["$vid"];
+        $sql = "select * from $tabla where $tid = $id";
+
+        $result = $db->getrows($sql);
+        if ($result != null) {
+            //TODO mostrar un mensaje acorde
+            return false;
+        }
+        return true;
+    }
+
 }

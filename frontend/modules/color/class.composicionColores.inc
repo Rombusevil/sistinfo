@@ -14,6 +14,6 @@ class composicionColores extends atkNode {
                 $this->setTable("composicionColores", "composicionColores");
 		
                 $this->setDescriptorTemplate("%[porcentaje] [colorPrimario.gamaId.nombreGama]-[colorSecundario.gamaId.nombreGama]");		
-// TODO No se ve en la vista de administracion de colres
+// TODO No se ve en la vista de administracion de colores
 	}
 }
