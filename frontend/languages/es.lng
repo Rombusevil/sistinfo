@@ -759,6 +759,8 @@
     "mra_editar_precio" => "Editar precio",
     "manejoStock" => "Manejo de stock",
     "tipoMovimientoId" => "Tipo de movimiento",
+    "tiposProducto" => "Tipos de Producto",
+    "atributosDeProductos" => "Atributos de Productos",
       
     // Colores
     "gamaId" => "Gama",
@@ -788,6 +790,9 @@
       "tipoFacturaId" => "Tipo factura",
       "tiposCliente" => "Tipos de clientes",
       
+      
+      
+      "datagrid_summary" => "(Registros [start] - [end] de [count])"
       
       
 );

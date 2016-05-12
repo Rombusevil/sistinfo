@@ -6,10 +6,12 @@ class gama extends atkNode {
         $this->atkNode($name, $flags | NF_ADD_LINK);
 
         $this->add(new atkNumberAttribute("gamaId", AF_AUTOKEY));
-        $this->add(new atkAttribute("nombreGama", AF_OBLIGATORY, 30));
+        $this->add(new atkAttribute("nombreGama", AF_OBLIGATORY | AF_UNIQUE, 30));
 
         $this->add(new atkColorPickerAttribute("imagen", $arr = "", AF_OBLIGATORY | AF_POPUP | AF_FORCE_LOAD));
 
+        $this->setOrder("imagen asc");
+        
         $this->setTable("gama", "gama");
         $this->setDescriptorTemplate("[nombreGama]");
     }
@@ -18,6 +20,25 @@ class gama extends atkNode {
         $color = $record["imagen"];
         return array($color);
     }
+    
+    function preUpdate(&$record) {
+        $vid = "gamaId";
+        $tid = "gamaId";
+        $tabla = "color";
+
+        $db = &atkGetDb();
+        $id = $record["$vid"];        
+        $sql = "select * from $tabla where $tid = $id";
+
+        $result = $db->getrows($sql);        
+        if ($result != null) {            
+            triggerError($record, "Error", "imposible modificar gama asociada a un color.");
+            return false;
+        }
+        return true;
+    }
+    
+    
 
     function preDelete($record) {
         $vid = "gamaId";

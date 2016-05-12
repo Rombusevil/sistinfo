@@ -6,9 +6,9 @@ class localidades extends atkNode {
         $this->atkNode($name, $flags | NF_ADD_LINK);
 
         $this->add(new atkNumberAttribute("localidadId", AF_AUTOKEY));
-        $this->add(new atkNumberAttribute("codigoPostal", AF_OBLIGATORY));
-        $this->add(new atkAttribute("nombreLocalidad", AF_OBLIGATORY, 30));
-
+        $this->add(new atkNumberAttribute("codigoPostal", AF_OBLIGATORY | AF_UNIQUE));
+        $this->add(new atkAttribute("nombreLocalidad", AF_OBLIGATORY | AF_UNIQUE , 30));
+        
         $this->setTable("localidades", "localidades");
         $this->setDescriptorTemplate("[nombreLocalidad]");
     }

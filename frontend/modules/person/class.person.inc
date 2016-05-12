@@ -50,17 +50,17 @@ class person extends atkNode
     $this->add(new useridAttribute("userid" ,AF_UNIQUE|AF_SEARCHABLE), 1); // first field
     $this->add(new atkAttribute("lastname",AF_SEARCHABLE|AF_OBLIGATORY, 50));
     $this->add(new atkAttribute("firstname",AF_HIDE_LIST|AF_FORCE_LOAD, 50));
-    $this->add(new atkAttribute("initials", AF_HIDE_LIST|AF_FORCE_LOAD, 50));
+//    $this->add(new atkAttribute("initials", AF_HIDE_LIST|AF_FORCE_LOAD, 50));
     $this->add(new atkAttribute("address",AF_HIDE_LIST, 100));
-    $this->add(new atkAttribute("zipcode",AF_HIDE_LIST, 20));
-    $this->add(new atkAttribute("city",AF_HIDE_LIST, 100));
-    $this->add(new atkAttribute("state",AF_HIDE_LIST, 100));
-    $this->add(new atkAttribute("country",AF_HIDE_LIST, 100));
+//    $this->add(new atkAttribute("zipcode",AF_HIDE_LIST, 20));
+//    $this->add(new atkAttribute("city",AF_HIDE_LIST, 100));
+//    $this->add(new atkAttribute("state",AF_HIDE_LIST, 100));
+//    $this->add(new atkAttribute("country",AF_HIDE_LIST, 100));
     $this->add(new atkAttribute("phone", 0, 20));
-    $this->add(new atkAttribute("cellular", AF_HIDE_LIST|AF_FORCE_LOAD, 20));
-    $this->add(new atkAttribute("fax", AF_HIDE_LIST|AF_FORCE_LOAD, 20));
+//    $this->add(new atkAttribute("cellular", AF_HIDE_LIST|AF_FORCE_LOAD, 20));
+//    $this->add(new atkAttribute("fax", AF_HIDE_LIST|AF_FORCE_LOAD, 20));
     $this->add(new atkEmailAttribute("email", false, 0, 50));
-    $this->add(new atkAttribute("function", AF_HIDE_LIST, 50));
+//    $this->add(new atkAttribute("function", AF_HIDE_LIST, 50));
     $this->add(new atkTextAttribute("remark", TEXT_LARGE, AF_HIDE_LIST));
     $this->add(new atkAttribute("role", AF_OBLIGATORY|AF_HIDE, 15)); //discriminator
     //$this->add(new atkParserAttribute("vcard", href("?atkaction=vcard&id=[id]", atktext("vcard"), SESSION_NESTED), AF_NO_LABEL|AF_HIDE_ADD), NULL, 10000);
@@ -162,6 +162,15 @@ class person extends atkNode
     $vcard->setNote($record["remark"]);
     $vcard->setProperty("TITLE", $record["function"]);
   }
+  
+  
+  
+
+  
+  
+  
+  
+  
 }
 
 ?>

@@ -18,7 +18,7 @@ class detalle extends atkNode {
         
 
         $this->add(new atkNumberAttribute("detalleId", AF_AUTOKEY));
-        $this->add(new atkManyToOneRelation("ventaId", "ventas.ventas", AF_RELATION_AUTOLINK | AF_HIDE | AF_FORCE_LOAD | AF_MANYTOONE_AUTOLINK ));
+        $this->add(new atkManyToOneRelation("ventaId", "ventas.ventas", AF_RELATION_AUTOLINK | AF_HIDE | AF_FORCE_LOAD | AF_MANYTOONE_AUTOLINK));
 
         global $ATK_VARS;
         $not_factura_flags = 0;
@@ -34,8 +34,8 @@ class detalle extends atkNode {
 
         $this->setTable("detalle", "detalle");
         $this->setDescriptorTemplate("[productoId.nombreProducto] ([cantidad])");
-        
-        
+                
+        $this->addUniqueFieldset(array("productoId", "ventaId"));
     }
 
     function cantidad_validate(&$record) {
@@ -50,11 +50,11 @@ class detalle extends atkNode {
             if ($cantidad == 0) {
                 triggerError($record, "Sin stock", "no hay stock registrado para el producto.");
             } else if ($cantidadNueva < 0) {
-                triggerError($record, "No hay suficiente stock", "la cantidad actual es $cantidad");
+                triggerError($record, "No hay suficiente stock", "la cantidad actual es $cantidad.");
             }
 
             if ($record["cantidad"] < 0) {
-                triggerError($record, "Error", "cantidad negativa");
+                triggerError($record, "Error", "cantidad negativa.");
             }
         }
     }

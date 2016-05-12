@@ -9,11 +9,12 @@ class color extends atkNode {
 
         $this->add(new atkNumberAttribute("colorId", AF_AUTOKEY));
         $this->add(new atkManyToOneRelation("gamaId", "color.gama", AF_OBLIGATORY | AF_RELATION_AUTOLINK));
-        $this->add(new atkAttribute("codigoColor", AF_OBLIGATORY));
+        $this->add(new atkAttribute("codigoColor", AF_OBLIGATORY | AF_UNIQUE));
         $this->add(new atkFileAttribute("imagen", atkconfig("images_dir"), AF_FILE_NO_SELECT)); //images_dir está en atkconf.inc
         $this->add(new atkManyToOneRelation("composicionId", "color.composicionColores", AF_RELATION_AUTOLINK | AF_UNIQUE | AF_HIDE_LIST));
 
-
+        $this->setOrder("codigoColor asc");
+        
         $this->setTable("color", "color");
 
         $this->setDescriptorTemplate("[codigoColor] | [gamaId.nombreGama]");
@@ -24,6 +25,29 @@ class color extends atkNode {
         $color = $record["gamaId"]["imagen"];
         return array($color);
     }
+    
+    function preUpdate(&$record) {
+        $vid = "colorId";
+        $tid = "colorId";
+        $tabla = "detalle";        
+
+        $db = &atkGetDb();
+        $id = $record["$vid"];        
+        $sql = "select * from $tabla d, composicionColores cc "
+                . " where d.$tid = $id "
+                . " or cc.colorPrimario = $id"
+                . " or cc.colorSecundario = $id";
+
+        
+        $result = $db->getrows($sql);
+        if ($result != null) {            
+            triggerError($record, "Error", "imposible modificar color asociado al detalle de una venta.");
+            return false;
+        }
+        return true;
+    }
+    
+    
     
     function preDelete($record) {
         $vid = "colorId";

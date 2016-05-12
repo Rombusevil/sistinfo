@@ -4,9 +4,11 @@ include_once("modules/constantes.inc");
 
 class ventas extends atkNode {
     protected $fileName;// Archivo de intercambio para detectar si hay productos en alerta de stock
-    
+        
     function ventas($name = "ventas", $flags = 0) {
         global $ATK_VARS;
+          
+        
 
         // Si canceló la venta anterior voy a limpiar el detalle:
         $lvl = $ATK_VARS["atkprevlevel"];
@@ -43,16 +45,18 @@ class ventas extends atkNode {
         $this->add(new atkManyToOneRelation("clienteId", "clientes.clientes", AF_RELATION_AUTOLINK | AF_READONLY_EDIT | AF_FORCE_LOAD));
         $this->add(new atkAttribute("nombreCliente", AF_SEARCHABLE | AF_READONLY_EDIT));        
         $this->add(new atkManyToOneRelation("tipoFactura", "ventas.tiposFactura", AF_HIDE | AF_RELATION_AUTOLINK | AF_READONLY_EDIT));
-        $this->add(new atkNumberAttribute("numeroFactura"));
+        $this->add(new atkNumberAttribute("numeroFactura", AF_UNIQUE));
         $this->add(new atkManyToOneRelation("empleadoId", "employee.employee", AF_RELATION_AUTOLINK | AF_HIDE | AF_READONLY_EDIT));
         $this->add(new atkOneToManyRelation("detalle", "ventas.detalle", "ventaId", AF_ONETOMANY_SHOW_ADD | AF_CASCADE_DELETE |  AF_FORCE_LOAD));
 
-        $this->add(new atkCurrencyAttribute("precioTotalConIVA", AF_HIDE_ADD|AF_HIDE_EDIT|AF_READONLY|AF_SEARCHABLE, 0, "$", 2));
-        $this->add(new atkCurrencyAttribute("precioTotalSinIVA", AF_READONLY|AF_SEARCHABLE, 0, "$", 2 ));
+        $this->add(new atkCurrencyAttribute("precioTotalConIVA", AF_HIDE_ADD|AF_HIDE_EDIT|AF_READONLY|AF_SEARCHABLE | AF_TOTAL, 0, "$", 2));
+        $this->add(new atkCurrencyAttribute("precioTotalSinIVA", AF_READONLY|AF_SEARCHABLE | AF_TOTAL, 0, "$", 2 ));
         
         
         
-        
+        $this->setOrder("fechaVenta desc");
+
+
         $this->setTable("ventas", "ventas");
 
         // Gestión de alarmas
@@ -165,8 +169,7 @@ class ventas extends atkNode {
             unset($_SESSION["achievo"]["default"]["stack"][$id][$i]["atkreject"]);
         }
         // ---------------------------------------------------------------------------------------------
-        
-        atk_var_dump($ATK_VARS,"RECORD VENTA!!!");
+                
 
         $url = atkSelf() . "?atknodetype=" . $this->atkNodeType() . "&atkaction=" . $this->m_action;
         $code = 'atkSubmit("' . atkurlencode(atkSessionManager::sessionUrl($url, SESSION_DEFAULT)) . '")';
@@ -220,7 +223,9 @@ class ventas extends atkNode {
             $this->getAttribute("fechaVencimiento")->addFlag(AF_HIDE);
             $this->getAttribute("tipoFactura")->removeFlag(AF_HIDE);
             $this->getAttribute("numeroFactura")->removeFlag(AF_HIDE_ADD);
-            $this->getAttribute("precioTotalConIVA")->removeFlag(AF_HIDE);                   
+            $this->getAttribute("precioTotalConIVA")->removeFlag(AF_HIDE);
+            
+            $this->getAttribute("numeroFactura")->addFlag(AF_OBLIGATORY);
             
             $tipoFactura = $record["tipoFactura"]["id"];
             
@@ -360,6 +365,8 @@ class ventas extends atkNode {
         if($tipoVentaId == VENTA_NORMAL && $record["numeroFactura"] == NULL){
             triggerError($record, "Error", "El numero de factura es obligatorio");
         }
+        
+        return parent::validate($record, $mode, $ignoreList);
     }
 
     function preAdd(&$record) {

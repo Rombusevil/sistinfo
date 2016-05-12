@@ -56,22 +56,22 @@ class employee extends person
     }
 
     $this->addFilter("person.role='employee'");
-    $this->add(new atkDateAttribute("birthdate","","", 0, date("Ymd"), AF_HIDE_LIST));
+//    $this->add(new atkDateAttribute("birthdate","","", 0, date("Ymd"), AF_HIDE_LIST));
 
-    $this->add(new atkAttribute("bankaccount", AF_HIDE_LIST|AF_HIDE_ADD), "finance");
-    $this->add(new atkAttribute("socialsecuritynumber", AF_HIDE_LIST|AF_HIDE_ADD), "finance");
+//    $this->add(new atkAttribute("bankaccount", AF_HIDE_LIST|AF_HIDE_ADD), "finance");
+//    $this->add(new atkAttribute("socialsecuritynumber", AF_HIDE_LIST|AF_HIDE_ADD), "finance");
 
-    $this->add(new atkManyToOneRelation("employer_id","organization.organization",AF_HIDE_ADD|AF_HIDE_LIST|AF_RELATION_AUTOLINK|AF_LARGE));
-    $this->add(new atkManyToOneRelation("department","employee.department",AF_HIDE_ADD|AF_HIDE_LIST|AF_RELATION_AUTOLINK));
+//    $this->add(new atkManyToOneRelation("employer_id","organization.organization",AF_HIDE_ADD|AF_HIDE_LIST|AF_RELATION_AUTOLINK|AF_LARGE));
+//    $this->add(new atkManyToOneRelation("department","employee.department",AF_HIDE_ADD|AF_HIDE_LIST|AF_RELATION_AUTOLINK));
 
     // you can't be your own supervisor neither can a nonactive employee be a supervisor
-    $preFilter = new atkManyToOneRelation("supervisor","employee.employee",AF_HIDE_ADD|AF_HIDE_LIST|AF_RELATION_AUTOLINK);
-    $preFilter->setDestinationFilter("userid !='[userid]'");
-    $preFilter->setUseFilterForAddLink(false);
-
-    $this->add($preFilter);
+//    $preFilter = new atkManyToOneRelation("supervisor","employee.employee",AF_HIDE_ADD|AF_HIDE_LIST|AF_RELATION_AUTOLINK);
+//    $preFilter->setDestinationFilter("userid !='[userid]'");
+//    $preFilter->setUseFilterForAddLink(false);
+//
+//    $this->add($preFilter);
       
-    $this->add(new atkManyToOneRelation("functionlevel", "employee.functionlevel",AF_HIDE_ADD|AF_HIDE_LIST|AF_RELATION_AUTOLINK));
+//    $this->add(new atkManyToOneRelation("functionlevel", "employee.functionlevel",AF_HIDE_ADD|AF_HIDE_LIST|AF_RELATION_AUTOLINK));
 
     //$this->add(new atkManyToOneRelation("entity", "employee.profile",AF_RELATION_AUTOLINK|AF_HIDE_ADD));
     $rel = &$this->add(new atkManyBoolRelation("profiles", "employee.employeerole", "employee.profile", AF_HIDE_LIST|AF_MANYBOOL_AUTOLINK), "account");
@@ -85,16 +85,16 @@ class employee extends person
       $statusfilter = ($this->getView() == "active") ? "active" : "nonactive";
       $this->addFilter("person.status",$statusfilter);
     }
-    $this->add(new adminLangSelectAttribute('lng',AF_HIDE_LIST), "account");
+//    $this->add(new adminLangSelectAttribute('lng',AF_HIDE_LIST), "account");
 
-    $this->add(new atkOneToManyRelation("usercontract","employee.usercontracts","userid",AF_HIDE_LIST|AF_HIDE_ADD));
+//    $this->add(new atkOneToManyRelation("usercontract","employee.usercontracts","userid",AF_HIDE_LIST|AF_HIDE_ADD));
 
     //$this->add(new useridAttribute("userid" ,AF_OBLIGATORY|AF_UNIQUE|AF_SEARCHABLE), 1); // first field
 
     if (in_array("db",explode(",",strtolower(atkconfig('authentication')))))
       $this->addPasswordAttribute();
 
-    $this->add(new atkAttribute("role", AF_OBLIGATORY|AF_READONLY|AF_HIDE, 50)); // discriminator.
+//    $this->add(new atkAttribute("role", AF_OBLIGATORY|AF_READONLY|AF_HIDE, 50)); // discriminator.
 
     $this->m_securityMap["deactivate"] = "edit"; // If you may edit, you may also deactivate.
 
@@ -414,13 +414,15 @@ class employee extends person
 
         $db = &atkGetDb();
         $id = $record["profiles"][0]["$vid"]["id"];
-        atk_var_dump($record, "RECORD");
-        $sql = "select * from $tabla where $tid = $id";
+        
+        if($id != null){
+            $sql = "select * from $tabla where $tid = $id";
 
-        $result = $db->getrows($sql);
-        if ($result != null) {
-            //TODO mostrar un mensaje acorde
-            return false;
+            $result = $db->getrows($sql);
+            if ($result != null) {
+                //TODO mostrar un mensaje acorde
+                return false;
+            }
         }
         return true;
     }

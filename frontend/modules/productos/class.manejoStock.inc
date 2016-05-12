@@ -15,6 +15,7 @@ class manejoStock extends atkNode {
 
         $tipoMov->setDestinationFilter("tipoMovimientoId <> 1"); // 1 es VENTA
         
+        $this->setOrder("codigoProducto desc");
         
         $this->setTable("manejoStock", "manejoStock");
     }
@@ -24,7 +25,7 @@ class manejoStock extends atkNode {
         if($record["cantidad"]< 0){
             triggerError($record, "Error", "cantidad negativa");
         }
-	}
+    }
 
     function preAdd(&$record) {
         $db = &atkGetDb();

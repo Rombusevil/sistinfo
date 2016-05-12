@@ -36,8 +36,9 @@ class profile extends atkNode
     $this->add(new atkDummyAttribute("profile_explanation",atktext("profile_explanation"),AF_HIDE_LIST|AF_HIDE_ADD));
     $this->add(new atkProfileAttribute("accessrights",AF_HIDE_LIST|AF_HIDE_ADD|AF_BLANKLABEL));
 
+    $this->setOrder("name asc");
+    
     $this->setTable("profile","profile");
-    $this->setOrder("name");
   }
 
   /**

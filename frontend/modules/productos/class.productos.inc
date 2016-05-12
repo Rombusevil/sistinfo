@@ -16,7 +16,7 @@ class productos extends atkNode {
         $this->add(new atkNumberAttribute("id", AF_AUTOKEY));
         $this->add(new atkManyToOneRelation("tipoProductoId", "productos.tiposProducto", AF_RELATION_AUTOLINK | AF_SEARCHABLE | AF_FORCE_LOAD));
         $this->add(new atkNumberAttribute("codigoProducto", AF_OBLIGATORY| AF_UNIQUE| AF_SEARCHABLE));
-        $this->add(new atkAttribute("nombreProducto", AF_OBLIGATORY | AF_SEARCHABLE, 30));
+        $this->add(new atkAttribute("nombreProducto", AF_OBLIGATORY | AF_UNIQUE | AF_SEARCHABLE, 30));
         $this->add(new atkAttribute("descripcion", 0, 100));
         $this->add(new atkCurrencyAttribute("precio", AF_OBLIGATORY|AF_FORCE_LOAD, 0, "$", 2));
         $this->add(new atkNumberAttribute("cantidad", AF_READONLY | AF_HIDE_ADD | AF_HIDE_EDIT));
@@ -46,6 +46,8 @@ class productos extends atkNode {
 //            }
 //        }
 
+        $this->setOrder("codigoProducto asc");
+        
         $this->setTable("productos", "productos");
         $this->setDescriptorTemplate("[codigoProducto] | [nombreProducto]");
 
@@ -65,7 +67,9 @@ class productos extends atkNode {
         }
     }
 
-    function preDelete($record) {
+    
+    function preUpdate(&$record) {
+        // TODO: hay que permitir modificar el precio y el stock mínimo, pero ningún otro campo.
         $db = &atkGetDb();
         $productoID = $record["id"];
         $sql = "select * from detalle d, manejoStock m "
@@ -73,7 +77,21 @@ class productos extends atkNode {
                 . " or m.productoId = $productoID";
         
         $result = $db->getrows($sql);
-        atk_var_dump($result, "preDelete RESULT");
+        if ($result != null) {            
+            triggerError($record, "Error", "imposible modificar producto asociada al detalle de una venta.");
+            return false;
+        }
+        return true;
+    }
+    
+    function preDelete($record) {
+        $db = &atkGetDb();
+        $productoID = $record["id"];
+        $sql = "select * from detalle d, manejoStock m "
+                . " where d.productoId = $productoID"
+                . " or m.productoId = $productoID";
+        
+        $result = $db->getrows($sql);        
         if($result != null){
             //TODO mostrar un mensaje acorde
             return false;
