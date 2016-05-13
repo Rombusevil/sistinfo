@@ -8,8 +8,8 @@ class clientes extends atkNode {
         $this->atkNode($name, $flags | NF_ADD_LINK);
 
         $this->add(new atkNumberAttribute("clienteId", AF_AUTOKEY));
-        $this->add(new atkAttribute("cuitCuil", AF_OBLIGATORY | AF_SEARCHABLE, 20));
-        $this->add(new atkAttribute("razonSocial", AF_OBLIGATORY, 50));
+        $this->add(new atkAttribute("cuitCuil", AF_OBLIGATORY | AF_SEARCHABLE | AF_UNIQUE, 20));
+        $this->add(new atkAttribute("razonSocial", AF_OBLIGATORY , 50));
         $this->add(new atkAttribute("correoElectronico", 0, 80));
         $this->add(new atkAttribute("telefono", 0, 50));
         $this->add(new atkAttribute("direccion", 0, 50));
@@ -19,8 +19,26 @@ class clientes extends atkNode {
         $this->add(new atkManyToOneRelation("sociedadId", "clientes.sociedades", AF_RELATION_AUTOLINK | AF_HIDE_LIST));
         $this->add(new atkManyToOneRelation("localidadId", "clientes.localidades", AF_OBLIGATORY | AF_RELATION_AUTOLINK | AF_HIDE_LIST));
 
+        $this->setOrder("cuitCuil desc");
+        
         $this->setTable("clientes", "clientes");
         $this->setDescriptorTemplate("[razonSocial] | [cuitCuil]");
+    }
+    
+    public function preUpdate(&$record) {
+        $vid = "clienteId";
+        $tabla = "ventas";
+
+        $db = &atkGetDb();
+        $id = $record["$vid"];
+        $sql = "select * from $tabla where $vid = $id";
+
+        $result = $db->getrows($sql);
+        if ($result != null) {
+            triggerError($record, "Error", "imposible modificar cliente asociado a una venta.");
+            return false;
+        }
+        return true;
     }
 
     function preDelete($record) {

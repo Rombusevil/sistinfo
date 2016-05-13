@@ -6,10 +6,17 @@ class tiposCliente extends atkNode {
         $this->atkNode($name, $flags | NF_ADD_LINK);
 
         $this->add(new atkNumberAttribute("tipoClienteId", AF_AUTOKEY));
-        $this->add(new atkAttribute("nombreTipoCliente", AF_OBLIGATORY, 30));
+        $this->add(new atkAttribute("nombreTipoCliente", AF_OBLIGATORY | AF_UNIQUE, 30));
 
         $this->add(new atkManyToOneRelation("tipoFacturaId", "ventas.tiposFactura", AF_OBLIGATORY | AF_RELATION_AUTOLINK | AF_FORCE_LOAD));
 
+        
+        $this->addUniqueFieldset(array("tipoFacturaId", "nombreTipoCliente"));
+        
+        
+        $this->setOrder("nombreTipoCliente desc");
+        
+        
         $this->setTable("tiposCliente", "tiposCliente");
         $this->setDescriptorTemplate("[nombreTipoCliente]");
     }

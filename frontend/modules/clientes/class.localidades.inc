@@ -9,6 +9,8 @@ class localidades extends atkNode {
         $this->add(new atkNumberAttribute("codigoPostal", AF_OBLIGATORY | AF_UNIQUE));
         $this->add(new atkAttribute("nombreLocalidad", AF_OBLIGATORY | AF_UNIQUE , 30));
         
+        $this->setOrder("codigoPostal asc");
+        
         $this->setTable("localidades", "localidades");
         $this->setDescriptorTemplate("[nombreLocalidad]");
     }

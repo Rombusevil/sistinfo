@@ -5,8 +5,10 @@ class sociedades extends atkNode {
             $this->atkNode($name, $flags|NF_ADD_LINK);
 
             $this->add(new atkNumberAttribute("sociedadId" ,AF_AUTOKEY));				
-            $this->add(new atkAttribute("nombreSociedad",AF_OBLIGATORY, 30));
+            $this->add(new atkAttribute("nombreSociedad",AF_OBLIGATORY | AF_UNIQUE, 30));
 
+            $this->setOrder("nombreSociedad asc");
+            
             $this->setTable("sociedades", "sociedades");
             $this->setDescriptorTemplate("[nombreSociedad]");
     }
