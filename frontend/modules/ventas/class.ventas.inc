@@ -43,7 +43,8 @@ class ventas extends atkNode {
         $this->add(new atkDateAttribute("fechaVencimiento", AF_SEARCHABLE|$flags_not_admin | AF_READONLY_EDIT));
         $this->add(new atkDateAttribute("fechaCierre", AF_READONLY_ADD | AF_HIDE_ADD | AF_FORCE_LOAD));
         $this->add(new atkManyToOneRelation("clienteId", "clientes.clientes", AF_RELATION_AUTOLINK | AF_READONLY_EDIT | AF_FORCE_LOAD));
-        $this->add(new atkAttribute("nombreCliente", AF_SEARCHABLE | AF_READONLY_EDIT));        
+        $this->add(new atkAttribute("nombreCliente", AF_SEARCHABLE | AF_READONLY_EDIT))->setAttribSize(15);        
+        
         $this->add(new atkManyToOneRelation("tipoFactura", "ventas.tiposFactura", AF_HIDE | AF_RELATION_AUTOLINK | AF_READONLY_EDIT));
         $this->add(new atkNumberAttribute("numeroFactura", AF_UNIQUE));
         $this->add(new atkManyToOneRelation("empleadoId", "employee.employee", AF_RELATION_AUTOLINK | AF_HIDE | AF_READONLY_EDIT));
@@ -408,8 +409,8 @@ class ventas extends atkNode {
         */
         $db = &atkGetDb();
 
-        // Me aseguro que esta venta tenga detalle, si no tiene salgo.
-        if (!isset($ATK_VARS['#STACK#'][$id]["ventas.ventas:detalle"])){
+        // Me aseguro que esta venta tenga detalle, si no tiene salgo.        
+        if (!isset($ATK_VARS['#STACK#'][$id]["ventas.ventas:detalle"]) || !$ATK_VARS['#STACK#'][$id]["ventas.ventas:detalle"]){
             triggerError($record, "Error", "Falta agregar el detalle.");
             // El triggerError Rollbackea automáticamente
         }
