@@ -69,7 +69,7 @@
     function userprefs_modifier(&$node)
     {
       userelation("atkOneToOneRelation");
-      $node->add(new atkOneToOneRelation("scheduler","scheduler.scheduler_userpreferences","userid",AF_ONETOONE_INTEGRATE|AF_ONETOONE_ERROR),"scheduler");
+      //$node->add(new atkOneToOneRelation("scheduler","scheduler.scheduler_userpreferences","userid",AF_ONETOONE_INTEGRATE|AF_ONETOONE_ERROR),"scheduler");
     }
 
     function search($expression)

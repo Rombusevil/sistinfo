@@ -42,7 +42,7 @@
     {
       userelation("atkOneToManyRelation");
 
-      $node->add(new atkOneToManyRelation("pimitems","pim.userpimitems","userid",AF_FORCE_LOAD),"pim");
+      //$node->add(new atkOneToManyRelation("pimitems","pim.userpimitems","userid",AF_FORCE_LOAD),"pim");
     }
 
   }
