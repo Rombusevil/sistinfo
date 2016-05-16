@@ -9,6 +9,12 @@ class detalle extends atkNode {
         $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)
         $this->fileName = "alertaStock$id.txt"; // Defino el nombre del archivo
         
+        // Si canceló la venta anterior voy a limpiar el detalle:
+        $lvl = $ATK_VARS["atkprevlevel"];
+        if($lvl == 1) { // Si estoy en la pantalla de detalle.
+            $this->limpiaFormulario();
+        }
+        
         atk_var_dump($ATK_VARS, "ATK VARS");
         $editFlag = 0;
         if($ATK_VARS["atkselector"] != NULL){
@@ -199,6 +205,16 @@ class detalle extends atkNode {
         }
 
         return true;
+    }
+    
+    function limpiaFormulario(){
+        global $ATK_VARS;
+        $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)
+        
+        // Borro todos los elementos del arreglo para que se limpie el formulario correctamente.
+        for($i=0; $i<count($_SESSION["achievo"]["default"]["stack"][$id]); $i++){
+            unset($_SESSION["achievo"]["default"]["stack"][$id][$i]["atkformdata"]);
+        }
     }
 
 }
