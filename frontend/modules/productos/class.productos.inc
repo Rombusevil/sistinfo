@@ -5,26 +5,35 @@ include_once("modules/utils.php");
 
 class productos extends atkNode {
     protected $fileMraPopup;// Archivo de intercambio para detectar si tengo que mandar popup pidiendo input de usuario
-    protected $productIds;// Archivo de intercambio que contiene el valor seleccionado por el usuario para hacer el MRA
+    protected $productIds;  // Archivo de intercambio que contiene el valor seleccionado por el usuario para hacer el MRA
 
     function productos($name = "productos", $flags = 0) {
         $this->fileMraPopup = "mraPopup.txt"; // Defino el nombre del archivo
         $this->productIds = "pId.txt"; // Defino el nombre del archivo
 
         $this->atkNode($name, $flags | NF_ADD_LINK | NF_EDITAFTERADD | NF_MRA);
+        global $ATK_VARS;
+        
+                
+        $id = split("=", $ATK_VARS["atkselector"])[1];
+        $usedFlags = 0;
+        if($this->isProductUsed($id)){
+            $usedFlag = AF_READONLY;
+        }
+        
 
         $this->add(new atkNumberAttribute("id", AF_AUTOKEY));
-        $this->add(new atkManyToOneRelation("tipoProductoId", "productos.tiposProducto", AF_RELATION_AUTOLINK | AF_SEARCHABLE | AF_FORCE_LOAD));
-        $this->add(new atkNumberAttribute("codigoProducto", AF_OBLIGATORY| AF_UNIQUE| AF_SEARCHABLE));
-        $this->add(new atkAttribute("nombreProducto", AF_OBLIGATORY | AF_UNIQUE | AF_SEARCHABLE, 30));
-        $this->add(new atkAttribute("descripcion", 0, 100));
+        $this->add(new atkManyToOneRelation("tipoProductoId", "productos.tiposProducto", AF_RELATION_AUTOLINK | AF_SEARCHABLE | AF_FORCE_LOAD | $usedFlag));
+        $this->add(new atkNumberAttribute("codigoProducto", AF_OBLIGATORY| AF_UNIQUE| AF_SEARCHABLE | $usedFlag));
+        $this->add(new atkAttribute("nombreProducto", AF_OBLIGATORY | AF_UNIQUE | AF_SEARCHABLE | $usedFlag, 30));
+        $this->add(new atkAttribute("descripcion", $usedFlag, 100));
         $this->add(new atkCurrencyAttribute("precio", AF_OBLIGATORY|AF_FORCE_LOAD, 0, "$", 2));
         $this->add(new atkNumberAttribute("cantidad", AF_READONLY | AF_HIDE_ADD | AF_HIDE_EDIT));
         $this->add(new atkNumberAttribute("stockMinimo", AF_HIDE_ADD));
 
         // Foraneas
-        $this->add(new atkManyToOneRelation("marcaId", "productos.marca", AF_RELATION_AUTOLINK));
-        $this->add(new atkOneToManyRelation("datosProductoId", "productos.datosProductos", "productoId",  AF_FORCE_LOAD | AF_HIDE_ADD));
+        $this->add(new atkManyToOneRelation("marcaId", "productos.marca", AF_RELATION_AUTOLINK | $usedFlag));
+        $this->add(new atkOneToManyRelation("datosProductoId", "productos.datosProductos", "productoId",  AF_FORCE_LOAD | AF_HIDE_ADD | $usedFlag));
 
 
 //        TODO: Hay que revisar si esto se va a terminar. Posiblemente no
@@ -68,20 +77,23 @@ class productos extends atkNode {
     }
 
     
-    function preUpdate(&$record) {
-        // TODO: hay que permitir modificar el precio y el stock mínimo, pero ningún otro campo.
+    function isProductUsed($productoID) {
+        if($productoID == null || $productoID == ""){            
+            return false;
+        }
+        
         $db = &atkGetDb();
-        $productoID = $record["id"];
+        
         $sql = "select * from detalle d, manejoStock m "
                 . " where d.productoId = $productoID"
                 . " or m.productoId = $productoID";
         
         $result = $db->getrows($sql);
         if ($result != null) {            
-            triggerError($record, "Error", "imposible modificar producto asociada al detalle de una venta.");
-            return false;
+            //triggerError($record, "Error", "imposible modificar producto asociada al detalle de una venta.");
+            return true;
         }
-        return true;
+        return false;
     }
     
     function preDelete($record) {
