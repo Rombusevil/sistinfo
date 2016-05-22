@@ -3,7 +3,7 @@
 class manejoStock extends atkNode {
 
     function manejoStock($name = "manejoStock", $flags = 0) {
-        $this->atkNode($name, $flags | NF_ADD_LINK);
+        $this->atkNode($name, $flags | NF_ADD_LINK | NF_NO_EDIT | NF_NO_DELETE);
 
         $this->add(new atkNumberAttribute("id", AF_AUTOKEY));
         $this->add(new atkDateTimeAttribute("Fecha", AF_OBLIGATORY));

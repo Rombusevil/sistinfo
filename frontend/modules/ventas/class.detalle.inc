@@ -45,12 +45,28 @@ class detalle extends atkNode {
     }
 
     function cantidad_validate(&$record) {
+        global $ATK_VARS;
+        $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)
+        
         $db = &atkGetDb();
         $producto = $record["productoId"]["id"];
         if ($producto != NULL) {
             $result = $db->getrows("select cantidad from productos where id = $producto");
             $cantidad = $result[0]["cantidad"];
+            
+            
+            // Tengo en cuenta las líneas de detalle agregadas para calcular el stock
+            // podés tener más de una línea de detalle para un mismo producto
+            // si querés vener por ej una lata a un precio y otra lata con descuento.
+            $detalles = $ATK_VARS["#STACK#"][$id]["ventas.ventas:detalle"];
+            $codigoProducto = $record["productoId"]["codigoProducto"];
 
+            for($i=0; $i< count($detalles); $i++ ){
+                if($detalles[$i]["productoId"]["codigoProducto"] == $codigoProducto){
+                    $cantidad -= $detalles[$i]["cantidad"];
+                }
+            }
+            
             $cantidadNueva = $cantidad - $record["cantidad"];
 
             if ($cantidad == 0) {
@@ -175,6 +191,9 @@ class detalle extends atkNode {
 
     // Meto lógica para mostrar el popup de alerta de stock
     function preAdd(&$record) {
+        global $ATK_VARS;
+        $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)
+               
         $productoId = $record["productoId"]["id"];
 
         if ($productoId == NULL) {
