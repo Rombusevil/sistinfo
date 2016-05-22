@@ -1,7 +1,7 @@
 <?php
 	// Defino el path al archivo de config
 	$path = $_SERVER['DOCUMENT_ROOT'];
-	$path .= "/frontend/config.inc.php";
+	$path .= "/sistinfo/frontend/config.inc.php";
 	$varsFile = fopen($path,"r");
 
 	// Parseo el archivo de config para obtener el usr y pass
