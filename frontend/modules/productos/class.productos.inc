@@ -7,19 +7,50 @@ class productos extends atkNode {
     protected $fileMraPopup;// Archivo de intercambio para detectar si tengo que mandar popup pidiendo input de usuario
     protected $productIds;  // Archivo de intercambio que contiene el valor seleccionado por el usuario para hacer el MRA
 
+    function checkUsed(){
+        global $ATK_VARS;
+        
+        $id = split("=", $ATK_VARS["atkselector"])[1];
+        $usedFlags = 0;
+        if($this->isProductUsed($id)){
+            $usedFlags = AF_READONLY;
+        }
+        return $usedFlags;
+    }
+    
+    function isProductUsed($productoID) {
+        if($productoID == null || $productoID == ""){            
+            return false;
+        }
+        
+        $db = &atkGetDb();
+        
+        $sql = "select * from detalle d, manejoStock m "
+                . " where d.productoId = $productoID"
+                . " or m.productoId = $productoID";
+        
+        $result = $db->getrows($sql);
+        if ($result != null) {
+            return true;
+        }
+        return false;
+    }
+    
+    
     function productos($name = "productos", $flags = 0) {
         $this->fileMraPopup = "mraPopup.txt"; // Defino el nombre del archivo
         $this->productIds = "pId.txt"; // Defino el nombre del archivo
 
         $this->atkNode($name, $flags | NF_ADD_LINK | NF_EDITAFTERADD | NF_MRA);
-        global $ATK_VARS;
         
-                
-        $id = split("=", $ATK_VARS["atkselector"])[1];
-        $usedFlags = 0;
-        if($this->isProductUsed($id)){
-            $usedFlag = AF_READONLY;
-        }
+        
+        $usedFlag = $this->checkUsed();
+//        global $ATK_VARS;
+//        $id = split("=", $ATK_VARS["atkselector"])[1];
+//        $usedFlags = 0;
+//        if($this->isProductUsed($id)){
+//            $usedFlag = AF_READONLY;
+//        }
         
 
         $this->add(new atkNumberAttribute("id", AF_AUTOKEY));
@@ -74,26 +105,6 @@ class productos extends atkNode {
             fclose($file);
             unlink($this->fileMraPopup); // Borro el archivo
         }
-    }
-
-    
-    function isProductUsed($productoID) {
-        if($productoID == null || $productoID == ""){            
-            return false;
-        }
-        
-        $db = &atkGetDb();
-        
-        $sql = "select * from detalle d, manejoStock m "
-                . " where d.productoId = $productoID"
-                . " or m.productoId = $productoID";
-        
-        $result = $db->getrows($sql);
-        if ($result != null) {            
-            //triggerError($record, "Error", "imposible modificar producto asociada al detalle de una venta.");
-            return true;
-        }
-        return false;
     }
     
     function preDelete($record) {

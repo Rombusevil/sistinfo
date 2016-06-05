@@ -476,7 +476,7 @@
   "problems_occured_while_registering_hours_on_phase_%s" => "Problems occured while registering hours on phase %s", // Missing string!!!
   "profile" => "Perfiles de seguridad",
   "profiles" => "Perfiles", //"Profiles"
-  "profile_explanation" => "<br>A continuaci&oacute;n puede indicar los empleados aceptados en este perfil<br><br>",
+  "profile_explanation" => "<br>A continuaci&oacute;n puede indicar las pantallas permitidas para este perfil<br><br>",
   "profile_hours_lock" => "semanas globales bloqueadas",
   "project" => "Proyecto",
   "projectid" => "Proyecto",

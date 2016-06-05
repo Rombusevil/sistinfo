@@ -1,34 +1,48 @@
 <?php
 
 class marca extends atkNode {
+    
+    function checkUsed(){
+        global $ATK_VARS;
+        
+        $id = split("=", $ATK_VARS["atkselector"])[1];
+        $usedFlags = 0;
+        if($this->isThingUsed($id)){
+            $usedFlags = AF_READONLY;
+        }
+        return $usedFlags;
+    }
+    
+    function isThingUsed($id) {
+        if($id == null || $id == ""){            
+            return false;
+        }
+        
+        $db = &atkGetDb();
+        
+        $tid = "marcaId";
+        $tabla = "productos";        
+        $sql = "select * from $tabla where $tid = $id";
+        
+        $result = $db->getrows($sql);
+        if ($result != null) {
+            return true;
+        }
+        return false;
+    }
 
     function marca($name = "marca", $flags = 0) {
         $this->atkNode($name, $flags | NF_ADD_LINK);
 
+        $usedFlag = $this->checkUsed();
+        
         $this->add(new atkNumberAttribute("marcaId", AF_AUTOKEY));
-        $this->add(new atkAttribute("nombreMarca", AF_OBLIGATORY | AF_UNIQUE, 30));
+        $this->add(new atkAttribute("nombreMarca", $usedFlag | AF_OBLIGATORY | AF_UNIQUE, 30));
 
         $this->setOrder("nombreMarca asc");
         
         $this->setTable("marca", "marca");
         $this->setDescriptorTemplate("[nombreMarca]");
-    }
-    
-    public function preUpdate(&$record) {
-        $vid = "marcaId";
-        $tid = $vid;
-        $tabla = "productos";
-
-        $db = &atkGetDb();
-        $id = $record["$vid"];
-        $sql = "select * from $tabla where $tid = $id";
-
-        $result = $db->getrows($sql);
-        if ($result != null) {
-            triggerError($record, "Error", "imposible modificar marca asociada a un producto.");
-            return false;
-        }
-        return true;
     }
 
     function preDelete($record) {
