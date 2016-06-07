@@ -1,2 +1,7 @@
 ALTER TABLE `ventas` DROP `facturaId`;
 ALTER TABLE  `ventas` ADD  `numeroFactura` INT NULL;
+
+
+
+
+ALTER TABLE `manejoStock` ADD `ventaId` INT(11) NULL AFTER `tipoMovimientoId`;
