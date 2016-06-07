@@ -52,14 +52,7 @@ class color extends atkNode {
         return false;
     }
     
-    public function preAdd(&$record) {
-        atk_var_dump($record, " PREADD RECORD, BUSCAR COMPOSICION ");
-        parent::preAdd($record);
-    }
-
     public function postAdd($record, $mode = "add") {
-        atk_var_dump($record, " POSTADD: RECORD, BUSCAR COMPOSICION ");
-        
         $db = &atkGetDb();             
         $sql = "DELETE FROM composicionColores WHERE colorPrimario IS NULL AND colorSecundario IS NULL";
         $db->query($sql);
@@ -69,8 +62,6 @@ class color extends atkNode {
     }
     
     public function editArray($mode = "add", $record = NULL, $forceList = "", $suppressList = "", $fieldprefix = "", $ignoreTab = false, $injectSections = true) {
-        atk_var_dump($record, "RECORD --------------------------");
-        
         $url = atkSelf() . "?atknodetype=" . $this->atkNodeType() . "&atkaction=" . $this->m_action;
         $code = 'atkSubmit("' . atkurlencode(atkSessionManager::sessionUrl($url, SESSION_DEFAULT)) . '")';
         $this->getAttribute('esCompuesto')->addOnChangeHandler($code);
@@ -81,11 +72,8 @@ class color extends atkNode {
         
         return parent::editArray($mode, $record, $forceList, $suppressList, $fieldprefix, $ignoreTab, $injectSections);
     }
-    
-    
 
     function rowColor($record) {
-        atk_var_dump($record);
         $color = $record["gamaId"]["imagen"];
         return array($color);
     }    
@@ -102,8 +90,6 @@ class color extends atkNode {
                 . " where d.$tid = $id "
                 . " or cc.colorPrimario = $id"
                 . " or cc.colorSecundario = $id";
-        
-        atk_var_dump($sql, " CONSULTAAAAAAA ");
 
         $result = $db->getrows($sql);
         if ($result != null) {
