@@ -132,7 +132,7 @@ class detalle extends atkNode {
 
 
         $manejoStockId = $this->incrementSequence("manejoStock");
-        $tipoMovimiento = 2; //2 = Venta
+        $tipoMovimiento = 1; //1 = Venta
         $db->query("INSERT INTO manejoStock values ($manejoStockId,$producto,'$fechaVenta',$cantidadDetalle,$tipoMovimiento,$ventaId)");
         
 
