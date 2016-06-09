@@ -7,8 +7,6 @@ class ventas extends atkNode {
         
     function ventas($name = "ventas", $flags = 0) {
         global $ATK_VARS;
-          
-        
 
         // Si canceló la venta anterior voy a limpiar el detalle:
         $lvl = $ATK_VARS["atkprevlevel"];
@@ -52,6 +50,10 @@ class ventas extends atkNode {
 
         $this->add(new atkCurrencyAttribute("precioTotalConIVA", AF_HIDE_ADD|AF_HIDE_EDIT|AF_READONLY|AF_SEARCHABLE | AF_TOTAL, 0, "$", 2));
         $this->add(new atkCurrencyAttribute("precioTotalSinIVA", AF_READONLY|AF_SEARCHABLE | AF_TOTAL, 0, "$", 2 ));
+        
+        $this->add(new atkBoolAttribute("anulada", AF_HIDE));
+        
+        $this->addFilter(" anulada = 0 ");
         
         
         
@@ -369,7 +371,7 @@ class ventas extends atkNode {
         
         return parent::validate($record, $mode, $ignoreList);
     }
-
+    
     function preAdd(&$record) {
         // -----------------------------------------------
         // Limpio la sesión de los detalles que fueron borrados
@@ -459,5 +461,57 @@ class ventas extends atkNode {
             }
         }
         return $acum;
+    }
+    
+    public function deleteDb($selector, $exectrigger = true, $failwhenempty = false) {
+        $db = atkGetDb();
+        
+        // Prendo el flag de anulada en la venta
+        $sql = "UPDATE ventas SET anulada=1 WHERE $selector";
+        $db->query($sql);
+        
+        
+        // Updateo el stock de los productos
+        $ventaId = split("=",$selector);
+        $ventaId = $ventaId[1];
+        
+        $sql = "SELECT productoId, cantidad FROM manejoStock WHERE ventaId = $ventaId and tipoMovimientoId = 1"; // TIPO MOVIMIENTO ID 1 = VENTA
+        $res = $db->getrows($sql);
+                
+        atk_var_dump($res, " RES");
+        for($i=0; $i<count($res); $i++){
+            atk_var_dump($i, " ENTREEE");
+            
+            $cant = $res[$i]["cantidad"];
+            $id = $res[$i]["productoId"];
+            $db->query("UPDATE productos set cantidad = cantidad + $cant where id= $id");
+            
+            
+            $msid = $this->incrementSequence("manejoStock");
+            // Inserto en manejo de stock
+            $sql = "INSERT INTO manejoStock (id, fecha, productoId, cantidad, tipoMovimientoId, ventaId) "
+            .  "VALUES ($msid,  '".date("Y-m-d H:i:s")."', $id , $cant , 3, $ventaId)"; // TIPO MOVIMIENTO ID 3 = Venta anulada
+            $db->query($sql);
+        }
+
+        $db->commit();
+        return true;
+    }
+    
+    
+    
+    function incrementSequence($tabla) {
+        $db = &atkGetDb();
+
+        $result = $db->getrows("SELECT nextid from db_sequence where seq_name = '$tabla';");
+
+        if ($result == NULL) {
+            $db->query("INSERT INTO db_sequence (seq_name, nextid) VALUES ('$tabla', 2);");
+            $newId = 1;
+        } else {
+            $newId = $result[0]["nextid"] + 1;
+            $db->query("UPDATE db_sequence set nextid =$newId where seq_name = '$tabla';");
+        }
+        return $newId;
     }
 }

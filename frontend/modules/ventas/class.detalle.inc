@@ -9,13 +9,13 @@ class detalle extends atkNode {
         $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)
         $this->fileName = "alertaStock$id.txt"; // Defino el nombre del archivo
         
-        // Si canceló la venta anterior voy a limpiar el detalle:
-        $lvl = $ATK_VARS["atkprevlevel"];
-        if($lvl == 1) { // Si estoy en la pantalla de detalle.
-            $this->limpiaFormulario();
-        }
+        // Guardar y siguiente te precarga el detalle anterior
+//        $lvl = $ATK_VARS["atkprevlevel"];
+//        if($lvl == 1) { // Si estoy en la pantalla de detalle.
+//            $this->limpiaFormulario();
+//        }
         
-        atk_var_dump($ATK_VARS, "ATK VARS");
+        
         $editFlag = 0;
         if($ATK_VARS["atkselector"] != NULL){
             $editFlag = NF_NO_ADD ;
@@ -48,6 +48,10 @@ class detalle extends atkNode {
         global $ATK_VARS;
         $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)
         
+        if($record["cantidad"] < 1){
+            triggerError($record, "Cantidad inv&aacute;lida", "se debe ingresar una cantidad mayor a 0.");
+        }
+        
         $db = &atkGetDb();
         $producto = $record["productoId"]["id"];
         if ($producto != NULL) {
@@ -73,10 +77,6 @@ class detalle extends atkNode {
                 triggerError($record, "Sin stock", "no hay stock registrado para el producto.");
             } else if ($cantidadNueva < 0) {
                 triggerError($record, "No hay suficiente stock", "la cantidad actual es $cantidad.");
-            }
-
-            if ($record["cantidad"] < 0) {
-                triggerError($record, "Error", "cantidad negativa.");
             }
         }
     }
@@ -132,8 +132,9 @@ class detalle extends atkNode {
 
 
         $manejoStockId = $this->incrementSequence("manejoStock");
-        $tipoMovimiento = 2; //2 = Venta
-        $db->query("INSERT INTO manejoStock values ($manejoStockId,$producto,'$fechaVenta',$cantidadDetalle,$tipoMovimiento)");
+        $tipoMovimiento = 1; //1 = Venta
+        $db->query("INSERT INTO manejoStock values ($manejoStockId,$producto,'$fechaVenta',$cantidadDetalle,$tipoMovimiento,$ventaId)");
+        
 
 
         return true;
@@ -150,7 +151,8 @@ class detalle extends atkNode {
             unset($_SESSION["achievo"]["default"]["stack"][$id][$i]["atkreject"]);
         }
         // ---------------------------------------------------------------------------------------------
-
+        
+        
 
         $url = atkSelf() . "?atknodetype=" . $this->atkNodeType() . "&atkaction=" . $this->m_action;
         $code = 'atkSubmit("' . atkurlencode(atkSessionManager::sessionUrl($url, SESSION_DEFAULT)) . '")';
@@ -161,7 +163,7 @@ class detalle extends atkNode {
         $this->getAttribute("colorId")->removeFlag(AF_HIDE);
 
         if ($esColoreable == false) {
-            $this->getAttribute("colorId")->addFlag(AF_HIDE);
+            $this->remove("colorId");
         }
 
         //$ventaId = $record["ventaId"]["id"];
@@ -169,8 +171,6 @@ class detalle extends atkNode {
         //$fechaVenta = $result[0]["fechaVenta"];
         //$result = $db->getrows("select valorIva from ivas where fechaVigencia <= '$fechaVenta' order by fechaVigencia desc");
         //$iva = $result[0]["valorIva"]/100.0;
-        atk_var_dump($ATK_VARS, "ATK_VARS!!!");
-        atk_var_dump($record, "RECORD!!!");
         $precioSinIVA = $record["cantidad"] * $record["productoId"]["precio"];
         $record["precioSinIVA"] = $precioSinIVA;
 //        $precioIVA = $precioSinIVA+$precioSinIVA*$iva;
@@ -227,13 +227,28 @@ class detalle extends atkNode {
     }
     
     function limpiaFormulario(){
+        /**
+         * ESTO NO ANDA, HAY QUE LIMPIAR EL FORMULARIO CUANDO HACES CLICK EN GUARDAR Y SIGUIENTE
+         */
         global $ATK_VARS;
         $id = $ATK_VARS["atkstackid"]; // Id del stack correspondiente a este detalle (se llena de id's basura pero no importa)
         
+        atk_var_dump($ATK_VARS["#STACK#"][$id], "ATK VARS DE ID");
+        unset($ATK_VARS["#STACK#"][$id]);
+        
+        atk_var_dump($id, " VER SI ESTE ID CONCUERDA");
         // Borro todos los elementos del arreglo para que se limpie el formulario correctamente.
         for($i=0; $i<count($_SESSION["achievo"]["default"]["stack"][$id]); $i++){
-            unset($_SESSION["achievo"]["default"]["stack"][$id][$i]["atkformdata"]);
+            atk_var_dump($_SESSION["achievo"]["default"]["stack"][$id][$i]["atkformdata"]," TODO ");
+            atk_var_dump($_SESSION["achievo"]["default"]["stack"][$id][$i]["atkformdata"]["#STACK#"][$id]["ventas.ventas:detalle"]," VER QUE TIENE PARA BORRAR");
+
+            unset($_SESSION["achievo"]["default"]["stack"][$id][$i]["atkformdata"]["#STACK#"][$id]["ventas.ventas:detalle"]);
         }
+    }
+    
+    function anularVenta(){
+        $ventaId = 1; // TODO
+        $sql = "select * from manejoStock ";
     }
 
 }

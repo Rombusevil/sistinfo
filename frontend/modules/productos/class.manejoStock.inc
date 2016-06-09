@@ -15,7 +15,7 @@ class manejoStock extends atkNode {
 
         $tipoMov->setDestinationFilter("tipoMovimientoId <> 1"); // 1 es VENTA
         
-        $this->setOrder("codigoProducto desc");
+        $this->setOrder("Fecha desc");
         
         $this->setTable("manejoStock", "manejoStock");
     }
