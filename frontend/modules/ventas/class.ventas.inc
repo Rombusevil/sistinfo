@@ -49,7 +49,7 @@ class ventas extends atkNode {
         $this->add(new atkOneToManyRelation("detalle", "ventas.detalle", "ventaId", AF_ONETOMANY_SHOW_ADD | AF_CASCADE_DELETE |  AF_FORCE_LOAD));
 
         $this->add(new atkCurrencyAttribute("precioTotalConIVA", AF_HIDE_ADD|AF_HIDE_EDIT|AF_READONLY|AF_SEARCHABLE | AF_TOTAL, 0, "$", 2));
-        $this->add(new atkCurrencyAttribute("precioTotalSinIVA", AF_READONLY|AF_SEARCHABLE | AF_TOTAL, 0, "$", 2 ));
+        $this->add(new atkCurrencyAttribute("precioTotalSinIVA", AF_READONLY|AF_SEARCHABLE | AF_TOTAL, 0, "$", 2));
         
         $this->add(new atkBoolAttribute("anulada", AF_HIDE));
         
@@ -498,7 +498,9 @@ class ventas extends atkNode {
         return true;
     }
     
-    
+    function confirmdeletetext(){
+        return "¿Desea anular la venta?";
+    }
     
     function incrementSequence($tabla) {
         $db = &atkGetDb();
@@ -514,4 +516,5 @@ class ventas extends atkNode {
         }
         return $newId;
     }
+    
 }
