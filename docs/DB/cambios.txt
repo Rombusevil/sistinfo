@@ -5,3 +5,4 @@ ALTER TABLE  `ventas` ADD  `numeroFactura` INT NULL;
 
 
 ALTER TABLE `manejoStock` ADD `ventaId` INT(11) NULL AFTER `tipoMovimientoId`;
+ALTER TABLE `ventas` ADD `anulada` tinyint(4) 0 AFTER `numeroFactura`;

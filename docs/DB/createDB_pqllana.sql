@@ -1,20 +1,20 @@
 -- phpMyAdmin SQL Dump
--- version 3.4.11.1deb2+deb7u1
+-- version 4.6.1deb1
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 31-10-2015 a las 12:04:59
--- Versión del servidor: 5.5.41
--- Versión de PHP: 5.4.41-0+deb7u1
+-- Tiempo de generación: 09-06-2016 a las 18:58:48
+-- Versión del servidor: 5.6.30-1
+-- Versión de PHP: 5.6.21-2
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Base de datos: `pqllana`
@@ -26,11 +26,10 @@ SET time_zone = "+00:00";
 -- Estructura de tabla para la tabla `accessright`
 --
 
-CREATE TABLE IF NOT EXISTS `accessright` (
+CREATE TABLE `accessright` (
   `node` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `action` varchar(25) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `role_id` int(10) NOT NULL,
-  PRIMARY KEY (`node`,`action`,`role_id`)
+  `role_id` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -39,13 +38,11 @@ CREATE TABLE IF NOT EXISTS `accessright` (
 -- Estructura de tabla para la tabla `atributosDeProductos`
 --
 
-CREATE TABLE IF NOT EXISTS `atributosDeProductos` (
+CREATE TABLE `atributosDeProductos` (
   `atributoId` int(11) NOT NULL DEFAULT '0',
   `nombreAtributo` varchar(30) DEFAULT NULL,
-  `unidadAtributo` varchar(11) DEFAULT NULL,
-  PRIMARY KEY (`atributoId`),
-  KEY `unidadAtributo` (`unidadAtributo`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `tipoAtributo` varchar(11) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -53,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `atributosDeProductos` (
 -- Estructura de tabla para la tabla `clientes`
 --
 
-CREATE TABLE IF NOT EXISTS `clientes` (
+CREATE TABLE `clientes` (
   `clienteId` int(11) NOT NULL DEFAULT '0',
   `cuitCuil` varchar(20) DEFAULT NULL,
   `razonSocial` varchar(50) DEFAULT NULL,
@@ -62,12 +59,8 @@ CREATE TABLE IF NOT EXISTS `clientes` (
   `direccion` varchar(50) DEFAULT NULL,
   `tipoClienteId` int(11) DEFAULT NULL,
   `sociedadId` int(11) DEFAULT NULL,
-  `localidadId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`clienteId`),
-  KEY `localidadId` (`localidadId`),
-  KEY `tipoClienteId` (`tipoClienteId`),
-  KEY `sociedadId` (`sociedadId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `localidadId` int(11) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -75,15 +68,14 @@ CREATE TABLE IF NOT EXISTS `clientes` (
 -- Estructura de tabla para la tabla `color`
 --
 
-CREATE TABLE IF NOT EXISTS `color` (
+CREATE TABLE `color` (
   `colorId` int(11) NOT NULL DEFAULT '0',
-  `codigoColor` int(11) DEFAULT NULL,
+  `codigoColor` varchar(30) DEFAULT NULL,
   `imagen` varchar(90) DEFAULT NULL,
   `gamaId` int(11) DEFAULT NULL,
   `composicionId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`colorId`),
-  KEY `gamaId` (`gamaId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `esCompuesto` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -91,15 +83,12 @@ CREATE TABLE IF NOT EXISTS `color` (
 -- Estructura de tabla para la tabla `composicionColores`
 --
 
-CREATE TABLE IF NOT EXISTS `composicionColores` (
+CREATE TABLE `composicionColores` (
   `id` int(11) NOT NULL DEFAULT '0',
   `colorPrimario` int(11) DEFAULT NULL,
   `colorSecundario` int(11) DEFAULT NULL,
-  `porcentaje` float DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `colorPrimario` (`colorPrimario`),
-  KEY `colorSecundario` (`colorSecundario`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `porcentaje` float DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -107,15 +96,13 @@ CREATE TABLE IF NOT EXISTS `composicionColores` (
 -- Estructura de tabla para la tabla `datosProductos`
 --
 
-CREATE TABLE IF NOT EXISTS `datosProductos` (
+CREATE TABLE `datosProductos` (
   `datosProductosId` int(11) NOT NULL DEFAULT '0',
   `productoId` int(11) DEFAULT NULL,
   `nombreAtributo` varchar(30) DEFAULT NULL,
-  `valorAtributo` int(11) DEFAULT NULL,
-  `tipoAtributo` int(11) DEFAULT NULL,
-  PRIMARY KEY (`datosProductosId`),
-  KEY `productoId` (`productoId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `valorAtributo` varchar(30) DEFAULT NULL,
+  `tipoAtributo` varchar(30) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -123,10 +110,9 @@ CREATE TABLE IF NOT EXISTS `datosProductos` (
 -- Estructura de tabla para la tabla `db_sequence`
 --
 
-CREATE TABLE IF NOT EXISTS `db_sequence` (
+CREATE TABLE `db_sequence` (
   `seq_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `nextid` int(10) NOT NULL,
-  PRIMARY KEY (`seq_name`)
+  `nextid` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -135,19 +121,15 @@ CREATE TABLE IF NOT EXISTS `db_sequence` (
 -- Estructura de tabla para la tabla `detalle`
 --
 
-CREATE TABLE IF NOT EXISTS `detalle` (
+CREATE TABLE `detalle` (
   `detalleId` int(11) NOT NULL DEFAULT '0',
   `productoId` int(11) DEFAULT NULL,
   `cantidad` int(11) DEFAULT NULL,
   `ventaId` int(11) DEFAULT NULL,
-  `precioIVA` decimal(5,2) DEFAULT NULL,
+  `precioIVA` decimal(10,2) DEFAULT NULL,
   `colorId` int(11) DEFAULT NULL,
-  `precioSinIVA` decimal(5,2) DEFAULT NULL,
-  PRIMARY KEY (`detalleId`),
-  KEY `ventaId` (`ventaId`),
-  KEY `productoId` (`productoId`),
-  KEY `colorId` (`colorId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `precioSinIVA` decimal(10,2) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -155,13 +137,11 @@ CREATE TABLE IF NOT EXISTS `detalle` (
 -- Estructura de tabla para la tabla `empleados`
 --
 
-CREATE TABLE IF NOT EXISTS `empleados` (
+CREATE TABLE `empleados` (
   `empleadoId` int(11) NOT NULL DEFAULT '0',
   `nombreEmpleado` varchar(30) DEFAULT NULL,
-  `perfilId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`empleadoId`),
-  KEY `perfilId` (`perfilId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `perfilId` int(11) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -169,10 +149,9 @@ CREATE TABLE IF NOT EXISTS `empleados` (
 -- Estructura de tabla para la tabla `employeerole`
 --
 
-CREATE TABLE IF NOT EXISTS `employeerole` (
+CREATE TABLE `employeerole` (
   `employee_id` int(10) NOT NULL,
-  `role_id` int(10) NOT NULL,
-  PRIMARY KEY (`employee_id`,`role_id`)
+  `role_id` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -181,26 +160,11 @@ CREATE TABLE IF NOT EXISTS `employeerole` (
 -- Estructura de tabla para la tabla `employee_department`
 --
 
-CREATE TABLE IF NOT EXISTS `employee_department` (
+CREATE TABLE `employee_department` (
   `id` int(10) NOT NULL,
   `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `description` text,
-  PRIMARY KEY (`id`)
+  `description` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `facturas`
---
-
-CREATE TABLE IF NOT EXISTS `facturas` (
-  `facturaId` int(11) NOT NULL DEFAULT '0',
-  `numeroFactura` int(11) DEFAULT NULL,
-  `tipoFacturaId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`facturaId`),
-  KEY `tipoFacturaId` (`tipoFacturaId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -208,11 +172,10 @@ CREATE TABLE IF NOT EXISTS `facturas` (
 -- Estructura de tabla para la tabla `functionlevel`
 --
 
-CREATE TABLE IF NOT EXISTS `functionlevel` (
+CREATE TABLE `functionlevel` (
   `id` int(10) NOT NULL,
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `description` text,
-  PRIMARY KEY (`id`)
+  `description` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -221,12 +184,11 @@ CREATE TABLE IF NOT EXISTS `functionlevel` (
 -- Estructura de tabla para la tabla `gama`
 --
 
-CREATE TABLE IF NOT EXISTS `gama` (
+CREATE TABLE `gama` (
   `gamaId` int(11) NOT NULL DEFAULT '0',
   `nombreGama` varchar(30) DEFAULT NULL,
-  `imagen` varchar(90) DEFAULT NULL,
-  PRIMARY KEY (`gamaId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `imagen` varchar(90) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -234,7 +196,7 @@ CREATE TABLE IF NOT EXISTS `gama` (
 -- Estructura de tabla para la tabla `ivas`
 --
 
-CREATE TABLE IF NOT EXISTS `ivas` (
+CREATE TABLE `ivas` (
   `id` int(11) DEFAULT NULL,
   `fechaVigencia` date DEFAULT NULL,
   `valorIva` decimal(5,2) DEFAULT NULL,
@@ -247,11 +209,10 @@ CREATE TABLE IF NOT EXISTS `ivas` (
 -- Estructura de tabla para la tabla `localidades`
 --
 
-CREATE TABLE IF NOT EXISTS `localidades` (
+CREATE TABLE `localidades` (
   `localidadId` int(11) NOT NULL DEFAULT '0',
   `codigoPostal` int(11) DEFAULT NULL,
-  `nombreLocalidad` varchar(30) DEFAULT NULL,
-  PRIMARY KEY (`localidadId`)
+  `nombreLocalidad` varchar(30) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -260,15 +221,14 @@ CREATE TABLE IF NOT EXISTS `localidades` (
 -- Estructura de tabla para la tabla `manejoStock`
 --
 
-CREATE TABLE IF NOT EXISTS `manejoStock` (
+CREATE TABLE `manejoStock` (
   `id` int(11) NOT NULL DEFAULT '0',
   `productoId` int(11) DEFAULT NULL,
   `fecha` timestamp NULL DEFAULT NULL,
   `cantidad` int(11) DEFAULT NULL,
   `tipoMovimientoId` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `productoId` (`productoId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `ventaId` int(11) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -276,11 +236,10 @@ CREATE TABLE IF NOT EXISTS `manejoStock` (
 -- Estructura de tabla para la tabla `marca`
 --
 
-CREATE TABLE IF NOT EXISTS `marca` (
+CREATE TABLE `marca` (
   `marcaId` int(11) NOT NULL DEFAULT '0',
-  `nombreMarca` varchar(30) DEFAULT NULL,
-  PRIMARY KEY (`marcaId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `nombreMarca` varchar(30) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -288,7 +247,7 @@ CREATE TABLE IF NOT EXISTS `marca` (
 -- Estructura de tabla para la tabla `organization`
 --
 
-CREATE TABLE IF NOT EXISTS `organization` (
+CREATE TABLE `organization` (
   `id` int(10) NOT NULL,
   `organizationcode` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
@@ -333,8 +292,7 @@ CREATE TABLE IF NOT EXISTS `organization` (
   `created_by` int(10) DEFAULT NULL,
   `created_on` datetime DEFAULT NULL,
   `last_modified_by` int(10) DEFAULT NULL,
-  `last_modified_on` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `last_modified_on` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -343,11 +301,10 @@ CREATE TABLE IF NOT EXISTS `organization` (
 -- Estructura de tabla para la tabla `perfiles`
 --
 
-CREATE TABLE IF NOT EXISTS `perfiles` (
+CREATE TABLE `perfiles` (
   `perfilId` int(11) NOT NULL DEFAULT '0',
-  `nombrePerfil` varchar(30) DEFAULT NULL,
-  PRIMARY KEY (`perfilId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `nombrePerfil` varchar(30) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -355,7 +312,7 @@ CREATE TABLE IF NOT EXISTS `perfiles` (
 -- Estructura de tabla para la tabla `person`
 --
 
-CREATE TABLE IF NOT EXISTS `person` (
+CREATE TABLE `person` (
   `id` int(10) NOT NULL,
   `title_id` int(10) DEFAULT NULL,
   `userid` varchar(15) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
@@ -389,8 +346,7 @@ CREATE TABLE IF NOT EXISTS `person` (
   `lng` varchar(2) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `password` varchar(40) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `theme` varchar(14) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
-  `company` int(10) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `company` int(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -399,7 +355,7 @@ CREATE TABLE IF NOT EXISTS `person` (
 -- Estructura de tabla para la tabla `productos`
 --
 
-CREATE TABLE IF NOT EXISTS `productos` (
+CREATE TABLE `productos` (
   `id` int(11) NOT NULL DEFAULT '0',
   `codigoProducto` int(11) DEFAULT NULL,
   `nombreProducto` varchar(30) DEFAULT NULL,
@@ -408,11 +364,8 @@ CREATE TABLE IF NOT EXISTS `productos` (
   `cantidad` int(11) DEFAULT NULL,
   `stockMinimo` int(11) DEFAULT NULL,
   `marcaId` int(11) DEFAULT NULL,
-  `tipoProductoId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `marcaId` (`marcaId`),
-  KEY `tipoProductoId` (`tipoProductoId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `tipoProductoId` int(11) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -420,10 +373,9 @@ CREATE TABLE IF NOT EXISTS `productos` (
 -- Estructura de tabla para la tabla `profile`
 --
 
-CREATE TABLE IF NOT EXISTS `profile` (
+CREATE TABLE `profile` (
   `id` int(10) NOT NULL,
-  `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  PRIMARY KEY (`id`)
+  `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -432,11 +384,10 @@ CREATE TABLE IF NOT EXISTS `profile` (
 -- Estructura de tabla para la tabla `role`
 --
 
-CREATE TABLE IF NOT EXISTS `role` (
+CREATE TABLE `role` (
   `id` int(10) NOT NULL,
   `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `description` text NOT NULL,
-  PRIMARY KEY (`id`)
+  `description` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -445,7 +396,7 @@ CREATE TABLE IF NOT EXISTS `role` (
 -- Estructura de tabla para la tabla `scheduler_alarms`
 --
 
-CREATE TABLE IF NOT EXISTS `scheduler_alarms` (
+CREATE TABLE `scheduler_alarms` (
   `scheduler_id` int(10) NOT NULL,
   `startdate` int(10) NOT NULL,
   `duration` int(10) DEFAULT NULL,
@@ -453,8 +404,7 @@ CREATE TABLE IF NOT EXISTS `scheduler_alarms` (
   `send` int(1) DEFAULT NULL,
   `type` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `userid` int(2) NOT NULL,
-  `owner` int(10) DEFAULT NULL,
-  PRIMARY KEY (`scheduler_id`,`startdate`,`userid`)
+  `owner` int(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -463,11 +413,10 @@ CREATE TABLE IF NOT EXISTS `scheduler_alarms` (
 -- Estructura de tabla para la tabla `scheduler_attendees`
 --
 
-CREATE TABLE IF NOT EXISTS `scheduler_attendees` (
+CREATE TABLE `scheduler_attendees` (
   `scheduler_id` int(10) NOT NULL,
   `person_id` int(10) NOT NULL,
-  `status` varchar(11) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  PRIMARY KEY (`scheduler_id`,`person_id`)
+  `status` varchar(11) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -476,12 +425,11 @@ CREATE TABLE IF NOT EXISTS `scheduler_attendees` (
 -- Estructura de tabla para la tabla `scheduler_category`
 --
 
-CREATE TABLE IF NOT EXISTS `scheduler_category` (
+CREATE TABLE `scheduler_category` (
   `id` int(10) NOT NULL,
   `description` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `bgcolor` varchar(10) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `fgcolor` varchar(10) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  PRIMARY KEY (`id`)
+  `fgcolor` varchar(10) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -490,7 +438,7 @@ CREATE TABLE IF NOT EXISTS `scheduler_category` (
 -- Estructura de tabla para la tabla `scheduler_cyclus`
 --
 
-CREATE TABLE IF NOT EXISTS `scheduler_cyclus` (
+CREATE TABLE `scheduler_cyclus` (
   `scheduler_id` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `monthly_day` int(2) DEFAULT NULL,
   `yearly_day` int(2) DEFAULT NULL,
@@ -510,8 +458,7 @@ CREATE TABLE IF NOT EXISTS `scheduler_cyclus` (
   `yearly_choice` int(10) DEFAULT NULL,
   `end_choice` int(10) DEFAULT NULL,
   `cyclus_enddate` date DEFAULT NULL,
-  `cyclus_times` int(10) DEFAULT NULL,
-  PRIMARY KEY (`scheduler_id`)
+  `cyclus_times` int(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -520,10 +467,9 @@ CREATE TABLE IF NOT EXISTS `scheduler_cyclus` (
 -- Estructura de tabla para la tabla `scheduler_cyclus_not`
 --
 
-CREATE TABLE IF NOT EXISTS `scheduler_cyclus_not` (
+CREATE TABLE `scheduler_cyclus_not` (
   `scheduler_id` int(10) NOT NULL,
-  `date` int(10) NOT NULL,
-  PRIMARY KEY (`scheduler_id`,`date`)
+  `date` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -532,12 +478,10 @@ CREATE TABLE IF NOT EXISTS `scheduler_cyclus_not` (
 -- Estructura de tabla para la tabla `scheduler_dates`
 --
 
-CREATE TABLE IF NOT EXISTS `scheduler_dates` (
+CREATE TABLE `scheduler_dates` (
   `scheduler_id` int(10) NOT NULL,
   `startdate` int(10) NOT NULL,
-  `enddate` int(10) DEFAULT NULL,
-  PRIMARY KEY (`scheduler_id`,`startdate`),
-  KEY `enddate_idx` (`enddate`)
+  `enddate` int(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -546,11 +490,10 @@ CREATE TABLE IF NOT EXISTS `scheduler_dates` (
 -- Estructura de tabla para la tabla `scheduler_group`
 --
 
-CREATE TABLE IF NOT EXISTS `scheduler_group` (
+CREATE TABLE `scheduler_group` (
   `id` int(10) NOT NULL,
   `userid` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
-  `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -559,10 +502,9 @@ CREATE TABLE IF NOT EXISTS `scheduler_group` (
 -- Estructura de tabla para la tabla `scheduler_group_member`
 --
 
-CREATE TABLE IF NOT EXISTS `scheduler_group_member` (
+CREATE TABLE `scheduler_group_member` (
   `groupid` int(10) NOT NULL,
-  `userid` int(10) NOT NULL,
-  PRIMARY KEY (`groupid`,`userid`)
+  `userid` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -571,7 +513,7 @@ CREATE TABLE IF NOT EXISTS `scheduler_group_member` (
 -- Estructura de tabla para la tabla `scheduler_holidays`
 --
 
-CREATE TABLE IF NOT EXISTS `scheduler_holidays` (
+CREATE TABLE `scheduler_holidays` (
   `id` int(10) NOT NULL,
   `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `type` varchar(7) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
@@ -583,8 +525,7 @@ CREATE TABLE IF NOT EXISTS `scheduler_holidays` (
   `weekday` int(1) DEFAULT NULL,
   `moveto` int(1) DEFAULT NULL,
   `schedulecategory` int(10) NOT NULL,
-  `country` varchar(2) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  PRIMARY KEY (`id`)
+  `country` varchar(2) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -593,14 +534,13 @@ CREATE TABLE IF NOT EXISTS `scheduler_holidays` (
 -- Estructura de tabla para la tabla `scheduler_notes`
 --
 
-CREATE TABLE IF NOT EXISTS `scheduler_notes` (
+CREATE TABLE `scheduler_notes` (
   `id` int(10) NOT NULL,
   `owner` int(10) NOT NULL,
   `scheduler_id` int(10) NOT NULL,
   `entrydate` date NOT NULL,
   `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `description` text NOT NULL,
-  PRIMARY KEY (`id`)
+  `description` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -609,7 +549,7 @@ CREATE TABLE IF NOT EXISTS `scheduler_notes` (
 -- Estructura de tabla para la tabla `scheduler_scheduler`
 --
 
-CREATE TABLE IF NOT EXISTS `scheduler_scheduler` (
+CREATE TABLE `scheduler_scheduler` (
   `id` int(10) NOT NULL,
   `title` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `location` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
@@ -628,8 +568,7 @@ CREATE TABLE IF NOT EXISTS `scheduler_scheduler` (
   `owner` int(10) NOT NULL,
   `owner_attendee` int(1) DEFAULT NULL,
   `lastdate` int(10) DEFAULT NULL,
-  `times` int(10) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `times` int(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -638,10 +577,9 @@ CREATE TABLE IF NOT EXISTS `scheduler_scheduler` (
 -- Estructura de tabla para la tabla `scheduler_userassistants`
 --
 
-CREATE TABLE IF NOT EXISTS `scheduler_userassistants` (
+CREATE TABLE `scheduler_userassistants` (
   `userid` int(10) NOT NULL,
-  `employeeid` int(10) NOT NULL,
-  PRIMARY KEY (`userid`,`employeeid`)
+  `employeeid` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -650,7 +588,7 @@ CREATE TABLE IF NOT EXISTS `scheduler_userassistants` (
 -- Estructura de tabla para la tabla `scheduler_userpreferences`
 --
 
-CREATE TABLE IF NOT EXISTS `scheduler_userpreferences` (
+CREATE TABLE `scheduler_userpreferences` (
   `userid` int(10) NOT NULL,
   `timeschedule` int(2) NOT NULL,
   `showweeknumbers` int(1) DEFAULT NULL,
@@ -664,8 +602,7 @@ CREATE TABLE IF NOT EXISTS `scheduler_userpreferences` (
   `default_eventtime` time DEFAULT NULL,
   `default_category` int(10) DEFAULT NULL,
   `scheduler_emptycolor` varchar(10) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
-  `scheduler_emptyworkhourscolor` varchar(10) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
-  PRIMARY KEY (`userid`)
+  `scheduler_emptyworkhourscolor` varchar(10) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -674,10 +611,9 @@ CREATE TABLE IF NOT EXISTS `scheduler_userpreferences` (
 -- Estructura de tabla para la tabla `sociedades`
 --
 
-CREATE TABLE IF NOT EXISTS `sociedades` (
+CREATE TABLE `sociedades` (
   `sociedadId` int(11) NOT NULL DEFAULT '0',
-  `nombreSociedad` varchar(30) DEFAULT NULL,
-  PRIMARY KEY (`sociedadId`)
+  `nombreSociedad` varchar(30) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -686,7 +622,7 @@ CREATE TABLE IF NOT EXISTS `sociedades` (
 -- Estructura de tabla para la tabla `tipoMovimiento`
 --
 
-CREATE TABLE IF NOT EXISTS `tipoMovimiento` (
+CREATE TABLE `tipoMovimiento` (
   `tipoMovimientoId` int(11) DEFAULT NULL,
   `nombreMovimiento` varchar(30) DEFAULT NULL,
   `tipoOperacion` varchar(30) DEFAULT NULL
@@ -698,13 +634,11 @@ CREATE TABLE IF NOT EXISTS `tipoMovimiento` (
 -- Estructura de tabla para la tabla `tiposAtributosDeProductos`
 --
 
-CREATE TABLE IF NOT EXISTS `tiposAtributosDeProductos` (
+CREATE TABLE `tiposAtributosDeProductos` (
   `tiposAtributosDeProductosId` int(11) NOT NULL DEFAULT '0',
   `tipoProductoId` int(11) DEFAULT NULL,
-  `atributoId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`tiposAtributosDeProductosId`),
-  KEY `tipoProductoId` (`tipoProductoId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `atributoId` int(11) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -712,13 +646,11 @@ CREATE TABLE IF NOT EXISTS `tiposAtributosDeProductos` (
 -- Estructura de tabla para la tabla `tiposCliente`
 --
 
-CREATE TABLE IF NOT EXISTS `tiposCliente` (
+CREATE TABLE `tiposCliente` (
   `tipoClienteId` int(11) NOT NULL DEFAULT '0',
   `nombreTipoCliente` varchar(30) DEFAULT NULL,
-  `tipoFacturaId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`tipoClienteId`),
-  KEY `tipoFacturaId` (`tipoFacturaId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `tipoFacturaId` int(11) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -726,12 +658,11 @@ CREATE TABLE IF NOT EXISTS `tiposCliente` (
 -- Estructura de tabla para la tabla `tiposFactura`
 --
 
-CREATE TABLE IF NOT EXISTS `tiposFactura` (
+CREATE TABLE `tiposFactura` (
   `id` int(11) NOT NULL DEFAULT '0',
   `nombreTipoFactura` varchar(30) DEFAULT NULL,
-  `ivaId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `ivaId` int(11) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -739,13 +670,12 @@ CREATE TABLE IF NOT EXISTS `tiposFactura` (
 -- Estructura de tabla para la tabla `tiposProducto`
 --
 
-CREATE TABLE IF NOT EXISTS `tiposProducto` (
+CREATE TABLE `tiposProducto` (
   `id` int(11) NOT NULL DEFAULT '0',
   `tipoProducto` varchar(30) DEFAULT NULL,
   `esColoreable` tinyint(1) DEFAULT NULL,
-  `stockMinimoPorDefecto` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `stockMinimoPorDefecto` int(11) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -753,11 +683,10 @@ CREATE TABLE IF NOT EXISTS `tiposProducto` (
 -- Estructura de tabla para la tabla `tiposVenta`
 --
 
-CREATE TABLE IF NOT EXISTS `tiposVenta` (
+CREATE TABLE `tiposVenta` (
   `tipoVentaId` int(11) NOT NULL DEFAULT '0',
-  `nombreTipoVenta` varchar(30) DEFAULT NULL,
-  PRIMARY KEY (`tipoVentaId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `nombreTipoVenta` varchar(30) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -765,10 +694,9 @@ CREATE TABLE IF NOT EXISTS `tiposVenta` (
 -- Estructura de tabla para la tabla `title`
 --
 
-CREATE TABLE IF NOT EXISTS `title` (
+CREATE TABLE `title` (
   `id` int(10) NOT NULL,
-  `title` varchar(25) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `title` varchar(25) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -777,7 +705,7 @@ CREATE TABLE IF NOT EXISTS `title` (
 -- Estructura de tabla para la tabla `usercontract`
 --
 
-CREATE TABLE IF NOT EXISTS `usercontract` (
+CREATE TABLE `usercontract` (
   `id` int(10) NOT NULL,
   `userid` int(10) NOT NULL,
   `uc_hours` decimal(6,2) NOT NULL,
@@ -786,8 +714,7 @@ CREATE TABLE IF NOT EXISTS `usercontract` (
   `description` text,
   `workingdays` text,
   `workstarttime` time DEFAULT NULL,
-  `workendtime` time DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `workendtime` time DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -796,12 +723,11 @@ CREATE TABLE IF NOT EXISTS `usercontract` (
 -- Estructura de tabla para la tabla `userpimitems`
 --
 
-CREATE TABLE IF NOT EXISTS `userpimitems` (
+CREATE TABLE `userpimitems` (
   `id` int(10) NOT NULL,
   `userid` int(10) DEFAULT NULL,
   `pimitem` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `orderby` int(10) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `orderby` int(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -810,23 +736,316 @@ CREATE TABLE IF NOT EXISTS `userpimitems` (
 -- Estructura de tabla para la tabla `ventas`
 --
 
-CREATE TABLE IF NOT EXISTS `ventas` (
+CREATE TABLE `ventas` (
   `id` int(11) NOT NULL DEFAULT '0',
   `nombreCliente` varchar(30) DEFAULT NULL,
   `fechaVenta` timestamp NULL DEFAULT NULL,
   `fechaVencimiento` timestamp NULL DEFAULT NULL,
-  `facturaId` int(11) DEFAULT NULL,
   `tipoVentaId` int(11) DEFAULT NULL,
   `empleadoId` int(11) DEFAULT NULL,
   `clienteId` int(11) DEFAULT NULL,
-  `precioTotalConIVA` decimal(5,2) DEFAULT NULL,
-  `precioTotalSinIVA` decimal(5,2) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `clienteId` (`clienteId`),
-  KEY `tipoVentaId` (`tipoVentaId`),
-  KEY `empleadoId` (`empleadoId`),
-  KEY `facturaId` (`facturaId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `precioTotalConIVA` decimal(10,2) DEFAULT NULL,
+  `precioTotalSinIVA` decimal(10,2) DEFAULT NULL,
+  `tipoFactura` int(11) DEFAULT NULL,
+  `fechaCierre` datetime DEFAULT NULL,
+  `numeroFactura` int(11) DEFAULT NULL,
+  `anulada` tinyint(4) NOT NULL DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `accessright`
+--
+ALTER TABLE `accessright`
+  ADD PRIMARY KEY (`node`,`action`,`role_id`);
+
+--
+-- Indices de la tabla `atributosDeProductos`
+--
+ALTER TABLE `atributosDeProductos`
+  ADD PRIMARY KEY (`atributoId`),
+  ADD KEY `tipoAtributo` (`tipoAtributo`);
+
+--
+-- Indices de la tabla `clientes`
+--
+ALTER TABLE `clientes`
+  ADD PRIMARY KEY (`clienteId`),
+  ADD KEY `localidadId` (`localidadId`),
+  ADD KEY `tipoClienteId` (`tipoClienteId`),
+  ADD KEY `sociedadId` (`sociedadId`);
+
+--
+-- Indices de la tabla `color`
+--
+ALTER TABLE `color`
+  ADD PRIMARY KEY (`colorId`),
+  ADD KEY `gamaId` (`gamaId`);
+
+--
+-- Indices de la tabla `composicionColores`
+--
+ALTER TABLE `composicionColores`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `colorPrimario` (`colorPrimario`),
+  ADD KEY `colorSecundario` (`colorSecundario`);
+
+--
+-- Indices de la tabla `datosProductos`
+--
+ALTER TABLE `datosProductos`
+  ADD PRIMARY KEY (`datosProductosId`),
+  ADD KEY `productoId` (`productoId`);
+
+--
+-- Indices de la tabla `db_sequence`
+--
+ALTER TABLE `db_sequence`
+  ADD PRIMARY KEY (`seq_name`);
+
+--
+-- Indices de la tabla `detalle`
+--
+ALTER TABLE `detalle`
+  ADD PRIMARY KEY (`detalleId`),
+  ADD KEY `ventaId` (`ventaId`),
+  ADD KEY `productoId` (`productoId`),
+  ADD KEY `colorId` (`colorId`);
+
+--
+-- Indices de la tabla `empleados`
+--
+ALTER TABLE `empleados`
+  ADD PRIMARY KEY (`empleadoId`),
+  ADD KEY `perfilId` (`perfilId`);
+
+--
+-- Indices de la tabla `employeerole`
+--
+ALTER TABLE `employeerole`
+  ADD PRIMARY KEY (`employee_id`,`role_id`);
+
+--
+-- Indices de la tabla `employee_department`
+--
+ALTER TABLE `employee_department`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `functionlevel`
+--
+ALTER TABLE `functionlevel`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `gama`
+--
+ALTER TABLE `gama`
+  ADD PRIMARY KEY (`gamaId`);
+
+--
+-- Indices de la tabla `localidades`
+--
+ALTER TABLE `localidades`
+  ADD PRIMARY KEY (`localidadId`);
+
+--
+-- Indices de la tabla `manejoStock`
+--
+ALTER TABLE `manejoStock`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `productoId` (`productoId`);
+
+--
+-- Indices de la tabla `marca`
+--
+ALTER TABLE `marca`
+  ADD PRIMARY KEY (`marcaId`);
+
+--
+-- Indices de la tabla `organization`
+--
+ALTER TABLE `organization`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `perfiles`
+--
+ALTER TABLE `perfiles`
+  ADD PRIMARY KEY (`perfilId`);
+
+--
+-- Indices de la tabla `person`
+--
+ALTER TABLE `person`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `productos`
+--
+ALTER TABLE `productos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `marcaId` (`marcaId`),
+  ADD KEY `tipoProductoId` (`tipoProductoId`);
+
+--
+-- Indices de la tabla `profile`
+--
+ALTER TABLE `profile`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `role`
+--
+ALTER TABLE `role`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `scheduler_alarms`
+--
+ALTER TABLE `scheduler_alarms`
+  ADD PRIMARY KEY (`scheduler_id`,`startdate`,`userid`);
+
+--
+-- Indices de la tabla `scheduler_attendees`
+--
+ALTER TABLE `scheduler_attendees`
+  ADD PRIMARY KEY (`scheduler_id`,`person_id`);
+
+--
+-- Indices de la tabla `scheduler_category`
+--
+ALTER TABLE `scheduler_category`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `scheduler_cyclus`
+--
+ALTER TABLE `scheduler_cyclus`
+  ADD PRIMARY KEY (`scheduler_id`);
+
+--
+-- Indices de la tabla `scheduler_cyclus_not`
+--
+ALTER TABLE `scheduler_cyclus_not`
+  ADD PRIMARY KEY (`scheduler_id`,`date`);
+
+--
+-- Indices de la tabla `scheduler_dates`
+--
+ALTER TABLE `scheduler_dates`
+  ADD PRIMARY KEY (`scheduler_id`,`startdate`),
+  ADD KEY `enddate_idx` (`enddate`);
+
+--
+-- Indices de la tabla `scheduler_group`
+--
+ALTER TABLE `scheduler_group`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `scheduler_group_member`
+--
+ALTER TABLE `scheduler_group_member`
+  ADD PRIMARY KEY (`groupid`,`userid`);
+
+--
+-- Indices de la tabla `scheduler_holidays`
+--
+ALTER TABLE `scheduler_holidays`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `scheduler_notes`
+--
+ALTER TABLE `scheduler_notes`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `scheduler_scheduler`
+--
+ALTER TABLE `scheduler_scheduler`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `scheduler_userassistants`
+--
+ALTER TABLE `scheduler_userassistants`
+  ADD PRIMARY KEY (`userid`,`employeeid`);
+
+--
+-- Indices de la tabla `scheduler_userpreferences`
+--
+ALTER TABLE `scheduler_userpreferences`
+  ADD PRIMARY KEY (`userid`);
+
+--
+-- Indices de la tabla `sociedades`
+--
+ALTER TABLE `sociedades`
+  ADD PRIMARY KEY (`sociedadId`);
+
+--
+-- Indices de la tabla `tiposAtributosDeProductos`
+--
+ALTER TABLE `tiposAtributosDeProductos`
+  ADD PRIMARY KEY (`tiposAtributosDeProductosId`),
+  ADD KEY `tipoProductoId` (`tipoProductoId`);
+
+--
+-- Indices de la tabla `tiposCliente`
+--
+ALTER TABLE `tiposCliente`
+  ADD PRIMARY KEY (`tipoClienteId`),
+  ADD KEY `tipoFacturaId` (`tipoFacturaId`);
+
+--
+-- Indices de la tabla `tiposFactura`
+--
+ALTER TABLE `tiposFactura`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `tiposProducto`
+--
+ALTER TABLE `tiposProducto`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `tiposVenta`
+--
+ALTER TABLE `tiposVenta`
+  ADD PRIMARY KEY (`tipoVentaId`);
+
+--
+-- Indices de la tabla `title`
+--
+ALTER TABLE `title`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `usercontract`
+--
+ALTER TABLE `usercontract`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `userpimitems`
+--
+ALTER TABLE `userpimitems`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `ventas`
+--
+ALTER TABLE `ventas`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `clienteId` (`clienteId`),
+  ADD KEY `tipoVentaId` (`tipoVentaId`),
+  ADD KEY `empleadoId` (`empleadoId`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
