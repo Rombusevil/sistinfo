@@ -23,7 +23,8 @@ class composicionColores extends atkNode {
         global $ATK_VARS;
 
         $color = &atkGetNode("color.color");
-        $id = split("=", $ATK_VARS["atkselector"])[1];
+        $id = split("=", $ATK_VARS["atkselector"]);
+        $id = $id[1];
 
         $usedFlags = 0;
         if ($id != null) {

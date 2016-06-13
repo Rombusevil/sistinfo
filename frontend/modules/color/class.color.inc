@@ -22,7 +22,8 @@ class color extends atkNode {
     function checkUsed(){
         global $ATK_VARS;
         
-        $id = split("=", $ATK_VARS["atkselector"])[1];
+        $id = split("=", $ATK_VARS["atkselector"]);
+        $id = $id[1];
         $usedFlags = 0;
         if($this->isThingUsed($id)){
             $usedFlags = AF_READONLY;
