@@ -151,7 +151,7 @@ class productos extends atkNode {
     }
 
     function recordActions($record, &$actions, &$mraactions) {
-        $mraactions["mra_editar_precio"] = "mra_editar_precio";
+        $mraactions[0] = "mra_editar_precio";
     }
 
     function action_mra_editar_precio() {
