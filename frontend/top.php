@@ -54,8 +54,8 @@
   getCenterPiece($centerpiece,$centerpiecelinks);
   $content.=$centerpiece;
 
-  $searchpiece = getSearchPiece();
-  $content.="&nbsp;&nbsp;&nbsp; ".$searchpiece;
+//  $searchpiece = getSearchPiece();
+//  $content.="&nbsp;&nbsp;&nbsp; ".$searchpiece;
 
   $title = getAchievoTitle();
   $top = $ui->renderBox(array("content"=> $content,
@@ -65,7 +65,7 @@
                               "logouttarget" => "_top",
                               "centerpiece" => $centerpiece,
                               "centerpiece_links" => $centerpiecelinks,
-                              "searchpiece" => $searchpiece,
+//                              "searchpiece" => $searchpiece,
                               "title" => $title,
                               "user" => $username,
                               "username"=>$username,
