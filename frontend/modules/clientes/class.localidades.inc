@@ -4,6 +4,7 @@ class localidades extends atkNode {
 
     function localidades($name = "localidades", $flags = 0) {
         $this->atkNode($name, $flags | NF_ADD_LINK);
+        // No se valida el uso para evitar la edición, el nombre puede cambiar (typo) y le codigo postal también
 
         $this->add(new atkNumberAttribute("localidadId", AF_AUTOKEY));
         $this->add(new atkNumberAttribute("codigoPostal", AF_OBLIGATORY | AF_UNIQUE));

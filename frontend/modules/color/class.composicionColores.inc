@@ -3,6 +3,7 @@
 class composicionColores extends atkNode {
     function composicionColores($name = "composicionColores", $flags = 0) {
         $usedFlag = $this->checkUsed();
+        // No se checkea por delete pq nadie tiene acceso a un admin de delete de las composiciones.
         
         $this->atkNode($name, $flags);
 
