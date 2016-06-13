@@ -65,7 +65,8 @@
       $c->setPhpFile($dispatcher);
 
       if($theme->getAttribute('useframes',true)) { $target='target="main"'; } else { $target=""; }
-      $centerpiece = $centerpiecelinks['ventas'] = href(dispatch_url("ventas.ventas", "ventas"), atktext("ventas"), SESSION_NEW, false,$target);
+//      $centerpiece = $centerpiecelinks['ventas'] = href(dispatch_url("ventas.ventas", "ventas"), atktext("ventas"), SESSION_NEW, false,$target);
+      $centerpiece = "";
       if (is_allowed("employee.userprefs", "edit"))
       {
         $centerpiece.= '&nbsp; &nbsp; &nbsp;';
