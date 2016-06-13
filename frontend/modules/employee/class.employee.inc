@@ -195,6 +195,7 @@ class employee extends person
     {
       $db = &atkGetDb();
       $db->query($query);
+      $db->commit();
     }
     else
     {
