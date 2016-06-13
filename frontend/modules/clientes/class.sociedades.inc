@@ -2,6 +2,7 @@
 
 class sociedades extends atkNode {
     function sociedades($name="sociedades", $flags=0) {
+            // No se valida el uso para evitar la edición, los atributos pueden cambiar naturalmente
             $this->atkNode($name, $flags|NF_ADD_LINK);
 
             $this->add(new atkNumberAttribute("sociedadId" ,AF_AUTOKEY));				

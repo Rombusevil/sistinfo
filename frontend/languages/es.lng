@@ -730,6 +730,7 @@
     "precioTotalConIVA" => "Total c/IVA",
       "nombreTipoFactura" => "Nombre de tipo factura",
       "tiposFactura" => "Tipos de factura",
+    "ventasAnuladas" => "Ventas anuladas",
       
     // Detalle
     "precioSinIVA" => "Precio s/IVA",
@@ -790,7 +791,7 @@
       "tipoFacturaId" => "Tipo factura",
       "tiposCliente" => "Tipos de clientes",
       
-      
+    
       
       "datagrid_summary" => "(Registros [start] - [end] de [count])"
       

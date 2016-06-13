@@ -245,10 +245,4 @@ class detalle extends atkNode {
             unset($_SESSION["achievo"]["default"]["stack"][$id][$i]["atkformdata"]["#STACK#"][$id]["ventas.ventas:detalle"]);
         }
     }
-    
-    function anularVenta(){
-        $ventaId = 1; // TODO
-        $sql = "select * from manejoStock ";
-    }
-
 }
