@@ -28,7 +28,7 @@ class ventas extends atkNode {
 //            }
 //        }
 
-        $this->atkNode($name, $flags | NF_NO_VIEW | NF_MRA  | NF_ADDAFTERADD /*| NF_EDITAFTERADD*/); //NF_NO_EDIT TODO: se quita hasta resolver el tema de asignacion de factura luego de la venta
+        $this->atkNode($name, $flags |  NF_NO_VIEW | NF_ADDAFTERADD /*| NF_EDITAFTERADD*/); //NF_NO_EDIT TODO: se quita hasta resolver el tema de asignacion de factura luego de la venta
         $flags_not_admin = 0;
         if($ATK_VARS["atkaction"] != "admin")
         {
@@ -81,6 +81,8 @@ class ventas extends atkNode {
             fclose($file);
             unlink($this->fileName); // Borro el archivo
         }
+        
+        
     }
 
     // Esta func carga un arreglo con key value los valores iniciales.

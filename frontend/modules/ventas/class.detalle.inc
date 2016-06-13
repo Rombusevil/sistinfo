@@ -20,7 +20,7 @@ class detalle extends atkNode {
         if($ATK_VARS["atkselector"] != NULL){
             $editFlag = NF_NO_ADD ;
         }
-        $this->atkNode($name, $flags | NF_ADDAFTERADD | $editFlag | NF_NO_EDIT);
+        $this->atkNode($name, $flags | /*NF_ADDAFTERADD |*/ $editFlag | NF_NO_EDIT);
         
 
         $this->add(new atkNumberAttribute("detalleId", AF_AUTOKEY));
