@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-06-2016 a las 17:18:38
+-- Tiempo de generación: 14-06-2016 a las 18:56:21
 -- Versión del servidor: 5.6.17
 -- Versión de PHP: 5.5.12
 
@@ -40,17 +40,29 @@ CREATE TABLE IF NOT EXISTS `accessright` (
 INSERT INTO `accessright` (`node`, `action`, `role_id`) VALUES
 ('basedatos.basedatos', 'view', 1),
 ('clientes.clientes', 'add', 1),
+('clientes.clientes', 'add', 2),
 ('clientes.clientes', 'admin', 1),
+('clientes.clientes', 'admin', 2),
 ('clientes.clientes', 'delete', 1),
+('clientes.clientes', 'delete', 2),
 ('clientes.clientes', 'edit', 1),
+('clientes.clientes', 'edit', 2),
 ('clientes.localidades', 'add', 1),
+('clientes.localidades', 'add', 2),
 ('clientes.localidades', 'admin', 1),
+('clientes.localidades', 'admin', 2),
 ('clientes.localidades', 'delete', 1),
+('clientes.localidades', 'delete', 2),
 ('clientes.localidades', 'edit', 1),
+('clientes.localidades', 'edit', 2),
 ('clientes.sociedades', 'add', 1),
+('clientes.sociedades', 'add', 2),
 ('clientes.sociedades', 'admin', 1),
+('clientes.sociedades', 'admin', 2),
 ('clientes.sociedades', 'delete', 1),
+('clientes.sociedades', 'delete', 2),
 ('clientes.sociedades', 'edit', 1),
+('clientes.sociedades', 'edit', 2),
 ('clientes.tiposCliente', 'add', 1),
 ('clientes.tiposCliente', 'admin', 1),
 ('clientes.tiposCliente', 'delete', 1),
@@ -91,6 +103,7 @@ INSERT INTO `accessright` (`node`, `action`, `role_id`) VALUES
 ('employee.usercontracts', 'delete', 1),
 ('employee.usercontracts', 'edit', 1),
 ('employee.userprefs', 'edit', 1),
+('employee.userprefs', 'edit', 2),
 ('organization.contact', 'add', 1),
 ('organization.contact', 'admin', 1),
 ('organization.contact', 'delete', 1),
@@ -159,6 +172,7 @@ INSERT INTO `accessright` (`node`, `action`, `role_id`) VALUES
 ('ventas.detalle', 'admin', 1),
 ('ventas.detalle', 'admin', 2),
 ('ventas.detalle', 'delete', 1),
+('ventas.detalle', 'delete', 2),
 ('ventas.detalle', 'edit', 1),
 ('ventas.detalle', 'edit', 2),
 ('ventas.ivas', 'add', 1),
@@ -173,7 +187,6 @@ INSERT INTO `accessright` (`node`, `action`, `role_id`) VALUES
 ('ventas.ventas', 'add', 1),
 ('ventas.ventas', 'add', 2),
 ('ventas.ventas', 'admin', 1),
-('ventas.ventas', 'admin', 2),
 ('ventas.ventas', 'cierraVenta', 1),
 ('ventas.ventas', 'delete', 1),
 ('ventas.ventas', 'edit', 1),
@@ -332,7 +345,7 @@ INSERT INTO `db_sequence` (`seq_name`, `nextid`) VALUES
 ('localidades', 2),
 ('manejoStock', 2),
 ('marca', 1),
-('person', 1),
+('person', 2),
 ('productos', 2),
 ('profile', 2),
 ('sociedades', 2),
@@ -341,7 +354,7 @@ INSERT INTO `db_sequence` (`seq_name`, `nextid`) VALUES
 ('tiposCliente', 2),
 ('tiposFactura', 2),
 ('tiposProducto', 2),
-('userpimitems', 3);
+('userpimitems', 6);
 
 -- --------------------------------------------------------
 
@@ -394,7 +407,8 @@ CREATE TABLE IF NOT EXISTS `employeerole` (
 --
 
 INSERT INTO `employeerole` (`employee_id`, `role_id`) VALUES
-(1, 1);
+(1, 1),
+(2, 2);
 
 -- --------------------------------------------------------
 
@@ -647,7 +661,8 @@ CREATE TABLE IF NOT EXISTS `person` (
 --
 
 INSERT INTO `person` (`id`, `title_id`, `userid`, `lastname`, `firstname`, `initials`, `address`, `zipcode`, `city`, `state`, `country`, `phone`, `cellular`, `fax`, `email`, `function`, `remark`, `role`, `created_by`, `created_on`, `last_modified_by`, `last_modified_on`, `birthdate`, `bankaccount`, `socialsecuritynumber`, `employer_id`, `department`, `supervisor`, `functionlevel`, `status`, `lng`, `password`, `theme`, `company`) VALUES
-(1, NULL, 'admin', 'admin', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'employee', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'active', 'es', '21232f297a57a5a743894a0e4a801fc3', NULL, NULL);
+(1, NULL, 'admin', 'admin', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'employee', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'active', 'es', '21232f297a57a5a743894a0e4a801fc3', NULL, NULL),
+(2, NULL, 'jota', 'jota', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', 'employee', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'active', NULL, '85ad902286ae933575ca51ab45f60399', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1147,7 +1162,10 @@ CREATE TABLE IF NOT EXISTS `userpimitems` (
 INSERT INTO `userpimitems` (`id`, `userid`, `pimitem`, `orderby`) VALUES
 (1, 1, 'timereg_timeregistration', 10),
 (2, 1, 'scheduler_schedule', 20),
-(3, 1, 'todo_todos', 30);
+(3, 1, 'todo_todos', 30),
+(4, 2, 'timereg_timeregistration', 10),
+(5, 2, 'scheduler_schedule', 20),
+(6, 2, 'todo_todos', 30);
 
 -- --------------------------------------------------------
 
