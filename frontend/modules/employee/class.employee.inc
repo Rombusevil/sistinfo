@@ -48,8 +48,7 @@ class employee extends person
         $p_attrib = &$this->getAttribute($attribname);
         $p_attrib->m_flags|=AF_HIDE_ADD;
       }
-      elseif($attribname=="userid")
-      {
+      else if($attribname=="userid" || $attribname =="firstname" ){
         $p_attrib = &$this->getAttribute($attribname);
         $p_attrib->m_flags|=AF_OBLIGATORY;
       }
