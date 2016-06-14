@@ -357,7 +357,7 @@ class employee extends person
     $this->removeBirthdaysCache();
     // Remove scheduler userprefs
 //    $userprefs = &atkGetNode("scheduler.scheduler_userpreferences");
-    $userprefs->deleteDb("userid='".$record['id']."'");
+//    $userprefs->deleteDb("userid='".$record['id']."'");
     return true;
   }
 
