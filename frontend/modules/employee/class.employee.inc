@@ -78,7 +78,7 @@ class employee extends person
     $rel->setRemoteKey("role_id");
 
     // If we are in employee administration mode, we show all users. Otherwise, we only show active users.
-    $this->add(new atkListAttribute("status", array("active","nonactive"), array(), AF_HIDE_LIST|AF_HIDE_ADD|AF_FORCE_LOAD), "account");
+    $this->add(new atkListAttribute("status", array("active","nonactive"), array(), AF_OBLIGATORY |AF_HIDE_LIST|AF_HIDE_ADD|AF_FORCE_LOAD), "account");
     if ((atkArrayNvl($ATK_VARS, "atknodetype", "") == "employee.employee") && in_array(atkArrayNvl($ATK_VARS, "atkaction", ""), array("admin", "add", "update", "edit")))
     {
       $statusfilter = ($this->getView() == "active") ? "active" : "nonactive";
