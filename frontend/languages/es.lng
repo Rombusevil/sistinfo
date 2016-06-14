@@ -807,7 +807,9 @@
 	  
 	  "datosProductos" => "Datos de Productos",
 	  "tiposAtributosDeProductos" => "Tipos de Atributos de Productos",
-	  "tipoMovimiento" => "Tipos de Movimiento"
+	  "tipoMovimiento" => "Tipos de Movimiento",
+	  
+	  "esCompuesto" => "Compuesto"
       
 );
 
