@@ -759,7 +759,7 @@
     "stockMinimoPorDefecto" => "Stock m&iacute;nimo por defecto", 
     "productoId" => "Producto",
     "mra_editar_precio" => "Editar precio",
-    "manejoStock" => "Manejo de stock",
+    "manejoStock" => "Manejo de Stock",
     "tipoMovimientoId" => "Tipo de movimiento",
     "tiposProducto" => "Tipos de Producto",
     "atributosDeProductos" => "Atributos de Productos",
@@ -773,6 +773,7 @@
     "imagen" => "Imagen",
     "composicionId" => "Composici&oacute;n",
     "ComposicionColores" => "Composicion de colores",
+	"composicionColores" => "Composicion de colores",
       
     //Localidades
       "codigoPostal" => "C&oacute;digo postal",
@@ -801,8 +802,12 @@
       "valorIva" => "Valor de IVA",
     
       
-      "datagrid_summary" => "(Registros [start] - [end] de [count])"
+      "datagrid_summary" => "(Registros [start] - [end] de [count])",
       
+	  
+	  "datosProductos" => "Datos de Productos",
+	  "tiposAtributosDeProductos" => "Tipos de Atributos de Productos",
+	  "tipoMovimiento" => "Tipos de Movimiento"
       
 );
 
