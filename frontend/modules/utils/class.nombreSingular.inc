@@ -18,6 +18,7 @@ class NombreSingular {
         "Tipos de Producto" => "tipo de producto",
         "Atributos de Productos" =>"atributo de producto",
         "Empleado" => "empleado",
+		"Ventas" => "venta",
         );
         
         return $singulares[$string];
