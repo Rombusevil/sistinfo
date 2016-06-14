@@ -19,6 +19,7 @@
    * @internal Include base class.
    */
   userelation("atkrelation");
+  include_once 'modules/utils/class.nombreSingular.inc';
 
   /**
    * Only allow deletion of master item when there are no child records
@@ -772,7 +773,9 @@
           $label = atktext($key,$this->m_destInstance->m_module, "", "", "", true);
           if ($label=="")
           {
-            $label = atktext(getNodeType($this->m_destination),$this->m_destInstance->m_module)." ".strtolower(atktext("add", "atk"));
+            $nombreOriginal = atktext(getNodeType($this->m_destination),$this->m_destInstance->m_module);
+            $nombreSingular = NombreSingular::getSingular($nombreOriginal);
+            $label = "Agregar ". (($nombreSingular == "")? $nombreOriginal: $nombreSingular);
           }
         }
       }

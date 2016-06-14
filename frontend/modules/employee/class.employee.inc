@@ -38,7 +38,7 @@ class employee extends person
   {
     global $ATK_VARS,$g_user;
 
-    $this->person("employee", NF_EDITAFTERADD|NF_IMPORT);
+    $this->person("employee", NF_EDITAFTERADD);
 
     // In employee edit screen, we hide most fields in the add screen.
     foreach (array_keys($this->m_attribList) as $attribname)
@@ -342,8 +342,8 @@ class employee extends person
     $pimitems->addDefaultPimItemsForUser($record['id']);
     $this->removeBirthdaysCache();
     // Create scheduler userprefs
-    $userprefs = &atkGetNode("scheduler.scheduler_userpreferences");
-    $userprefs->createUserPreferences($record['id']);
+//    $userprefs = &atkGetNode("scheduler.scheduler_userpreferences");
+//    $userprefs->createUserPreferences($record['id']);
     return true;
   }
 
@@ -357,7 +357,7 @@ class employee extends person
   {
     $this->removeBirthdaysCache();
     // Remove scheduler userprefs
-    $userprefs = &atkGetNode("scheduler.scheduler_userpreferences");
+//    $userprefs = &atkGetNode("scheduler.scheduler_userpreferences");
     $userprefs->deleteDb("userid='".$record['id']."'");
     return true;
   }

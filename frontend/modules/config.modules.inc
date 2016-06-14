@@ -35,6 +35,6 @@
 	module("person");
 	module("employee");
 	module("utils");
-	module("organization");
-	module("scheduler");
+//	module("organization");
+//	module("scheduler");
 ?>

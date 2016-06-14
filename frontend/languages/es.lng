@@ -731,6 +731,7 @@
       "nombreTipoFactura" => "Nombre de tipo factura",
       "tiposFactura" => "Tipos de factura",
     "ventasAnuladas" => "Ventas anuladas",
+      "tiposVenta" => "Tipos de venta",
       
     // Detalle
     "precioSinIVA" => "Precio s/IVA",
@@ -762,12 +763,16 @@
     "tipoMovimientoId" => "Tipo de movimiento",
     "tiposProducto" => "Tipos de Producto",
     "atributosDeProductos" => "Atributos de Productos",
+      "DatosProductos" => "Datos de productos",
+      "TiposAtributosDeProductos" => "Tipos de atributos de productos",
+      "TipoMovimiento" => "Tipo de movimiento de stock",
       
     // Colores
     "gamaId" => "Gama",
     "codigoColor" => "C&oacute;digo color",
     "imagen" => "Imagen",
-    "composicionId" => "Composici&oacute;n",   
+    "composicionId" => "Composici&oacute;n",
+    "ComposicionColores" => "Composicion de colores",
       
     //Localidades
       "codigoPostal" => "C&oacute;digo postal",
@@ -791,6 +796,8 @@
       "tipoFacturaId" => "Tipo factura",
       "tiposCliente" => "Tipos de clientes",
       
+      "baseDatos" => "Base de datos",
+      "valorIva" => "Valor de IVA",
     
       
       "datagrid_summary" => "(Registros [start] - [end] de [count])"

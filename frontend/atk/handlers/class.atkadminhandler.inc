@@ -28,6 +28,7 @@
    *
    */
   atkimport("atk.handlers.atkactionhandler");
+  include_once 'modules/utils/class.nombreSingular.inc';
 
   class atkAdminHandler extends atkActionHandler
   {
@@ -339,7 +340,9 @@
         if (empty($label))
         {
           // generic text
-          $label = $this->m_node->text($this->m_node->m_type)." ".atktext("add","atk","");
+            $nombreOriginal = $this->m_node->text($this->m_node->m_type);
+            $nombreSingular = NombreSingular::getSingular($nombreOriginal);
+            $label = "Agregar ". (($nombreSingular == "")? $nombreOriginal: $nombreSingular);
         }
 
         atkimport('atk.handlers.atkaddorcopyhandler');

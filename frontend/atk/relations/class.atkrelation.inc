@@ -24,6 +24,7 @@
    * @abstract
    *
    */
+include_once 'modules/utils/class.nombreSingular.inc';
   class atkRelation extends atkAttribute
   {
     /**
@@ -365,8 +366,11 @@
       $label = atktext($keys, getNodeModule($this->m_destination), "", "", "", true);
 
       // If translation not found, then use a concatenation of translations of the destination and the word "add" as default
-      if ($label=="")
-        $label = atktext(getNodeType($this->m_destination), getNodeModule($this->m_destination)) . " " . strtolower(atktext("add", "atk"));
+      if ($label==""){
+        $nombreOriginal = atktext(getNodeType($this->m_destination), getNodeModule($this->m_destination));
+        $nombreSingular = NombreSingular::getSingular($nombreOriginal);
+        $label = "Agregar ". (($nombreSingular == "")? $nombreOriginal: $nombreSingular);
+      }
 
       // Return the translation
       return $label;
