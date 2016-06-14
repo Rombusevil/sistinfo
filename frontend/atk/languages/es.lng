@@ -95,8 +95,8 @@
   "criterium_value" => "Valor del criterio",
   "critical" => "Crítico",
   "datagrid_norecordsfound_general" => "No se encontraron registros.", 
-  "datagrid_norecordsfound_search" => "No results found for the current search query.", // Missing string!!!
-  "datagrid_summary" => "(Records [start] - [end] of [count])", // Missing string!!!
+  "datagrid_norecordsfound_search" => "No se encontraron resultados.", // Missing string!!!
+  "datagrid_summary" => "(Registros [start] - [end] de [count])", // Missing string!!!
   "date_format_edit" => "j F Y",
   "date_format_view" => "j F Y",
   "db_access_denied_database" => "El usuario '%s' no tiene derechos en la base de datos '%s'",
@@ -201,7 +201,7 @@
   "invalid_relative_url" => "URL relativa inválida, por favor use el formato: '/mysite/guestbook'",
   "invalid_url_anchor" => "Indicador de URL inválido, por favor use este formato: '#internal_bookmark'",
   "invert_selection" => "Invertir la selección",
-  "in_use_by" => "In use by", // Missing string!!!
+  "in_use_by" => "En uso por", // Missing string!!!
   "jan" => "Ene",
   "january" => "Enero",
   "jul" => "Jul",
@@ -220,7 +220,7 @@
   "lock_expired" => "Los elementos que ha abierto no son accesibles en modo exclusivo. Esto puede tener varias consecuencias,
                      la más frecuente es que no haya guardado durante un periodo largo de tiempo. Puede intentar guardar su
                      trabajo, pero es posible que los elementos estén bloqueados por otro usuario.",
-  "lock_info_line" => "[user_id] (ip: [user_ip]) since [lock_date]", // Missing string!!!
+  "lock_info_line" => "[user_id] (ip: [user_ip]) desde [lock_date]", // Missing string!!!
   "lock_locked" => "Lo elementos no se encuentra disponibles porque otro usuario los ha bloqueado.",
   "logged_in_as" => "Usuario",
   "login" => "Entrar",
@@ -298,7 +298,7 @@
   "search_substring" => "Buscar una subcadena",
   "search_wildcard" => "Buscar con comodines (*)",
   "select" => "Seleccionar",
-  "selected" => "Selected", // Missing string!!!
+  "selected" => "Seleccionado", // Missing string!!!
   "selection" => "Selección",
   "select_a" => "Seleccionar un",
   "select_all" => "Seleccionar todo",

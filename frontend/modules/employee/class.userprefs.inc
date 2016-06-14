@@ -41,8 +41,8 @@ class userprefs extends atkNode
       $this->addPasswordAttribute();
     }
     $themes = $this->getThemes();
-    $this->add(new atkListAttribute("theme",$themes,$themes,AF_HIDE_ADD));
-    $this->add(new adminLangSelectAttribute("lng"));
+    //$this->add(new atkListAttribute("theme",$themes,$themes,AF_HIDE_ADD));
+    //$this->add(new adminLangSelectAttribute("lng"));
 
     $this->setTable("person", "person");
     $this->setDescriptorTemplate('[userid]');

@@ -38,7 +38,7 @@ class employee extends person
   {
     global $ATK_VARS,$g_user;
 
-    $this->person("employee", NF_EDITAFTERADD);
+    $this->person("employee", 0/*NF_EDITAFTERADD*/);
 
     // In employee edit screen, we hide most fields in the add screen.
     foreach (array_keys($this->m_attribList) as $attribname)
@@ -48,8 +48,7 @@ class employee extends person
         $p_attrib = &$this->getAttribute($attribname);
         $p_attrib->m_flags|=AF_HIDE_ADD;
       }
-      elseif($attribname=="userid")
-      {
+      else if($attribname=="userid" || $attribname =="firstname" ){
         $p_attrib = &$this->getAttribute($attribname);
         $p_attrib->m_flags|=AF_OBLIGATORY;
       }
@@ -74,12 +73,12 @@ class employee extends person
 //    $this->add(new atkManyToOneRelation("functionlevel", "employee.functionlevel",AF_HIDE_ADD|AF_HIDE_LIST|AF_RELATION_AUTOLINK));
 
     //$this->add(new atkManyToOneRelation("entity", "employee.profile",AF_RELATION_AUTOLINK|AF_HIDE_ADD));
-    $rel = &$this->add(new atkManyBoolRelation("profiles", "employee.employeerole", "employee.profile", AF_HIDE_LIST|AF_MANYBOOL_AUTOLINK), "account");
+    $rel = &$this->add(new atkManyBoolRelation("profiles", "employee.employeerole", "employee.profile", AF_MANYBOOL_AUTOLINK |AF_OBLIGATORY), "account");
     $rel->setLocalKey("employee_id");
     $rel->setRemoteKey("role_id");
 
     // If we are in employee administration mode, we show all users. Otherwise, we only show active users.
-    $this->add(new atkListAttribute("status", array("active","nonactive"), array(), AF_HIDE_LIST|AF_HIDE_ADD|AF_FORCE_LOAD), "account");
+    $this->add(new atkListAttribute("status", array("active","nonactive"), array(), AF_OBLIGATORY |AF_HIDE_LIST|AF_HIDE_ADD|AF_FORCE_LOAD), "account");
     if ((atkArrayNvl($ATK_VARS, "atknodetype", "") == "employee.employee") && in_array(atkArrayNvl($ATK_VARS, "atkaction", ""), array("admin", "add", "update", "edit")))
     {
       $statusfilter = ($this->getView() == "active") ? "active" : "nonactive";
@@ -358,7 +357,7 @@ class employee extends person
     $this->removeBirthdaysCache();
     // Remove scheduler userprefs
 //    $userprefs = &atkGetNode("scheduler.scheduler_userpreferences");
-    $userprefs->deleteDb("userid='".$record['id']."'");
+//    $userprefs->deleteDb("userid='".$record['id']."'");
     return true;
   }
 
