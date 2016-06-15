@@ -7,7 +7,7 @@ class mod_color extends achievoModule {
 	}
 
 	function getMenuItems() {
-		$this->menuitem("color",dispatch_url("color.color", "admin"),"main",array("color.color", "admin"),600);
+		$this->menuitem("color",dispatch_url("color.color", "admin"),"main",array("color.color", "admin"),200);
 		$this->menuitem("Administrar", dispatch_url("color.color", "admin"), "color", array("color.color", "admin"));
 		$this->menuitem("Gamas", dispatch_url("color.gama", "admin"), "color", array("color.gama", "admin"));
 			

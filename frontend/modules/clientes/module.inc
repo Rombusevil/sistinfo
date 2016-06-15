@@ -8,7 +8,7 @@ class mod_clientes extends achievoModule {
 	}
 
 	function getMenuItems() {
-		$this->menuitem("Clientes",dispatch_url("clientes.clientes", "admin"),"main",array("clientes.clientes", "admin"),600);
+		$this->menuitem("Clientes",dispatch_url("clientes.clientes", "admin"),"main",array("clientes.clientes", "admin"),500);
 		$this->menuitem("Administrar", dispatch_url("clientes.clientes", "admin"), "Clientes", array("clientes.clientes", "admin"));
 		$this->menuitem("Tipos", dispatch_url("clientes.tiposCliente", "admin"), "Clientes", array("clientes.tiposCliente", "admin"));
                 $this->menuitem("Localidad", dispatch_url("clientes.localidades", "admin"), "Clientes", array("clientes.localidades", "admin"));

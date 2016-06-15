@@ -48,8 +48,8 @@ class ventas extends atkNode {
         $this->add(new atkManyToOneRelation("empleadoId", "employee.employee", AF_RELATION_AUTOLINK | AF_HIDE | AF_READONLY_EDIT));
         $this->add(new atkOneToManyRelation("detalle", "ventas.detalle", "ventaId", AF_ONETOMANY_SHOW_ADD | AF_CASCADE_DELETE |  AF_FORCE_LOAD))->setAttribSize(20);
 
-        $this->add(new atkCurrencyAttribute("precioTotalConIVA", AF_HIDE_ADD|AF_HIDE_EDIT|AF_READONLY|/*AF_SEARCHABLE | */AF_TOTAL, 0, "$", 2))->setAttribSize(7);
-        $this->add(new atkCurrencyAttribute("precioTotalSinIVA", AF_READONLY|/*AF_SEARCHABLE | */AF_TOTAL, 0, "$", 2))->setAttribSize(7);
+        $this->add(new atkCurrencyAttribute("precioTotalConIVA", AF_HIDE_ADD|AF_HIDE_EDIT|AF_READONLY|/*AF_SEARCHABLE | */AF_TOTAL, 0, "$", 2))->setAttribSize(9);
+        $this->add(new atkCurrencyAttribute("precioTotalSinIVA", AF_READONLY|/*AF_SEARCHABLE | */AF_TOTAL, 0, "$", 2))->setAttribSize(9);
         
         $this->add(new atkBoolAttribute("anulada", AF_HIDE));
         
@@ -329,6 +329,9 @@ class ventas extends atkNode {
         $fy = $fechaVencimiento["year"];
         $fm = $fechaVencimiento["month"];
         $fd = $fechaVencimiento["day"];
+        
+        
+        
 
         if($vy > $fy){       // Año de venta mayor a año de vencimiento
             return false;
@@ -344,6 +347,31 @@ class ventas extends atkNode {
             }
 
             if($vm == $fm && $vd == $fd){  // Si es el mismo día, mismo mes y mismo año devuelvo falso. No tengo en cuenta el horario.
+                return false;
+            }
+        }
+
+        return true;
+    }
+    
+    // Retorna false si la fecha de venta es posterior a la fecha actual
+    function validarFechaVenta($fechaVenta){
+        $now = array("year"=>date("Y"), "month"=>date("m"), "day"=>date("d"), "hours"=>date("H"), "minutes"=>date("i"), "seconds"=>date("s"));
+        
+        atk_var_dump($now, " ARRAY NOW ");
+        atk_var_dump($fechaVenta, " ARRAY FECHA VENTA ");
+        
+        foreach ($fechaVenta as $key => $value) {
+            atk_var_dump((int)$value, " VALUE FECHAVENTA");
+            atk_var_dump((int)$now[$key], " VALUE NOW ");
+            
+            if((int)$value < (int)$now[$key]){
+                atk_var_dump("RETORNO TRUE");
+                return true;
+            }
+            
+            if((int)$value > (int)$now[$key]){
+                atk_var_dump("RETORNO FALSE");
                 return false;
             }
         }
@@ -369,6 +397,10 @@ class ventas extends atkNode {
         
         if($tipoVentaId == VENTA_NORMAL && $record["numeroFactura"] == NULL){
             triggerError($record, "Error", "El numero de factura es obligatorio");
+        }
+        
+        if(!$this->validarFechaVenta($record["fechaVenta"])){
+            triggerError($record, "Error", "La fecha de venta es posterior a la actual.");
         }
         
         return parent::validate($record, $mode, $ignoreList);
