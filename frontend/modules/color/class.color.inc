@@ -112,9 +112,15 @@ class color extends atkNode {
 			}
 		}
 		
-		if($record["composicionId"]["porcentaje"] > 99){
+		$porc = $record["composicionId"]["porcentaje"];
+		if($porc > 99){
 			triggerError($record, "Error", "El porcentaje no puede ser mayor a 99");
 		}
+		else if($porc < 1){
+			triggerError($record, "Error", "El porcentaje no puede ser menor a 1");
+		}
+		
+
 		
 		return parent::validate($record, $mode, $ignoreList);
 	}
