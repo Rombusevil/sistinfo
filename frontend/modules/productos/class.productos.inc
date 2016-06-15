@@ -42,7 +42,7 @@ class productos extends atkNode {
         $this->fileMraPopup = "mraPopup.txt"; // Defino el nombre del archivo
         $this->productIds = "pId.txt"; // Defino el nombre del archivo
 
-        $this->atkNode($name, $flags | NF_ADD_LINK | NF_EDITAFTERADD | NF_MRA);
+        $this->atkNode($name, $flags | NF_ADD_LINK /*| NF_EDITAFTERADD */| NF_MRA);
         
         
         $usedFlag = $this->checkUsed();
@@ -237,4 +237,10 @@ class productos extends atkNode {
         }
         return parent::editArray($mode, $record, $forceList, $suppressList, $fieldprefix, $ignoreTab, $injectSections);
     }
+	
+	function validate(&$record, $mode, $ignoreList = array()) {
+		if($record["precio"] < 0){
+			triggerError($record, "Error", "El precio no puede ser negativo.");
+		}
+	}
 }
