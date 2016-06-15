@@ -809,7 +809,9 @@
 	  "tiposAtributosDeProductos" => "Tipos de Atributos de Productos",
 	  "tipoMovimiento" => "Tipos de Movimiento",
 	  
-	  "esCompuesto" => "Compuesto"
+	  "esCompuesto" => "Compuesto",
+	  "colorPrimario" => "Color 1",
+	  "colorSecundario" => "Color 2"
       
 );
 
