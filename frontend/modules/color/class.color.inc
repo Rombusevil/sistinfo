@@ -99,4 +99,24 @@ class color extends atkNode {
         }
         return true;
     }
+
+
+		
+	function validate(&$record, $mode, $ignoreList = array()) {
+		$c1 = $record["composicionId"]["colorPrimario"]["atkprimkey"];
+		$c2 = $record["composicionId"]["colorSecundario"]["atkprimkey"];
+		
+		if($c1 != NULL && $c1 != ""){
+			if( $c1 == $c2 ){
+				triggerError($record, "Error", "Color 1 y Color 2 no pueden ser iguales");
+			}
+		}
+		
+		if($record["composicionId"]["porcentaje"] > 99){
+			triggerError($record, "Error", "El porcentaje no puede ser mayor a 99");
+		}
+		
+		return parent::validate($record, $mode, $ignoreList);
+	}
+	
 }
