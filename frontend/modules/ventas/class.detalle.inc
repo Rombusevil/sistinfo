@@ -189,6 +189,14 @@ class detalle extends atkNode {
         return parent::editArray($mode, $record, $forceList, $suppressList, $fieldprefix, $ignoreTab, $injectSections);
     }
 
+	function validate(&$record, $mode, $ignoreList = array()) {
+		if($record["precioSinIVA"] < 0){
+			triggerError($record, "Error", "el precio no puede ser menor a 0");
+		}
+        
+        return parent::validate($record, $mode, $ignoreList);
+    }
+	
     // Meto lógica para mostrar el popup de alerta de stock
     function preAdd(&$record) {
         global $ATK_VARS;
@@ -197,11 +205,9 @@ class detalle extends atkNode {
         $productoId = $record["productoId"]["id"];
 
         if ($productoId == NULL) {
-            atk_var_dump($record, "ENtre!!!");
             triggerError($record, "Error", "productId es obligatorio");
             return false;
         }
-        atk_var_dump($record, "Saliii!!!");
         $db = &atkGetDb();
         $productosAlerta = $db->getrows("SELECT nombreProducto, cantidad, stockMinimo "
                 . "FROM productos WHERE (id = $productoId)"
