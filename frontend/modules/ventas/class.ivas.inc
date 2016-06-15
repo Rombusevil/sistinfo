@@ -33,6 +33,9 @@ class ivas extends atkNode {
             triggerError($record, "Error", "La fecha de vigencia debe ser posterior a la actual.");
     	}
 
+		if($record["valorIva"] < 1){
+			triggerError($record, "Error", "El valor de IVA debe ser superior a 1.");
+		}
         
         return parent::validate($record, $mode, $ignoreList);
     }
