@@ -73,4 +73,9 @@ class tiposProducto extends atkNode {
         return false;
     }
 
+	function validate(&$record, $mode, $ignoreList = array()) {
+		if($record["stockMinimoPorDefecto"] < 0){
+			triggerError($record, "Error", "El stock m&iacute;nimo por defecto no puede ser negativo.");
+		}
+	}
 }
