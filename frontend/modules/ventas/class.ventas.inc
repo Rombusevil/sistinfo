@@ -431,6 +431,10 @@ class ventas extends atkNode {
             $prodId = $ATK_VARS['#STACK#'][$id]["ventas.ventas:detalle"][$i]["productoId"]["id"];
             $cant = $ATK_VARS['#STACK#'][$id]["ventas.ventas:detalle"][$i]["cantidad"];
 
+			if($prodId == NULL || $prodId == ""){
+				continue;
+			}
+			
             $getStock= "SELECT cantidad, nombreProducto FROM productos WHERE id = $prodId;";
             $rows = $db->getrows($getStock);
             $nombreProducto = $rows[0]["nombreProducto"];
