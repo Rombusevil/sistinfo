@@ -17,7 +17,7 @@ class ventas extends atkNode {
             //unset($ATK_VARS["atkcancel"]); // EDIT: Con la forma nueva de venta esto no hace falta
             $this->redirect();
         }
-        
+
 //        Esto lo comentamos por que debería ser no por usuario sino por permiso (si es que es necesario...)        
 //        // Filtro según tipo de usuario
 //        $user = &atkGetUser();
@@ -36,24 +36,43 @@ class ventas extends atkNode {
         }
 
         $this->add(new atkNumberAttribute("id", AF_SERCHEABLE |AF_AUTOKEY));
-        $this->add(new atkManyToOneRelation("tipoVentaId", "ventas.tiposVenta", AF_RELATION_AUTOLINK| /*AF_SEARCHABLE |*/ AF_READONLY_EDIT))->setAttribSize(7);
-        $this->add(new atkDateTimeAttribute("fechaVenta", AF_OBLIGATORY| /*AF_SEARCHABLE | */AF_READONLY_EDIT))->setAttribSize(8);
-        $this->add(new atkDateAttribute("fechaVencimiento", /*AF_SEARCHABLE|*/$flags_not_admin | AF_READONLY_EDIT))->setAttribSize(8);
-        $this->add(new atkDateAttribute("fechaCierre", AF_READONLY_ADD | AF_HIDE_ADD | AF_FORCE_LOAD))->setAttribSize(2);
-        $this->add(new atkManyToOneRelation("clienteId", "clientes.clientes", AF_RELATION_AUTOLINK | AF_READONLY_EDIT | AF_FORCE_LOAD));
-        $this->add(new atkAttribute("nombreCliente", /*AF_SEARCHABLE | */AF_READONLY_EDIT))->setAttribSize(12);        
+        $this->add(new atkManyToOneRelation("tipoVentaId", "ventas.tiposVenta", AF_RELATION_AUTOLINK| AF_SEARCHABLE | AF_READONLY_EDIT));
+        $this->add(new atkDateTimeAttribute("fechaVenta", AF_OBLIGATORY| AF_SEARCHABLE_ | AF_READONLY_EDIT));
+        $this->add(new atkDateAttribute("fechaVencimiento", /*AF_SEARCHABLE|*/$flags_not_admin | AF_READONLY_EDIT));
+        $this->add(new atkDateAttribute("fechaCierre", AF_READONLY_ADD | AF_HIDE_ADD | AF_FORCE_LOAD));
+        $this->add(new atkManyToOneRelation("clienteId", "clientes.clientes", AF_SEARCHABLE | AF_RELATION_AUTOLINK | AF_READONLY_EDIT | AF_FORCE_LOAD));
+        $this->add(new atkAttribute("nombreCliente", AF_SEARCHABLE | AF_READONLY_EDIT));
         
         $this->add(new atkManyToOneRelation("tipoFactura", "ventas.tiposFactura", AF_HIDE | AF_RELATION_AUTOLINK | AF_READONLY_EDIT));
         $this->add(new atkNumberAttribute("numeroFactura", AF_UNIQUE));
         $this->add(new atkManyToOneRelation("empleadoId", "employee.employee", AF_RELATION_AUTOLINK | AF_HIDE | AF_READONLY_EDIT));
-        $this->add(new atkOneToManyRelation("detalle", "ventas.detalle", "ventaId", AF_ONETOMANY_SHOW_ADD | AF_CASCADE_DELETE |  AF_FORCE_LOAD))->setAttribSize(20);
+        $this->add(new atkOneToManyRelation("detalle", "ventas.detalle", "ventaId", AF_ONETOMANY_SHOW_ADD | AF_CASCADE_DELETE |  AF_FORCE_LOAD));
 
-        $this->add(new atkCurrencyAttribute("precioTotalConIVA", AF_HIDE_ADD|AF_HIDE_EDIT|AF_READONLY|/*AF_SEARCHABLE | */AF_TOTAL, 0, "$", 2))->setAttribSize(9);
-        $this->add(new atkCurrencyAttribute("precioTotalSinIVA", AF_READONLY|/*AF_SEARCHABLE | */AF_TOTAL, 0, "$", 2))->setAttribSize(9);
+        $this->add(new atkCurrencyAttribute("precioTotalConIVA", AF_HIDE_ADD|AF_HIDE_EDIT|AF_READONLY|/*AF_SEARCHABLE | */AF_TOTAL, 0, "$", 2));
+        $this->add(new atkCurrencyAttribute("precioTotalSinIVA", AF_READONLY|/*AF_SEARCHABLE | */AF_TOTAL, 0, "$", 2));
         
         $this->add(new atkBoolAttribute("anulada", AF_HIDE));
         
+        
+        $user = &atkGetUser();
+        
         $this->addFilter(" anulada = 0 ");
+        
+        
+        atk_var_dump($user, " USUARIO ");
+        
+        
+        $db = &atkGetDb();
+        $userId = $user["id"];
+        $sql = "SELECT role_id FROM employeerole where employee_id = $userId";
+        $result = $db->getrows($sql);
+        $roleId = $result[0]["role_id"];
+        
+        atk_var_dump($roleId, " ROL ID");
+        if($roleId != 1){ // ID 1 es el id del usuario administrador
+            atk_var_dump($roleId, " ENTROOOO ");
+            $this->addFilter(" empleadoId = $userId ");
+        }
         
         
         
@@ -247,7 +266,6 @@ class ventas extends atkNode {
             $this->getAttribute("numeroFactura")->addFlag(AF_HIDE);
         }
         else if ($tipoVentaId == VENTA_FIADA) {
-            atk_var_dump($record, " ver numeroFactura y fecha cierre");
             if($record["numeroFactura"] == 0 || $record["fechaCierre"] == 0){
                 $this->getAttribute("fechaCierre")->removeFlag(AF_READONLY_EDIT);
                 $this->getAttribute("numeroFactura")->removeFlag(AF_READONLY_EDIT);                
@@ -279,23 +297,19 @@ class ventas extends atkNode {
     public function preUpdate(&$record) {
         parent::preUpdate($record);
         
-        atk_var_dump($record, "preUpdate");
         $id = $record["id"];
         $sql = "Select numeroFactura from ventas where id = $id";
         $db = atkGetDb();
         $result = $db->getrows($sql);
-        atk_var_dump($result, " RESULTADO QUERY PREUPDATE");
     }
     
     public function postUpdate($record) {
         parent::postUpdate($record);
         
-        atk_var_dump($record, "postUpdate");
         $id = $record["id"];
         $sql = "Select numeroFactura from ventas where id = $id";
         $db = atkGetDb();
         $result = $db->getrows($sql);
-        atk_var_dump($result, " RESULTADO QUERY POSTDATE");
     }
     
     function rowColor($record) {
@@ -357,21 +371,13 @@ class ventas extends atkNode {
     // Retorna false si la fecha de venta es posterior a la fecha actual
     function validarFechaVenta($fechaVenta){
         $now = array("year"=>date("Y"), "month"=>date("m"), "day"=>date("d"), "hours"=>date("H"), "minutes"=>date("i"), "seconds"=>date("s"));
-        
-        atk_var_dump($now, " ARRAY NOW ");
-        atk_var_dump($fechaVenta, " ARRAY FECHA VENTA ");
-        
+                
         foreach ($fechaVenta as $key => $value) {
-            atk_var_dump((int)$value, " VALUE FECHAVENTA");
-            atk_var_dump((int)$now[$key], " VALUE NOW ");
-            
             if((int)$value < (int)$now[$key]){
-                atk_var_dump("RETORNO TRUE");
                 return true;
             }
             
             if((int)$value > (int)$now[$key]){
-                atk_var_dump("RETORNO FALSE");
                 return false;
             }
         }
@@ -515,10 +521,8 @@ class ventas extends atkNode {
         
         $sql = "SELECT productoId, cantidad FROM manejoStock WHERE ventaId = $ventaId and tipoMovimientoId = 1"; // TIPO MOVIMIENTO ID 1 = VENTA
         $res = $db->getrows($sql);
-                
-        atk_var_dump($res, " RES");
+        
         for($i=0; $i<count($res); $i++){
-            atk_var_dump($i, " ENTREEE");
             
             $cant = $res[$i]["cantidad"];
             $id = $res[$i]["productoId"];

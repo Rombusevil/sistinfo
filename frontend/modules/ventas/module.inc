@@ -10,7 +10,7 @@ class mod_ventas extends achievoModule {
 	}
 
 	function getMenuItems() {
-            $this->menuitem("Ventas",dispatch_url("ventas.ventas", "view"),"main",array("ventas.ventas", "admin"),100);		            
+            $this->menuitem("Ventas",dispatch_url("ventas.ventas", "admin"),"main",array("ventas.ventas", "admin"),100);		            
             $this->menuitem("Realizar Venta",dispatch_url("ventas.ventas", "add"),"Ventas",array("ventas.ventas", "add"));		            
             $this->menuitem("Listar Ventas", dispatch_url("ventas.ventas", "admin"), "Ventas", array("ventas.ventas", "admin"));            
             $this->menuitem("Ventas Anuladas", dispatch_url("ventas.ventasAnuladas", "admin"), "Ventas", array("ventas.ventasAnuladas", "admin"));
