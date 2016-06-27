@@ -13,7 +13,8 @@ class manejoStock extends atkNode {
         
         $this->add(new atkManyToOneRelation("productoId", "productos.productos", AF_RELATION_AUTOLINK | AF_OBLIGATORY | AF_SEARCHABLE));
 
-        $tipoMov->setDestinationFilter("tipoMovimientoId <> 1"); // 1 es VENTA
+        $tipoMov->setDestinationFilter("tipoMovimientoId <> 1 AND tipoMovimientoId <> 3"); // 1 es VENTA, 3 es Venta Anulada
+        
         
         $this->setOrder("Fecha desc");
         

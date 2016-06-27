@@ -42,7 +42,7 @@ class productos extends atkNode {
         $this->fileMraPopup = "mraPopup.txt"; // Defino el nombre del archivo
         $this->productIds = "pId.txt"; // Defino el nombre del archivo
 
-        $this->atkNode($name, $flags | NF_ADD_LINK /*| NF_EDITAFTERADD */| NF_MRA);
+        $this->atkNode($name, $flags | NF_ADD_LINK | NF_EDITAFTERADD | NF_MRA);
         
         
         $usedFlag = $this->checkUsed();
@@ -65,7 +65,7 @@ class productos extends atkNode {
 
         // Foraneas
         $this->add(new atkManyToOneRelation("marcaId", "productos.marca", AF_RELATION_AUTOLINK | $usedFlag));
-        $this->add(new atkOneToManyRelation("datosProductoId", "productos.datosProductos", "productoId",  AF_FORCE_LOAD | AF_HIDE_ADD | $usedFlag));
+        $this->add(new atkOneToManyRelation("datosProductoId", "productos.datosProductos", "productoId",  AF_FORCE_LOAD | AF_HIDE_ADD /* | $usedFlag*/));
 
 
 //        TODO: Hay que revisar si esto se va a terminar. Posiblemente no
