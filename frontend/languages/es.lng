@@ -811,7 +811,12 @@
 	  
 	  "esCompuesto" => "Compuesto",
 	  "colorPrimario" => "Color 1",
-	  "colorSecundario" => "Color 2"
+	  "colorSecundario" => "Color 2",
+      "colorId" => "Color",
+      "nombreMovimiento" => "Nombre de movimiento",
+      "tipoOperacion" => "Tipo de operaci&oacute;n",
+      "fechaVigencia" => "Fecha vigencia"
+      
       
 );
 
