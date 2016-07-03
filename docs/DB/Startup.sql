@@ -1,13 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.1.14
+-- version 3.4.11.1deb2
 -- http://www.phpmyadmin.net
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 14-06-2016 a las 18:56:21
--- Versión del servidor: 5.6.17
--- Versión de PHP: 5.5.12
+-- Servidor: localhost
+-- Tiempo de generación: 03-07-2016 a las 20:03:03
+-- Versión del servidor: 5.5.31
+-- Versión de PHP: 5.4.4-14+deb7u5
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
@@ -236,15 +236,6 @@ CREATE TABLE IF NOT EXISTS `clientes` (
   KEY `sociedadId` (`sociedadId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
---
--- Volcado de datos para la tabla `clientes`
---
-
-INSERT INTO `clientes` (`clienteId`, `cuitCuil`, `razonSocial`, `correoElectronico`, `telefono`, `direccion`, `tipoClienteId`, `sociedadId`, `localidadId`) VALUES
-(1, '27-33099231-5', 'Juan Perez', 'jperez@puelche.com', NULL, NULL, 1, 1, 1),
-(2, '27-89876231-5', 'Hiper Tehuelche', NULL, NULL, NULL, 1, 2, 1),
-(3, '27-12876546-5', 'Jorge Lopez', NULL, NULL, NULL, 2, NULL, 2);
-
 -- --------------------------------------------------------
 
 --
@@ -261,15 +252,6 @@ CREATE TABLE IF NOT EXISTS `color` (
   PRIMARY KEY (`colorId`),
   KEY `gamaId` (`gamaId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Volcado de datos para la tabla `color`
---
-
-INSERT INTO `color` (`colorId`, `codigoColor`, `imagen`, `gamaId`, `composicionId`, `esCompuesto`) VALUES
-(1, '1000', NULL, 1, NULL, 0),
-(2, '2000', NULL, 2, NULL, 0),
-(3, '3000', NULL, 3, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -341,7 +323,7 @@ INSERT INTO `db_sequence` (`seq_name`, `nextid`) VALUES
 ('composicionColores', 1),
 ('datosProductos', 3),
 ('gama', 3),
-('ivas', 3),
+('ivas', 4),
 ('localidades', 2),
 ('manejoStock', 2),
 ('marca', 1),
@@ -407,8 +389,7 @@ CREATE TABLE IF NOT EXISTS `employeerole` (
 --
 
 INSERT INTO `employeerole` (`employee_id`, `role_id`) VALUES
-(1, 1),
-(2, 2);
+(1, 1);
 
 -- --------------------------------------------------------
 
@@ -476,9 +457,7 @@ CREATE TABLE IF NOT EXISTS `ivas` (
 --
 
 INSERT INTO `ivas` (`id`, `fechaVigencia`, `valorIva`, `tipoFacturaId`) VALUES
-(1, '2014-05-05', '14.00', 1),
-(2, '2016-05-02', '21.00', 1),
-(3, '2016-05-02', '25.00', 2);
+(4, '2016-07-04', 21.00, 2);
 
 -- --------------------------------------------------------
 
@@ -518,14 +497,6 @@ CREATE TABLE IF NOT EXISTS `manejostock` (
   KEY `productoId` (`productoId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
---
--- Volcado de datos para la tabla `manejostock`
---
-
-INSERT INTO `manejostock` (`id`, `productoId`, `fecha`, `cantidad`, `tipoMovimientoId`, `ventaId`) VALUES
-(1, 1, '2016-05-03 23:42:00', 20, 2, NULL),
-(2, 2, '2016-05-03 23:43:00', 20, 2, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -537,13 +508,6 @@ CREATE TABLE IF NOT EXISTS `marca` (
   `nombreMarca` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`marcaId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Volcado de datos para la tabla `marca`
---
-
-INSERT INTO `marca` (`marcaId`, `nombreMarca`) VALUES
-(1, 'Alba');
 
 -- --------------------------------------------------------
 
@@ -661,8 +625,7 @@ CREATE TABLE IF NOT EXISTS `person` (
 --
 
 INSERT INTO `person` (`id`, `title_id`, `userid`, `lastname`, `firstname`, `initials`, `address`, `zipcode`, `city`, `state`, `country`, `phone`, `cellular`, `fax`, `email`, `function`, `remark`, `role`, `created_by`, `created_on`, `last_modified_by`, `last_modified_on`, `birthdate`, `bankaccount`, `socialsecuritynumber`, `employer_id`, `department`, `supervisor`, `functionlevel`, `status`, `lng`, `password`, `theme`, `company`) VALUES
-(1, NULL, 'admin', 'admin', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'employee', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'active', 'es', '21232f297a57a5a743894a0e4a801fc3', NULL, NULL),
-(2, NULL, 'jota', 'jota', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', 'employee', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'active', NULL, '85ad902286ae933575ca51ab45f60399', NULL, NULL);
+(1, NULL, 'admin', 'admin', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'employee', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'active', 'es', '21232f297a57a5a743894a0e4a801fc3', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -684,14 +647,6 @@ CREATE TABLE IF NOT EXISTS `productos` (
   KEY `marcaId` (`marcaId`),
   KEY `tipoProductoId` (`tipoProductoId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Volcado de datos para la tabla `productos`
---
-
-INSERT INTO `productos` (`id`, `codigoProducto`, `nombreProducto`, `descripcion`, `precio`, `cantidad`, `stockMinimo`, `marcaId`, `tipoProductoId`) VALUES
-(1, 1, 'Lata de pintura Alba', NULL, '100.00', 20, 10, 1, 1),
-(2, 2, 'Pincel de madera', NULL, '10.00', 20, 5, 1, 2);
 
 -- --------------------------------------------------------
 
@@ -973,14 +928,6 @@ CREATE TABLE IF NOT EXISTS `sociedades` (
   `nombreSociedad` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`sociedadId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Volcado de datos para la tabla `sociedades`
---
-
-INSERT INTO `sociedades` (`sociedadId`, `nombreSociedad`) VALUES
-(1, 'Puelche'),
-(2, 'Hiper Tehuelche');
 
 -- --------------------------------------------------------
 
