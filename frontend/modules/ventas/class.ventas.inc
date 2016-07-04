@@ -64,17 +64,16 @@ class ventas extends atkNode {
         
         $db = &atkGetDb();
         $userId = $user["id"];
-        $sql = "SELECT role_id FROM employeerole where employee_id = $userId";
-        $result = $db->getrows($sql);
-        $roleId = $result[0]["role_id"];
-        
+		if($userId != ""){
+			$sql = "SELECT role_id FROM employeerole where employee_id = $userId";
+			$result = $db->getrows($sql);
+			$roleId = $result[0]["role_id"];
+		}
+		$roleId = 1; // Si no tiene userId es ADMINISTRATOR
         atk_var_dump($roleId, " ROL ID");
         if($roleId != 1){ // ID 1 es el id del usuario administrador
-            atk_var_dump($roleId, " ENTROOOO ");
             $this->addFilter(" empleadoId = $userId ");
         }
-        
-        
         
         $this->setOrder("fechaVenta desc");
 
@@ -541,7 +540,7 @@ class ventas extends atkNode {
     }
     
     function confirmdeletetext(){
-        return "¿Desea anular la venta?";
+        return "&iquest;Desea anular la venta?";
     }
     
     function incrementSequence($tabla) {
