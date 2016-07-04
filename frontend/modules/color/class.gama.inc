@@ -11,7 +11,7 @@ class gama extends atkNode {
 
         $this->add(new atkColorPickerAttribute("imagen", $arr = "",  $usedFlag | AF_OBLIGATORY | AF_POPUP | AF_FORCE_LOAD));
 
-        $this->setOrder("imagen asc");
+        $this->setOrder("nombreGama asc");
         
         $this->setTable("gama", "gama");
         $this->setDescriptorTemplate("[nombreGama]");
