@@ -105,7 +105,7 @@ $profileAdministrador = "3";
 
 // Warning para evitar el uso del usuario administrator
 if (atkArrayNvl(atkGetUser(), "name") == "administrator") {
-    echo '<script language="javascript"> confirm("El usuario ADMINISTRATOR es únicamente para configuración.");</script>';
+    echo '<script language="javascript"> confirm("El usuario ADMINISTRATOR es unicamente para configuracion.");</script>';
 } 
 // Muestro alertas de vencimiento solo si es administrador.
 else if (atkArrayNvl(atkGetUser(), "level") == $profileAdministrador) {
