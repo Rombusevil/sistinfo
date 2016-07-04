@@ -541,7 +541,7 @@ class ventas extends atkNode {
     }
     
     function confirmdeletetext(){
-        return "¿Desea anular la venta?";
+        return "&iquest;Desea anular la venta?";
     }
     
     function incrementSequence($tabla) {
