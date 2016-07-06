@@ -8,8 +8,8 @@ class color extends atkNode {
         $usedFlag = $this->checkUsed();
 
         $this->add(new atkNumberAttribute("colorId", AF_AUTOKEY));
-        $this->add(new atkManyToOneRelation("gamaId", "color.gama", AF_OBLIGATORY | AF_RELATION_AUTOLINK  | $usedFlag));
-        $this->add(new atkAttribute("codigoColor", AF_OBLIGATORY | AF_UNIQUE | $usedFlag));
+        $this->add(new atkManyToOneRelation("gamaId", "color.gama", AF_SEARCHABLE |  AF_OBLIGATORY | AF_RELATION_AUTOLINK  | $usedFlag));
+        $this->add(new atkAttribute("codigoColor", AF_SEARCHABLE | AF_OBLIGATORY | AF_UNIQUE | $usedFlag));
         $this->add(new atkFileAttribute("imagen", atkconfig("images_dir"), AF_FILE_NO_SELECT)); //images_dir está en atkconf.inc        
         $this->add(new atkBoolAttribute("esCompuesto", AF_READONLY_EDIT));
         $this->add(new atkOneToOneRelation("composicionId", "color.composicionColores", "", AF_ONETOONE_INTEGRATE |  AF_HIDE_LIST | AF_FORCE_LOAD | $usedFlag));
@@ -74,10 +74,10 @@ class color extends atkNode {
         return parent::editArray($mode, $record, $forceList, $suppressList, $fieldprefix, $ignoreTab, $injectSections);
     }
 
-    function rowColor($record) {
-        $color = $record["gamaId"]["imagen"];
-        return array($color);
-    }    
+//    function rowColor($record) {
+//        $color = $record["gamaId"]["imagen"];
+//        return array($color);
+//    }    
     
     function preDelete($record) {
         $vid = "colorId";
